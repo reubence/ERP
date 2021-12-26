@@ -23,7 +23,6 @@
   }
   ```
 */
-//testing
 import {
   CheckCircleIcon,
   OfficeBuildingIcon,
