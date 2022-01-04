@@ -1,13 +1,13 @@
 import React from "react";
-import { useTable } from "react-table";
-
+import { useExpanded, useTable } from "react-table";
+import { useState } from "react";
 import makeData from "./makeData";
 interface TableProps {
   columns: any;
   data: any;
-  children: any;
+  renderRowSubComponent?: any;
 }
-function Table({ columns, data, children }: TableProps) {
+function Table({ columns, data, renderRowSubComponent }: TableProps) {
   const [open, setOpen] = React.useState(false);
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -17,12 +17,16 @@ function Table({ columns, data, children }: TableProps) {
     rows,
     prepareRow,
     visibleColumns,
-  } = useTable({
-    columns,
-    data,
-  });
+    state: { expanded },
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useExpanded //can use useExpanded to track expanded state for sub-components too
+  );
 
-  const toggleRowOpen = (id: boolean) => {
+  const toggleRowOpen = (id: any) => {
     if (open === id) {
       setOpen(false);
     } else {
@@ -32,14 +36,14 @@ function Table({ columns, data, children }: TableProps) {
 
   // Render the UI for your table
   return (
-    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-coffee-light">
-        {headerGroups.map((headerGroup) => (
-          <React.Fragment key={headerGroup.headers.length + "_hfrag"}>
+    <>
+      <table
+        {...getTableProps()}
+        className="min-w-full divide-y divide-gray-200"
+      >
+        <thead className="bg-coffee-light">
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              <th className="px-6 py-3 text-left text-xs font-medium text-cream-light uppercase tracking-wider">
-                Expand
-              </th>
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
@@ -49,113 +53,134 @@ function Table({ columns, data, children }: TableProps) {
                 </th>
               ))}
             </tr>
-          </React.Fragment>
-        ))}
-      </thead>
-      <tbody
-        {...getTableBodyProps()}
-        className="bg-cream-light divide-y divide-gray-200"
-      >
-        {rows.map((row, i) => {
-          prepareRow(row);
-          return (
-            <React.Fragment key={i + "_frag"}>
-              <tr {...row.getRowProps()}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  <span
-                    id={row.id}
-                    onClick={() => toggleRowOpen(Boolean(row.id))}
-                  >
-                    {String(open) === row.id ? "close" : "open"}
-                  </span>
-                </td>
-                {row.cells.map((cell) => {
-                  return (
+          ))}
+        </thead>
+        <tbody
+          {...getTableBodyProps()}
+          className="bg-cream-light divide-y divide-gray-200"
+        >
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <>
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+                {row.isExpanded ? (
+                  <tr>
                     <td
-                      {...cell.getCellProps()}
+                      colSpan={visibleColumns.length}
                       className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                     >
-                      {cell.render("Cell")}
+                      {renderRowSubComponent({ row })}
                     </td>
-                  );
-                })}
-              </tr>
-              {String(open) === row.id && (
-                <tr>
-                  <td
-                    colSpan={visibleColumns.length}
-                    className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                  >
-                    {children}
-                    {/* React.cloneElement(children, {props: "any necessary props here"}) */}
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </tbody>
-    </table>
+                  </tr>
+                ) : null}
+              </>
+            );
+          })}
+        </tbody>
+      </table>
+      <br />
+      <div>Showing the first 20 results of {rows.length} rows</div>
+    </>
   );
 }
 
 function App() {
+  const [data, setData] = useState(React.useMemo(() => makeData(10), []));
+
+  const resetData = () => {
+    const newData = makeData(5);
+    setData(newData);
+  };
+
   const columns = React.useMemo(
     () => [
       {
-        Header: "First Name",
-        accessor: "firstName",
+        // Make an expander cell
+        Header: () => null, // No header
+        id: "expander", // It needs an ID
+        Cell: ({ row }: any) => (
+          // Use Cell to render an expander for each row.
+          // We can use the getExpandedToggleProps prop-getter
+          // to build the expander.
+          <span {...row.getToggleRowExpandedProps()}>
+            {row.isExpanded ? "👇" : "👉"}
+          </span>
+        ),
       },
       {
-        Header: "First ssd",
-        accessor: "firstNamedsd",
-      },
-
-      {
-        Header: "Firsts ssd",
-        accessor: "firstNadmedsd",
-      },
-
-      {
-        Header: "Firstdd ssd",
-        accessor: "firstsNamedsd",
-      },
-      {
-        Header: "Last Name",
-        accessor: "lastName",
+        Header: "Name",
+        columns: [
+          {
+            Header: "First Name",
+            accessor: "firstName",
+          },
+          {
+            Header: "Last Name",
+            accessor: "lastName",
+          },
+        ],
       },
       {
-        Header: "Age",
-        accessor: "age",
-      },
-      {
-        Header: "Visits",
-        accessor: "visits",
-      },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "Profile Progress",
-        accessor: "progress",
+        Header: "Info",
+        columns: [
+          {
+            Header: "Age",
+            accessor: "age",
+          },
+          {
+            Header: "Visits",
+            accessor: "visits",
+          },
+          {
+            Header: "Status",
+            accessor: "status",
+          },
+          {
+            Header: "Profile Progress",
+            accessor: "progress",
+          },
+        ],
       },
     ],
     []
   );
 
-  const data = React.useMemo(() => makeData(20), []);
-  const data2 = React.useMemo(() => makeData(10), []);
+  const renderRowSubComponent = React.useCallback(
+    ({ row }) => (
+      <Table
+        columns={columns}
+        data={data}
+        renderRowSubComponent={renderRowSubComponent}
+      ></Table>
+    ),
+    []
+  );
+
+  // const data = React.useMemo(() => makeData(20), []);
+  // const data2 = React.useMemo(() => makeData(10), []);
   return (
     <div className="flex flex-col border-2 border-coffee-light rounded-lg overflow-hidden">
       <div className="-my-2 overflow-x-auto  sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow rounded-md">
-            <Table columns={columns} data={data}>
-              <Table columns={columns} data={data2}>
-                Content!
-              </Table>
-            </Table>
+            <button onClick={resetData}>Reset Data</button>
+            <Table
+              columns={columns}
+              data={data}
+              renderRowSubComponent={renderRowSubComponent}
+            ></Table>
           </div>
         </div>
       </div>
