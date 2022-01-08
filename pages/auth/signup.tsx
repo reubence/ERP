@@ -176,7 +176,7 @@ export default function SignUp() {
               </div>
               {createUserMutation.isError && (
                 <p className="text-sm mb-8 text-red-500">
-                  {createUserMutation.error}
+                  {(createUserMutation.error as Error).message}
                 </p>
               )}
 

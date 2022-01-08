@@ -119,7 +119,7 @@ export default function SignIn() {
 
               {loginMutation.isError && (
                 <p className="text-sm mb-8 text-red-500">
-                  {loginMutation.error.message}
+                  {(loginMutation.error as Error).message}
                 </p>
               )}
 
