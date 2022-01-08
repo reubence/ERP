@@ -3,17 +3,48 @@ import { AppProps } from "next/app";
 import SideBar from "../components/layout/SideBar-Nav";
 import { supabase } from "../utils/supabaseClient";
 import { useState, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import ProtectedWrapper from "../components/layout/Protected";
+import { useRouter } from "next/router";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <html className="h-full bg-cream-light">
-      <body className="h-full overflow-hidden">
-        <SideBar>
-          <Component {...pageProps} />
-        </SideBar>
-      </body>
-    </html>
-  );
+  const router = useRouter();
+  {
+    if ("/auth/login" === router.asPath || "/auth/signup" === router.asPath) {
+      return (
+        <html className="h-full bg-cream-light">
+          <body className="h-full overflow-hidden">
+            <QueryClientProvider client={queryClient}>
+              <Component {...pageProps} />
+              <ReactQueryDevtools position="bottom-right" />
+            </QueryClientProvider>
+          </body>
+        </html>
+      );
+    } else {
+      return (
+        <html className="h-full bg-cream-light">
+          <body className="h-full overflow-hidden">
+            <SideBar>
+              <QueryClientProvider client={queryClient}>
+                <Component {...pageProps} />
+                <ReactQueryDevtools position="bottom-right" />
+              </QueryClientProvider>
+            </SideBar>
+          </body>
+        </html>
+      );
+    }
+  }
 }
 
 export default MyApp;

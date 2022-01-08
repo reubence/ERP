@@ -109,6 +109,7 @@ export default function SideBar({ children }: LayoutProps) {
                     }
                   >
                     <item.icon
+                      key={item.name}
                       className={classNames(
                         item.href === router.asPath
                           ? "text-cream-light"
