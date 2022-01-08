@@ -34,6 +34,8 @@ import {
 import Breadcrumb from "./Breadcrumbs";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import useLogOut from "../../hooks/useLogout";
+import useUser from "../../hooks/useUser";
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
@@ -66,6 +68,13 @@ interface LayoutProps {
 export default function SideBar({ children }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
+
+  const { data, isLoading } = useUser();
+  const logoutMutation = useLogOut();
+
+  if (logoutMutation.isSuccess) {
+    router.push("/auth/login");
+  }
 
   return (
     <>
@@ -268,7 +277,7 @@ export default function SideBar({ children }: LayoutProps) {
                             {({ active }) => (
                               <Link href={item.href}>
                                 <a
-                                  onClick={() => supabase.auth.signOut()}
+                                  onClick={() => logoutMutation.mutate()}
                                   href={item.href}
                                   className={classNames(
                                     active

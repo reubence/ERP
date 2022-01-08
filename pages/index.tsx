@@ -32,6 +32,8 @@ import DataCard from "../components/Cards/Data-Card";
 import SimpleStripedTable from "../components/Tables/SimpleStripedTable";
 import SimpleButton from "../components/Buttons/SimpleButton";
 import ProtectedWrapper from "../components/layout/Protected";
+import useUser from "../hooks/useUser";
+import useLogOut from "../hooks/useLogout";
 
 export default function HomePage() {
   const cards: {
@@ -71,6 +73,9 @@ export default function HomePage() {
       buttonText: "View All",
     },
   ];
+
+  const { data, isLoading } = useUser();
+
   return (
     <ProtectedWrapper>
       <main className="flex-1 pb-8 h-screen overflow-y-auto">
@@ -95,7 +100,11 @@ export default function HomePage() {
                         alt=""
                       />
                       <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                        Good morning, Emilia Birch
+                        {isLoading ? (
+                          <span>Loading... </span>
+                        ) : (
+                          "Good Morning, " + data?.name
+                        )}
                       </h1>
                     </div>
                     <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">

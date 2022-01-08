@@ -34,12 +34,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       return (
         <html className="h-full bg-cream-light">
           <body className="h-full overflow-hidden">
-            <SideBar>
-              <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={queryClient}>
+              <SideBar>
                 <Component {...pageProps} />
                 <ReactQueryDevtools position="bottom-right" />
-              </QueryClientProvider>
-            </SideBar>
+              </SideBar>
+            </QueryClientProvider>
           </body>
         </html>
       );
