@@ -63,12 +63,12 @@ function Table({ columns, data, renderRowSubComponent }: TableProps) {
             prepareRow(row);
             return (
               <>
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} className="group">
                   {row.cells.map((cell) => {
                     return (
                       <td
                         {...cell.getCellProps()}
-                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-coffee group-hover:text-cream group-hover:cursor-pointer"
                       >
                         {cell.render("Cell")}
                       </td>
