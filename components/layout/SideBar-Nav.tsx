@@ -15,9 +15,7 @@
   }
   ```
 */
-// @ts-ignore
 import { Fragment, useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   CashIcon,
@@ -70,7 +68,7 @@ export default function SideBar({ children }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
-  const { data, isLoading } = useUser();
+  // const { data, isLoading } = useUser();
   const logoutMutation = useLogOut();
 
   if (logoutMutation.isSuccess) {
@@ -128,7 +126,9 @@ export default function SideBar({ children }: LayoutProps) {
                       )}
                       aria-hidden="true"
                     />
-                    <span className="mt-2">{item.name}</span>
+                    <span key={item.name} className="mt-2">
+                      {item.name}
+                    </span>
                   </a>
                 </Link>
               ))}
@@ -198,7 +198,7 @@ export default function SideBar({ children }: LayoutProps) {
                   <nav className="h-full flex flex-col">
                     <div className="space-y-1">
                       {navigation.map((item) => (
-                        <Link href={item.href}>
+                        <Link key={item.name} href={item.href}>
                           <a
                             key={item.name}
                             //   href={item.href}
@@ -211,6 +211,7 @@ export default function SideBar({ children }: LayoutProps) {
                             aria-current={item.current ? "page" : undefined}
                           >
                             <item.icon
+                              key={item.name}
                               className={classNames(
                                 item.current
                                   ? "text-accent-light"
@@ -219,7 +220,7 @@ export default function SideBar({ children }: LayoutProps) {
                               )}
                               aria-hidden="true"
                             />
-                            <span>{item.name}</span>
+                            <span key={item.name}>{item.name}</span>
                           </a>
                         </Link>
                       ))}
@@ -276,8 +277,9 @@ export default function SideBar({ children }: LayoutProps) {
                         {userNavigation.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
-                              <Link href={item.href}>
+                              <Link key={item.name} href={item.href}>
                                 <a
+                                  key={item.name}
                                   onClick={() => logoutMutation.mutate()}
                                   href={item.href}
                                   className={classNames(
