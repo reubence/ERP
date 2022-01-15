@@ -1,5 +1,6 @@
 import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
+// @ts-ignore
 import SideBar from "../components/Layout/SideBar-Nav";
 import { supabase } from "../utils/supabaseClient";
 import { useState, useEffect } from "react";
