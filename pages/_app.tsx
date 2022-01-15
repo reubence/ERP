@@ -1,11 +1,11 @@
 import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
-import SideBar from "../components/layout/SideBar-Nav";
+import SideBar from "../components/Layout/SideBar-Nav";
 import { supabase } from "../utils/supabaseClient";
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import ProtectedWrapper from "../components/layout/Protected";
+import ProtectedWrapper from "../components/Layout/Protected";
 import { useRouter } from "next/router";
 
 const queryClient = new QueryClient({

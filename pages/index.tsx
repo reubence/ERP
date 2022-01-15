@@ -31,7 +31,7 @@ import {
 import DataCard from "../components/Cards/Data-Card";
 import SimpleStripedTable from "../components/Tables/SimpleStripedTable";
 import SimpleButton from "../components/Buttons/SimpleButton";
-import ProtectedWrapper from "../components/layout/Protected";
+import ProtectedWrapper from "../components/Layout/Protected";
 import useUser from "../hooks/useUser";
 import useLogOut from "../hooks/useLogout";
 
