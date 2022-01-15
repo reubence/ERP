@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     if ("/auth/login" === router.asPath || "/auth/signup" === router.asPath) {
       return (
         <html className="h-full bg-cream-light">
-          <body className="h-full overflow-hidden">
+          <body className="h-full">
             <QueryClientProvider client={queryClient}>
               <Component {...pageProps} />
               <ReactQueryDevtools position="bottom-right" />
@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     } else {
       return (
         <html className="h-full bg-cream-light">
-          <body className="h-full overflow-hidden">
+          <body className="h-full overflow-visible">
             <QueryClientProvider client={queryClient}>
               <SideNavBar>
                 <Component {...pageProps} />
