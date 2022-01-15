@@ -1,7 +1,7 @@
 import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
 // @ts-ignore
-import SideNavBar from "../components/Layout/SideNavBar";
+import SideNavBar from "../components/layout/SideNavBar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { useRouter } from "next/router";
