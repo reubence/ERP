@@ -64,7 +64,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function SideBar({ children }: LayoutProps) {
+export default function SideNavBar({ children }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 

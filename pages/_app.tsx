@@ -1,7 +1,7 @@
 import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
 // @ts-ignore
-import SideBar from "../components/Layout/SideBar-Nav";
+import SideNavBar from "../components/Layout/SideNavBar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { useRouter } from "next/router";
@@ -33,10 +33,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <html className="h-full bg-cream-light">
           <body className="h-full overflow-hidden">
             <QueryClientProvider client={queryClient}>
-              <SideBar>
+              <SideNavBar>
                 <Component {...pageProps} />
                 <ReactQueryDevtools position="bottom-right" />
-              </SideBar>
+              </SideNavBar>
             </QueryClientProvider>
           </body>
         </html>
