@@ -31,7 +31,8 @@ import {
 import DataCard from "../components/Cards/Data-Card";
 import SimpleStripedTable from "../components/Tables/SimpleStripedTable";
 import SimpleButton from "../components/Buttons/SimpleButton";
-import ProtectedWrapper from "../components/Layout/Protected";
+// @ts-ignore
+import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
 
 export default function HomePage() {
