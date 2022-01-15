@@ -15,6 +15,7 @@
   }
   ```
 */
+// @ts-ignore
 import { Fragment, useState } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { Dialog, Menu, Transition } from "@headlessui/react";
