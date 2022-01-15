@@ -315,7 +315,7 @@ function App() {
                           <code>
                             {JSON.stringify({
                               // data,
-                              data: data.allCells.map((row) => row.valuem),
+                              data: data.allCells.map((row) => row.value),
                             })}
                             {console.log(data, "ODHAR")}
                           </code>
