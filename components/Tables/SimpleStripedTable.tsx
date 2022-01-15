@@ -95,12 +95,14 @@ TableProps) {
             return (
               <>
                 <tr
+                  key={i}
                   {...row.getRowProps(formatRowProps && formatRowProps(row))}
                   className="group"
                 >
                   {row.cells.map((cell) => {
                     return (
                       <td
+                        key={i}
                         {...cell.getCellProps()}
                         className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-coffee group-hover:text-cream group-hover:cursor-pointer"
                       >
@@ -241,8 +243,6 @@ function App() {
       },
     };
   };
-
-  console.log(dataModal, "HERER");
 
   const Modal = ({ data }) => {
     const [open, setOpen] = useState(true);
