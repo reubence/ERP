@@ -623,9 +623,11 @@ function App() {
                       </div>
                     </div>
                     <pre>
-                      {JSON.stringify({
-                        data: dataModal.allCells,
-                      })}
+                      <code>
+                        {JSON.stringify({
+                          data: dataModal.allCells.map((row) => row.value),
+                        })}
+                      </code>
                     </pre>
 
                     {/* Action buttons */}
