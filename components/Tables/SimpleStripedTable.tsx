@@ -625,7 +625,7 @@ function App() {
                     <pre>
                       <code>
                         {JSON.stringify({
-                          data: dataModal.allCells.map((row) => row.value),
+                          data: data.allCells.map((row) => row.value),
                         })}
                       </code>
                     </pre>
