@@ -54,7 +54,7 @@ const navigation = [
 ];
 const userNavigation = [
   { name: "Your profile", href: "/profile" },
-  { name: "Sign out", href: "/signout" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes: string[]) {
@@ -287,7 +287,7 @@ export default function SideNavBar({ children }: LayoutProps) {
                                     active
                                       ? "bg-cream-light"
                                       : "text-cream-light",
-                                    "block px-4 py-2 text-sm rounded-md"
+                                    "block px-4 py-2 text-sm rounded-md hover:bg-accent-light hover:text-cream-light"
                                   )}
                                 >
                                   {item.name}

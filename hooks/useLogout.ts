@@ -17,7 +17,7 @@ export default function useLogOut() {
   return useMutation(() => logout(), {
     onSuccess: () => {
       queryClient.removeQueries();
-      router.push("/auth/login");
+      // router.push("/auth/login");
     },
   });
 }

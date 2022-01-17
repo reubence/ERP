@@ -622,14 +622,14 @@ function App() {
                         </fieldset>
                       </div>
                     </div>
-                    <pre>
+                    {/* <pre>
                       <code>
                         {JSON.stringify({
                           data: data.allCells.map((row) => row.value),
                         })}
                       </code>
                     </pre>
-
+ */}
                     {/* Action buttons */}
                     <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
