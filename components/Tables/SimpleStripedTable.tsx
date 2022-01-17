@@ -8,9 +8,13 @@ import {
 } from "react-table";
 import makeData from "./makeData";
 import { Fragment, useState, useEffect } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
-import { DotsVerticalIcon } from "@heroicons/react/solid";
+import {
+  LinkIcon,
+  PlusSmIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -323,6 +327,44 @@ function App() {
   };
 
   const Modal = ({ data }) => {
+    const team = [
+      {
+        name: "Tom Cook",
+        email: "tomcook@example.com",
+        href: "#",
+        imageUrl:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      },
+      {
+        name: "Whitney Francis",
+        email: "whitneyfrancis@example.com",
+        href: "#",
+        imageUrl:
+          "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      },
+      {
+        name: "Leonard Krasner",
+        email: "leonardkrasner@example.com",
+        href: "#",
+        imageUrl:
+          "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      },
+      {
+        name: "Floyd Miles",
+        email: "floydmiles@example.com",
+        href: "#",
+        imageUrl:
+          "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      },
+      {
+        name: "Emily Selman",
+        email: "emilyselman@example.com",
+        href: "#",
+        imageUrl:
+          "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      },
+    ];
+
     console.log(open);
     console.log(data);
     useEffect(() => {
@@ -334,11 +376,11 @@ function App() {
       <Transition.Root show={showModal} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 overflow-hidden"
+          className="fixed inset-0 overflow-hidden z-50"
           onClose={setShowModal}
         >
           <div className="absolute inset-0 overflow-hidden">
-            <Dialog.Overlay className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="absolute inset-0 bg-coffee bg-opacity-75 transition-opacity" />
 
             <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
               <Transition.Child
@@ -351,182 +393,260 @@ function App() {
                 leaveTo="translate-x-full"
               >
                 <div className="w-screen max-w-2xl">
-                  <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
-                    <div className="px-4 py-6 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
-                          Profile
-                        </Dialog.Title>
-                        <div className="ml-3 h-7 flex items-center">
-                          <button
-                            type="button"
-                            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
-                            onClick={() => setShowModal(false)}
-                          >
-                            <span className="sr-only">Close panel</span>
-                            <XIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
+                  <form className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+                    <div className="flex-1">
+                      {/* Header */}
+                      <div className="px-4 py-6 bg-gray-50 sm:px-6">
+                        <div className="flex items-start justify-between space-x-3">
+                          <div className="space-y-1">
+                            <Dialog.Title className="text-lg font-medium text-coffee">
+                              New project
+                            </Dialog.Title>
+                            <p className="text-sm text-coffee">
+                              Get started by filling in the information below to
+                              create your new project.
+                            </p>
+                          </div>
+                          <div className="h-7 flex items-center">
+                            <button
+                              type="button"
+                              className="text-gray-400 hover:text-coffee"
+                              onClick={() => setShowModal(false)}
+                            >
+                              <span className="sr-only">Close panel</span>
+                              <XIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    {/* Main */}
-                    <div className="divide-y divide-gray-200">
-                      <div className="pb-6">
-                        <div className="bg-indigo-700 h-24 sm:h-20 lg:h-28" />
-                        <div className="-mt-12 flow-root px-4 sm:-mt-8 sm:flex sm:items-end sm:px-6 lg:-mt-15">
+
+                      {/* Divider container */}
+                      <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+                        {/* Project name */}
+                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
                           <div>
-                            <div className="-m-1 flex">
-                              <div className="inline-flex rounded-lg overflow-hidden border-4 border-white">
-                                <img
-                                  className="flex-shrink-0 h-24 w-24 sm:h-40 sm:w-40 lg:w-48 lg:h-48"
-                                  src="https://images.unsplash.com/photo-1501031170107-cfd33f0cbdcc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80"
-                                  alt=""
+                            <label
+                              htmlFor="project-name"
+                              className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
+                            >
+                              Project name
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <input
+                              type="text"
+                              name="project-name"
+                              id="project-name"
+                              className="block w-full shadow-sm sm:text-sm focus:ring-coffee focus:border-coffee border-gray-300 rounded-md"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Project description */}
+                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                          <div>
+                            <label
+                              htmlFor="project-description"
+                              className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
+                            >
+                              Description
+                            </label>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <textarea
+                              id="project-description"
+                              name="project-description"
+                              rows={3}
+                              className="block w-full shadow-sm sm:text-sm focus:ring-coffee focus:border-coffee border border-gray-300 rounded-md"
+                              defaultValue={""}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Team members */}
+                        <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:px-6 sm:py-5">
+                          <div>
+                            <h3 className="text-sm font-medium text-coffee">
+                              Team Members
+                            </h3>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <div className="flex space-x-2">
+                              {team.map((person) => (
+                                <a
+                                  key={person.email}
+                                  href={person.href}
+                                  className="flex-shrink-0 rounded-full hover:opacity-75"
+                                >
+                                  <img
+                                    className="inline-block h-8 w-8 rounded-full"
+                                    src={person.imageUrl}
+                                    alt={person.name}
+                                  />
+                                </a>
+                              ))}
+
+                              <button
+                                type="button"
+                                className="flex-shrink-0 bg-white inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-gray-400 hover:text-coffee hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                <span className="sr-only">Add team member</span>
+                                <PlusSmIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
                                 />
-                              </div>
+                              </button>
                             </div>
                           </div>
-                          <div className="mt-6 sm:ml-6 sm:flex-1">
+                        </div>
+
+                        {/* Privacy */}
+                        <fieldset>
+                          <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:px-6 sm:py-5">
                             <div>
-                              <div className="flex items-center">
-                                <h3 className="font-bold text-xl text-gray-900 sm:text-2xl">
-                                  Ashley Porter
-                                </h3>
-                                <span className="ml-2.5 bg-green-400 flex-shrink-0 inline-block h-2 w-2 rounded-full">
-                                  <span className="sr-only">Online</span>
-                                </span>
-                              </div>
-                              <p className="text-sm text-gray-500">
-                                @ashleyporter
-                              </p>
+                              <legend className="text-sm font-medium text-coffee">
+                                Privacy
+                              </legend>
                             </div>
-                            <div className="mt-5 flex flex-wrap space-y-3 sm:space-y-0 sm:space-x-3">
-                              <button
-                                type="button"
-                                className="flex-shrink-0 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:flex-1"
-                              >
-                                Message
-                              </button>
-                              <button
-                                type="button"
-                                className="flex-1 w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              >
-                                Call
-                              </button>
-                              <span className="ml-3 inline-flex sm:ml-0">
-                                <Menu
-                                  as="div"
-                                  className="relative inline-block text-left"
-                                >
-                                  <Menu.Button className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-400 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <span className="sr-only">
-                                      Open options menu
-                                    </span>
-                                    <DotsVerticalIcon
-                                      className="h-5 w-5"
+                            <div className="space-y-5 sm:col-span-2">
+                              <div className="space-y-5 sm:mt-0">
+                                <div className="relative flex items-start">
+                                  <div className="absolute flex items-center h-5">
+                                    <input
+                                      id="public-access"
+                                      name="privacy"
+                                      aria-describedby="public-access-description"
+                                      type="radio"
+                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                                      defaultChecked
+                                    />
+                                  </div>
+                                  <div className="pl-7 text-sm">
+                                    <label
+                                      htmlFor="public-access"
+                                      className="font-medium text-coffee"
+                                    >
+                                      Public access
+                                    </label>
+                                    <p
+                                      id="public-access-description"
+                                      className="text-coffee"
+                                    >
+                                      Everyone with the link will see this
+                                      project
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="relative flex items-start">
+                                  <div className="absolute flex items-center h-5">
+                                    <input
+                                      id="restricted-access"
+                                      name="privacy"
+                                      aria-describedby="restricted-access-description"
+                                      type="radio"
+                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                                    />
+                                  </div>
+                                  <div className="pl-7 text-sm">
+                                    <label
+                                      htmlFor="restricted-access"
+                                      className="font-medium text-coffee"
+                                    >
+                                      Private to Project Members
+                                    </label>
+                                    <p
+                                      id="restricted-access-description"
+                                      className="text-coffee"
+                                    >
+                                      Only members of this project would be able
+                                      to access
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="relative flex items-start">
+                                  <div className="absolute flex items-center h-5">
+                                    <input
+                                      id="private-access"
+                                      name="privacy"
+                                      aria-describedby="private-access-description"
+                                      type="radio"
+                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                                    />
+                                  </div>
+                                  <div className="pl-7 text-sm">
+                                    <label
+                                      htmlFor="private-access"
+                                      className="font-medium text-coffee"
+                                    >
+                                      Private to you
+                                    </label>
+                                    <p
+                                      id="private-access-description"
+                                      className="text-coffee"
+                                    >
+                                      You are the only one able to access this
+                                      project
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              <hr className="border-gray-200" />
+                              <div className="flex flex-col space-between space-y-4 sm:flex-row sm:items-center sm:space-between sm:space-y-0">
+                                <div className="flex-1">
+                                  <a
+                                    href="#"
+                                    className="group flex items-center text-sm text-indigo-600 hover:text-indigo-900 font-medium space-x-2.5"
+                                  >
+                                    <LinkIcon
+                                      className="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
                                       aria-hidden="true"
                                     />
-                                  </Menu.Button>
-                                  <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
+                                    <span>Copy link</span>
+                                  </a>
+                                </div>
+                                <div>
+                                  <a
+                                    href="#"
+                                    className="group flex items-center text-sm text-coffee hover:text-coffee space-x-2.5"
                                   >
-                                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                      <div className="py-1">
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <a
-                                              href="#"
-                                              className={classNames(
-                                                active
-                                                  ? "bg-gray-100 text-gray-900"
-                                                  : "text-gray-700",
-                                                "block px-4 py-2 text-sm"
-                                              )}
-                                            >
-                                              View profile
-                                            </a>
-                                          )}
-                                        </Menu.Item>
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <a
-                                              href="#"
-                                              className={classNames(
-                                                active
-                                                  ? "bg-gray-100 text-gray-900"
-                                                  : "text-gray-700",
-                                                "block px-4 py-2 text-sm"
-                                              )}
-                                            >
-                                              Copy profile link
-                                            </a>
-                                          )}
-                                        </Menu.Item>
-                                      </div>
-                                    </Menu.Items>
-                                  </Transition>
-                                </Menu>
-                              </span>
+                                    <QuestionMarkCircleIcon
+                                      className="h-5 w-5 text-gray-400 group-hover:text-coffee"
+                                      aria-hidden="true"
+                                    />
+                                    <span>Learn more about sharing</span>
+                                  </a>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="px-4 py-5 sm:px-0 sm:py-0">
-                        <dl className="space-y-8 sm:divide-y sm:divide-gray-200 sm:space-y-0">
-                          <div className="sm:flex sm:px-6 sm:py-5">
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 lg:w-48">
-                              Bio
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:ml-6 sm:col-span-2">
-                              <p>
-                                Enim feugiat ut ipsum, neque ut. Tristique mi id
-                                elementum praesent. Gravida in tempus feugiat
-                                netus enim aliquet a, quam scelerisque. Dictumst
-                                in convallis nec in bibendum aenean arcu.
-                              </p>
-                            </dd>
-                          </div>
-                          <div className="sm:flex sm:px-6 sm:py-5">
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 lg:w-48">
-                              Location
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:ml-6 sm:col-span-2">
-                              New York, NY, USA
-                            </dd>
-                          </div>
-                          <div className="sm:flex sm:px-6 sm:py-5">
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 lg:w-48">
-                              Website
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:ml-6 sm:col-span-2">
-                              ashleyporter.com
-                            </dd>
-                          </div>
-                          <div className="sm:flex sm:px-6 sm:py-5">
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 lg:w-48">
-                              Birthday
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:ml-6 sm:col-span-2">
-                              <time dateTime="1982-06-23">June 23, 1982</time>
-                            </dd>
-                          </div>
-                          <pre>
-                            <code>
-                              {JSON.stringify({
-                                // data,
-                                data: data.allCells.map((row) => row.value),
-                              })}
-                            </code>
-                          </pre>
-                        </dl>
+                        </fieldset>
                       </div>
                     </div>
-                  </div>
+                    <pre>
+                      {JSON.stringify({
+                        data: dataModal.allCells,
+                      })}
+                    </pre>
+
+                    {/* Action buttons */}
+                    <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
+                      <div className="space-x-3 flex justify-end">
+                        <button
+                          type="button"
+                          className="bg-white py-2 px-4 border-2 border-coffee rounded-md shadow-sm text-sm font-medium text-gray-700 hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          onClick={() => setShowModal(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-coffee hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </Transition.Child>
             </div>
