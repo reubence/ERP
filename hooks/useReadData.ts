@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { supabase } from "../utils/supabaseClient";
 
 interface companyTable {
@@ -43,13 +43,14 @@ interface companyTable {
 //   return data;
 // };
 
-const readData = async (
-  table_name: string,
-  startRow: number,
-  endRow: number
-) => {
-  console.log("Reaching supabase query function");
+interface props {
+  table_name: string;
+  startRow: number;
+  endRow: number;
+}
 
+const readData = async ({ table_name, startRow, endRow }: props) => {
+  console.log("Reaching supabase query function");
   await supabase
     .from(table_name)
     .select("*", { count: "exact" })
@@ -57,17 +58,24 @@ const readData = async (
     .then(({ data, error }) => {
       if (!error) {
         return data;
+      } else {
+        return error;
       }
     });
 };
 
-export default function useReadData(
-  table_name: string,
-  startRow: number,
-  endRow: number
-) {
-  console.log("Reaching useReadData Hook");
+export default function useReadData({ table_name, startRow, endRow }: props) {
+  // console.log("Reaching useReadData Hook");
   //   const user = supabase.auth.user();
   //   return useMutation(() => addMovie(ledger, user?.id));
-  return useMutation(() => readData(table_name, startRow, endRow));
+  return useQuery(
+    ["key", { table_name, startRow, endRow }],
+    () => readData({ table_name, startRow, endRow }),
+    {
+      onSuccess: (data) => {
+        console.log("Get data!");
+        console.log(data);
+      },
+    }
+  );
 }

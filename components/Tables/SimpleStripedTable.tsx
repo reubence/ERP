@@ -288,56 +288,56 @@ function App() {
       //   ),
       // },
 
-      // { Header: "ID", accessor: "id" },
-      // { Header: "Name", accessor: "name" },
-      // { Header: "Email", accessor: "eamil" },
-      // { Header: "Contact", accessor: "contact" },
-      // { Header: "Address", accessor: "address" },
-      // { Header: "Pin", accessor: "pin" },
-      // { Header: "City", accessor: "city" },
-      // { Header: "State", accessor: "state" },
-      // { Header: "Country", accessor: "country" },
-      // { Header: "Type", accessor: "type" },
-      // { Header: "DL NO", accessor: "dl_no" },
-      // { Header: "Pan No", accessor: "pan_no" },
-      // { Header: "Responsible Person", accessor: "responsible_person" },
-      // { Header: "Responsible Phone", accessor: "responsible_phone" },
-      // { Header: "GSTIN", accessor: "gstin" },
+      { Header: "ID", accessor: "id" },
+      { Header: "Name", accessor: "name" },
+      { Header: "Email", accessor: "eamil" },
+      { Header: "Contact", accessor: "contact" },
+      { Header: "Address", accessor: "address" },
+      { Header: "Pin", accessor: "pin" },
+      { Header: "City", accessor: "city" },
+      { Header: "State", accessor: "state" },
+      { Header: "Country", accessor: "country" },
+      { Header: "Type", accessor: "type" },
+      { Header: "DL NO", accessor: "dl_no" },
+      { Header: "Pan No", accessor: "pan_no" },
+      { Header: "Responsible Person", accessor: "responsible_person" },
+      { Header: "Responsible Phone", accessor: "responsible_phone" },
+      { Header: "GSTIN", accessor: "gstin" },
 
-      {
-        Header: "Name",
-        columns: [
-          {
-            Header: "First Name",
-            accessor: "firstName",
-          },
-          {
-            Header: "Last Name",
-            accessor: "lastName",
-          },
-        ],
-      },
-      {
-        Header: "Info",
-        columns: [
-          {
-            Header: "Age",
-            accessor: "age",
-          },
-          {
-            Header: "Visits",
-            accessor: "visits",
-          },
-          {
-            Header: "Status",
-            accessor: "status",
-          },
-          {
-            Header: "Profile Progress",
-            accessor: "progress",
-          },
-        ],
-      },
+      //   {
+      //     Header: "Name",
+      //     columns: [
+      //       {
+      //         Header: "First Name",
+      //         accessor: "firstName",
+      //       },
+      //       {
+      //         Header: "Last Name",
+      //         accessor: "lastName",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     Header: "Info",
+      //     columns: [
+      //       {
+      //         Header: "Age",
+      //         accessor: "age",
+      //       },
+      //       {
+      //         Header: "Visits",
+      //         accessor: "visits",
+      //       },
+      //       {
+      //         Header: "Status",
+      //         accessor: "status",
+      //       },
+      //       {
+      //         Header: "Profile Progress",
+      //         accessor: "progress",
+      //       },
+      //     ],
+      //   },
     ],
     []
   );
@@ -376,16 +376,25 @@ function App() {
     setLoading(true);
 
     // Only update the data if this is the latest fetch
+    // if (fetchId === fetchIdRef.current) {
+    //   const startRow = pageSize * pageIndex;
+    //   const endRow = startRow + pageSize;
+    //   setData(serverData.slice(startRow, endRow));
+
+    //   // Your server could send back total page count.
+    //   // For now we'll just fake it, too
+    //   setPageCount(Math.ceil(serverData.length / pageSize));
+
+    //   setLoading(false);
+    // }
+
     if (fetchId === fetchIdRef.current) {
       const startRow = pageSize * pageIndex;
       const endRow = startRow + pageSize;
-      setData(serverData.slice(startRow, endRow));
-
-      // Your server could send back total page count.
-      // For now we'll just fake it, too
-      setPageCount(Math.ceil(serverData.length / pageSize));
-
-      setLoading(false);
+      const table_name = "company";
+      const { data, error } = useReadData({ table_name, startRow, endRow });
+      // setData(data);
+      console.log(data);
     }
   }, []);
 
