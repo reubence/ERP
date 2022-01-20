@@ -1,9 +1,9 @@
-import { createClient, User } from '@supabase/supabase-js';
+import { createClient, User } from "@supabase/supabase-js";
 
 const supabaseUrl: any = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey: any = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(
-	process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 );

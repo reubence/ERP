@@ -10,11 +10,13 @@ import makeData from "./makeData";
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
+import { supabase } from "../../utils/supabaseClient";
 import {
   LinkIcon,
   PlusSmIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/solid";
+import useReadData from "../../hooks/useReadData";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -27,17 +29,25 @@ interface TableProps {
   formatRowProps?: any;
   // selectedRows?: any;
   // onSelectedRowsChange?: any;
+  fetchData?: any;
+  loading?: any;
+  pageCount?: any;
 }
+
+// Let's add a fetchData method to our Table component that will be used to fetch
+// new data when pagination state changes
+// We can also add a loading state to let our table know it's loading new data
 function Table({
   columns,
   data,
+
   // renderRowSubComponent,
   formatRowProps,
-}: // selectedRows,
-// onSelectedRowsChange,
-TableProps) {
-  const [open, setOpen] = React.useState(false);
-  // Use the state and functions returned from useTable to build your UI
+  fetchData,
+  loading,
+  pageCount: controlledPageCount,
+}: TableProps) {
+  const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
@@ -60,15 +70,21 @@ TableProps) {
       // expanded,
       // selectedRowIds,
       pageIndex,
-      pageSize,
+      pageSize, // Get the state from the instance
     },
   } = useTable(
     {
       columns,
       data,
-      // initialState: {
-      //   selectedRowIds: selectedRows,
-      // },
+      initialState: {
+        //   selectedRowIds: selectedRows,
+        pageIndex: 0, // Pass our hoisted table state
+      },
+      manualPagination: true, // Tell the usePagination
+      // hook that we'll handle our own data fetching
+      // This means we'll also have to provide our own
+      // pageCount.
+      pageCount: controlledPageCount,
     },
     usePagination
     // useExpanded,
@@ -88,10 +104,15 @@ TableProps) {
   //     setOpen(id);
   //   }
   // };
+
+  useEffect(() => {
+    fetchData({ pageIndex, pageSize });
+  }, [fetchData, pageIndex, pageSize]);
+
   // Render the UI for your table
   return (
     <>
-      {/* <pre>
+      <pre>
         <code>
           {JSON.stringify(
             {
@@ -105,7 +126,7 @@ TableProps) {
             2
           )}
         </code>
-      </pre> */}
+      </pre>
 
       <table
         {...getTableProps()}
@@ -163,6 +184,17 @@ TableProps) {
               </>
             );
           })}
+          <tr>
+            {loading ? (
+              // Use our custom loading state to show a loading indicator
+              <td colSpan={10000}>Loading...</td>
+            ) : (
+              <td colSpan={10000}>
+                Showing {page.length} of ~{controlledPageCount * pageSize}{" "}
+                results
+              </td>
+            )}
+          </tr>
         </tbody>
       </table>
       <br />
@@ -213,9 +245,10 @@ TableProps) {
     </>
   );
 }
+const serverData = makeData(10000);
 
 function App() {
-  const [data, setData] = useState(React.useMemo(() => makeData(10000), []));
+  // const [data, setData] = useState(React.useMemo(() => makeData(10000), []));
 
   // const resetData = () => {
   //   const newData = makeData(5);
@@ -254,6 +287,23 @@ function App() {
       //     </span>
       //   ),
       // },
+
+      // { Header: "ID", accessor: "id" },
+      // { Header: "Name", accessor: "name" },
+      // { Header: "Email", accessor: "eamil" },
+      // { Header: "Contact", accessor: "contact" },
+      // { Header: "Address", accessor: "address" },
+      // { Header: "Pin", accessor: "pin" },
+      // { Header: "City", accessor: "city" },
+      // { Header: "State", accessor: "state" },
+      // { Header: "Country", accessor: "country" },
+      // { Header: "Type", accessor: "type" },
+      // { Header: "DL NO", accessor: "dl_no" },
+      // { Header: "Pan No", accessor: "pan_no" },
+      // { Header: "Responsible Person", accessor: "responsible_person" },
+      // { Header: "Responsible Phone", accessor: "responsible_phone" },
+      // { Header: "GSTIN", accessor: "gstin" },
+
       {
         Header: "Name",
         columns: [
@@ -307,6 +357,37 @@ function App() {
   //   ),
   //   []
   // );
+
+  // We'll start our table without any data
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [pageCount, setPageCount] = React.useState(0);
+  const fetchIdRef = React.useRef(0);
+
+  const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
+    // This will get called when the table needs new data
+    // You could fetch your data from literally anywhere,
+    // even a server. But for this example, we'll just fake it.
+
+    // Give this fetch an ID
+    const fetchId = ++fetchIdRef.current;
+
+    // Set the loading state
+    setLoading(true);
+
+    // Only update the data if this is the latest fetch
+    if (fetchId === fetchIdRef.current) {
+      const startRow = pageSize * pageIndex;
+      const endRow = startRow + pageSize;
+      setData(serverData.slice(startRow, endRow));
+
+      // Your server could send back total page count.
+      // For now we'll just fake it, too
+      setPageCount(Math.ceil(serverData.length / pageSize));
+
+      setLoading(false);
+    }
+  }, []);
 
   const [showModal, setShowModal] = useState(false);
   const [dataModal, setDataModal] = useState({});
@@ -670,6 +751,9 @@ function App() {
               <Table
                 columns={columns}
                 data={data}
+                fetchData={fetchData}
+                loading={loading}
+                pageCount={pageCount}
                 // renderRowSubComponent={renderRowSubComponent}
                 // selectedRows={selectedRows}
                 // onSelectedRowsChange={setSelectedRows}

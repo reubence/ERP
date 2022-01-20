@@ -1,4 +1,5 @@
 import namor from "namor";
+import { v4 as uuid } from "uuid";
 
 const range = (len: number) => {
   const arr = [];
@@ -11,6 +12,7 @@ const range = (len: number) => {
 const newPerson = () => {
   const statusChance = Math.random();
   return {
+    key: uuid(),
     firstName: namor.generate({ words: 1, numbers: 0 }),
     lastName: namor.generate({ words: 1, numbers: 0 }),
     age: Math.floor(Math.random() * 30),
@@ -31,7 +33,7 @@ export default function makeData(...lens: number[]) {
     return range(len).map((d) => {
       return {
         ...newPerson(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
+        // subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
       };
     });
   };
