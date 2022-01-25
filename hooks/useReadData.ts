@@ -1,6 +1,6 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { supabase } from "../utils/supabaseClient";
-
+import axios from "axios";
 interface companyTable {
   id: number;
   name: string;
@@ -51,31 +51,47 @@ interface props {
 
 const readData = async ({ table_name, startRow, endRow }: props) => {
   console.log("Reaching supabase query function");
-  await supabase
+  const { data, error } = await supabase
     .from(table_name)
-    .select("*", { count: "exact" })
-    .range(startRow, endRow)
-    .then(({ data, error }) => {
-      if (!error) {
-        return data;
-      } else {
-        return error;
-      }
-    });
+    .select("*")
+    .range(startRow, endRow);
+  // .then(({ data, error }) => {
+  //   if (!error) {
+  //     return data as [];
+  //   } else {
+  //     return error;
+  //   }
+  // });
+
+  if (error) {
+    throw new Error(`${error.message}: ${error.details}`);
+  }
+
+  return data;
 };
 
 export default function useReadData({ table_name, startRow, endRow }: props) {
   // console.log("Reaching useReadData Hook");
   //   const user = supabase.auth.user();
   //   return useMutation(() => addMovie(ledger, user?.id));
-  return useQuery(
-    ["key", { table_name, startRow, endRow }],
-    () => readData({ table_name, startRow, endRow }),
-    {
-      onSuccess: (data) => {
-        console.log("Get data!");
-        console.log(data);
-      },
-    }
+
+  // const { isLoading, error, data } = useQuery("table", () =>
+  //   axios
+  //     .get("https://jsonplaceholder.typicode.com/users")
+  //     .then((res) => res.data)
+  // );
+  // if (isLoading) return "Loading...";
+  // if (error) return "An error occurred" + error.message;
+
+  // console.log(data);
+
+  return useMutation(
+    () => readData({ table_name, startRow, endRow })
+    // {
+    //   onSuccess: (data) => {
+    //     console.log("Get data!");
+    //     console.log(data);
+    //   },
+    // }
   );
 }

@@ -17,9 +17,17 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/solid";
 import useReadData from "../../hooks/useReadData";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+
+interface props {
+  table_name: string;
+  startRow: number;
+  endRow: number;
 }
 
 interface TableProps {
@@ -248,6 +256,73 @@ function Table({
 const serverData = makeData(10000);
 
 function App() {
+  // We'll start our table without any data
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [pageCount, setPageCount] = React.useState(0);
+  const fetchIdRef = React.useRef(0);
+
+  const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
+    // This will get called when the table needs new data
+    // You could fetch your data from literally anywhere,
+    // even a server. But for this example, we'll just fake it.
+
+    // Give this fetch an ID
+    const fetchId = ++fetchIdRef.current;
+
+    // Set the loading state
+    setLoading(true);
+
+    // Only update the data if this is the latest fetch
+    // if (fetchId === fetchIdRef.current) {
+    //   const startRow = pageSize * pageIndex;
+    //   const endRow = startRow + pageSize;
+    //   setData(serverData.slice(startRow, endRow));
+
+    //   // Your server could send back total page count.
+    //   // For now we'll just fake it, too
+    //   setPageCount(Math.ceil(serverData.length / pageSize));
+
+    //   setLoading(false);
+    // }
+
+    if (fetchId === fetchIdRef.current) {
+      const startRow = pageSize * pageIndex;
+      const endRow = startRow + pageSize;
+      const table_name = "company";
+
+      const readData = async ({ table_name, startRow, endRow }: props) => {
+        console.log("Reaching supabase query function");
+        const { data, error } = await supabase
+          .from(table_name)
+          .select("*")
+          .range(startRow, endRow);
+
+        if (error) {
+          throw new Error(`${error.message}: ${error.details}`);
+        }
+        console.log(data, "Unwrapping the pr");
+        setData(data);
+        setPageCount(Math.ceil(data.length / pageSize));
+
+        return data;
+      };
+
+      const data = readData({
+        table_name,
+        startRow,
+        endRow,
+      });
+      // setData(data);
+      // console.log(data);
+
+      // setData(data[0]);
+      // setPageCount(Math.ceil(serverData.length / pageSize));
+
+      setLoading(false);
+    }
+  }, []);
+
   // const [data, setData] = useState(React.useMemo(() => makeData(10000), []));
 
   // const resetData = () => {
@@ -357,46 +432,6 @@ function App() {
   //   ),
   //   []
   // );
-
-  // We'll start our table without any data
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [pageCount, setPageCount] = React.useState(0);
-  const fetchIdRef = React.useRef(0);
-
-  const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
-    // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
-
-    // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current;
-
-    // Set the loading state
-    setLoading(true);
-
-    // Only update the data if this is the latest fetch
-    // if (fetchId === fetchIdRef.current) {
-    //   const startRow = pageSize * pageIndex;
-    //   const endRow = startRow + pageSize;
-    //   setData(serverData.slice(startRow, endRow));
-
-    //   // Your server could send back total page count.
-    //   // For now we'll just fake it, too
-    //   setPageCount(Math.ceil(serverData.length / pageSize));
-
-    //   setLoading(false);
-    // }
-
-    if (fetchId === fetchIdRef.current) {
-      const startRow = pageSize * pageIndex;
-      const endRow = startRow + pageSize;
-      const table_name = "company";
-      const { data, error } = useReadData({ table_name, startRow, endRow });
-      // setData(data);
-      console.log(data);
-    }
-  }, []);
 
   const [showModal, setShowModal] = useState(false);
   const [dataModal, setDataModal] = useState({});
