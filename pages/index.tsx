@@ -36,6 +36,24 @@ import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
 
 export default function HomePage() {
+  const tableData = [
+    { Header: "ID", accessor: "id" },
+    { Header: "Name", accessor: "name" },
+    { Header: "Email", accessor: "eamil" },
+    { Header: "Contact", accessor: "contact" },
+    { Header: "Address", accessor: "address" },
+    { Header: "Pin", accessor: "pin" },
+    { Header: "City", accessor: "city" },
+    { Header: "State", accessor: "state" },
+    { Header: "Country", accessor: "country" },
+    { Header: "Type", accessor: "type" },
+    { Header: "DL NO", accessor: "dl_no" },
+    { Header: "Pan No", accessor: "pan_no" },
+    { Header: "Responsible Person", accessor: "responsible_person" },
+    { Header: "Responsible Phone", accessor: "responsible_phone" },
+    { Header: "GSTIN", accessor: "gstin" },
+  ];
+
   const cards: {
     id: number;
     name: string;
@@ -155,9 +173,8 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
           <SimpleStripedTable
-            border-2
-            border-coffee-light
-            // cols={8}
+            tableData={tableData}
+            tableName="company"
           ></SimpleStripedTable>
         </div>
       </main>
