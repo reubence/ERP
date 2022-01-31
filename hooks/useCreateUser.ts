@@ -42,7 +42,7 @@ export default function useCreateUser(user: User) {
         .insert({
           name: user.name,
           username: user.username,
-          id: data.id,
+          id: data!.id,
         });
 
       if (insertError) {

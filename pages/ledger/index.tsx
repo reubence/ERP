@@ -1,21 +1,21 @@
 import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
 
 const tableData = [
-  { Header: "ID", accessor: "id" },
-  { Header: "Name", accessor: "name" },
-  { Header: "Email", accessor: "eamil" },
-  { Header: "Contact", accessor: "contact" },
-  { Header: "Address", accessor: "address" },
-  { Header: "Pin", accessor: "pin" },
-  { Header: "City", accessor: "city" },
-  { Header: "State", accessor: "state" },
-  { Header: "Country", accessor: "country" },
-  { Header: "Type", accessor: "type" },
-  { Header: "DL NO", accessor: "dl_no" },
-  { Header: "Pan No", accessor: "pan_no" },
-  { Header: "Responsible Person", accessor: "responsible_person" },
-  { Header: "Responsible Phone", accessor: "responsible_phone" },
-  { Header: "GSTIN", accessor: "gstin" },
+  { Header: "ID", accessor: "id" as const },
+  { Header: "Name", accessor: "name" as const },
+  { Header: "Email", accessor: "eamil" as const },
+  { Header: "Contact", accessor: "contact" as const },
+  { Header: "Address", accessor: "address" as const },
+  { Header: "Pin", accessor: "pin" as const },
+  { Header: "City", accessor: "city" as const },
+  { Header: "State", accessor: "state" as const },
+  { Header: "Country", accessor: "country" as const },
+  { Header: "Type", accessor: "type" as const },
+  { Header: "DL NO", accessor: "dl_no" as const },
+  { Header: "Pan No", accessor: "pan_no" as const },
+  { Header: "Responsible Person", accessor: "responsible_person" as const },
+  { Header: "Responsible Phone", accessor: "responsible_phone" as const },
+  { Header: "GSTIN", accessor: "gstin" as const },
 ];
 
 function App() {

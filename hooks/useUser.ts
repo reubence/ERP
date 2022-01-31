@@ -1,7 +1,8 @@
+import { User } from "@supabase/supabase-js";
 import { useQuery } from "react-query";
 import { supabase } from "../utils/supabaseClient";
 
-const getUser = async (userId) => {
+const getUser = async (userId: string) => {
   const { data, error } = await supabase
     .from("users")
     .select()
@@ -23,5 +24,5 @@ const getUser = async (userId) => {
 
 export default function useUser() {
   const user = supabase.auth.user();
-  return useQuery("user", () => getUser(user?.id));
+  return useQuery("user", () => getUser(user?.id!));
 }

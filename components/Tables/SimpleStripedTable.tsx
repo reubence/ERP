@@ -12,17 +12,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
 import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
   LinkIcon,
   PlusSmIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/solid";
-import useReadData from "../../hooks/useReadData";
-import { useQuery } from "react-query";
-import axios from "axios";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 interface props {
   table_name: string;
@@ -30,16 +25,17 @@ interface props {
   endRow: number;
 }
 
+interface AppProps {
+  tableData: {}[];
+  tableName: string;
+}
 interface TableProps {
   columns: any;
-  data: any;
-  // renderRowSubComponent?: any;
-  formatRowProps?: any;
-  // selectedRows?: any;
-  // onSelectedRowsChange?: any;
-  fetchData?: any;
-  loading?: any;
-  pageCount?: any;
+  data: Array<any>;
+  formatRowProps: object | any;
+  fetchData: any;
+  loading: any;
+  pageCount: any;
 }
 
 // Let's add a fetchData method to our Table component that will be used to fetch
@@ -48,14 +44,11 @@ interface TableProps {
 function Table({
   columns,
   data,
-
-  // renderRowSubComponent,
   formatRowProps,
   fetchData,
   loading,
   pageCount: controlledPageCount,
 }: TableProps) {
-  const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
@@ -80,7 +73,6 @@ function Table({
       columns,
       data,
       initialState: {
-        //   selectedRowIds: selectedRows,
         pageIndex: 0, // Pass our hoisted table state
       },
       manualPagination: true, // Tell the usePagination
@@ -142,14 +134,12 @@ function Table({
             return (
               <>
                 <tr
-                  key={i}
                   {...row.getRowProps(formatRowProps && formatRowProps(row))}
                   className="group"
                 >
                   {row.cells.map((cell) => {
                     return (
                       <td
-                        key={i}
                         {...cell.getCellProps()}
                         className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-coffee group-hover:text-cream group-hover:cursor-pointer"
                       >
@@ -176,14 +166,26 @@ function Table({
       </table>
       <br />
       <div className="pagination">
+        <button
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+          type="button"
+          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <span className="sr-only">Previous</span>
+          <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+          type="button"
+          className="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <span className="sr-only">Next</span>
+          <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+        </button>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
         </button>{" "}
         <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
           {">>"}
@@ -224,11 +226,11 @@ function Table({
 }
 const serverData = makeData(10000);
 
-function App({ tableData, tableName }) {
+function App({ tableData, tableName }: AppProps) {
   // We'll start our table without any data
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(false);
-  const [pageCount, setPageCount] = React.useState(0);
+  const [pageCount, setPageCount] = React.useState<any>(0);
   const fetchIdRef = React.useRef(0);
 
   const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
@@ -259,7 +261,7 @@ function App({ tableData, tableName }) {
         }
 
         setData(data);
-        setPageCount(Math.ceil(data.length / pageSize));
+        setPageCount(3);
 
         return data;
       };
@@ -274,25 +276,23 @@ function App({ tableData, tableName }) {
     }
   }, []);
 
-  const columns = React.useMemo(() => [], []);
+  // const columns = React.useMemo(() => [], []);
 
   const [showModal, setShowModal] = useState(false);
-  const [dataModal, setDataModal] = useState({});
+  const [dataModal, setDataModal] = useState<any>({});
   let data_row = {};
   const formatTrProps = (state = {}) => {
     return {
       onClick: () => {
-        console.log(state, "qua");
+        console.log(state, "State");
         setShowModal(true);
-        // console.log(showModal);
-        data_row = state;
         setDataModal(state);
-        // handleShow();
+        console.log(dataModal, "dataModal");
       },
     };
   };
 
-  const Modal = ({ data }) => {
+  const Modal = () => {
     const team = [
       {
         name: "Tom Cook",
@@ -331,8 +331,6 @@ function App({ tableData, tableName }) {
       },
     ];
 
-    console.log(open);
-    console.log(data);
     useEffect(() => {
       // Update the document title using the browser API
       data;
@@ -366,7 +364,9 @@ function App({ tableData, tableName }) {
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-lg font-medium text-coffee">
-                              New project
+                              {tableName.charAt(0).toUpperCase() +
+                                tableName.slice(1)}
+                              {" Table"}
                             </Dialog.Title>
                             <p className="text-sm text-coffee">
                               Get started by filling in the information below to
@@ -390,50 +390,41 @@ function App({ tableData, tableName }) {
                       <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                         {/* Project name */}
                         <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="project-name"
-                              className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
-                            >
-                              Project name
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <input
-                              type="text"
-                              name="project-name"
-                              id="project-name"
-                              className="block w-full shadow-sm sm:text-sm focus:ring-coffee focus:border-coffee border-gray-300 rounded-md"
-                            />
-                          </div>
+                          {Object.keys(dataModal.values).map((key, i) => (
+                            <>
+                              <div>
+                                <label
+                                  key={i}
+                                  htmlFor="project-name"
+                                  className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
+                                >
+                                  {key.toUpperCase()}
+                                </label>
+                              </div>
+                              <div className="sm:col-span-2">
+                                <input
+                                  key={i}
+                                  type="text"
+                                  name="project-name"
+                                  id="project-name"
+                                  defaultValue={dataModal.values[key]}
+                                  // onChange={}
+                                  className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                  focus:border-coffee border-gray-300 rounded-md"
+                                />
+                              </div>
+                            </>
+                          ))}
                         </div>
 
                         {/* Project description */}
-                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                          <div>
-                            <label
-                              htmlFor="project-description"
-                              className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
-                            >
-                              Description
-                            </label>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <textarea
-                              id="project-description"
-                              name="project-description"
-                              rows={3}
-                              className="block w-full shadow-sm sm:text-sm focus:ring-coffee focus:border-coffee border border-gray-300 rounded-md"
-                              defaultValue={""}
-                            />
-                          </div>
-                        </div>
+                        {/*  No need */}
 
                         {/* Team members */}
                         <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:px-6 sm:py-5">
                           <div>
                             <h3 className="text-sm font-medium text-coffee">
-                              Team Members
+                              Last Edited By
                             </h3>
                           </div>
                           <div className="sm:col-span-2">
@@ -467,135 +458,16 @@ function App({ tableData, tableName }) {
                         </div>
 
                         {/* Privacy */}
-                        <fieldset>
-                          <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:px-6 sm:py-5">
-                            <div>
-                              <legend className="text-sm font-medium text-coffee">
-                                Privacy
-                              </legend>
-                            </div>
-                            <div className="space-y-5 sm:col-span-2">
-                              <div className="space-y-5 sm:mt-0">
-                                <div className="relative flex items-start">
-                                  <div className="absolute flex items-center h-5">
-                                    <input
-                                      id="public-access"
-                                      name="privacy"
-                                      aria-describedby="public-access-description"
-                                      type="radio"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                                      defaultChecked
-                                    />
-                                  </div>
-                                  <div className="pl-7 text-sm">
-                                    <label
-                                      htmlFor="public-access"
-                                      className="font-medium text-coffee"
-                                    >
-                                      Public access
-                                    </label>
-                                    <p
-                                      id="public-access-description"
-                                      className="text-coffee"
-                                    >
-                                      Everyone with the link will see this
-                                      project
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="relative flex items-start">
-                                  <div className="absolute flex items-center h-5">
-                                    <input
-                                      id="restricted-access"
-                                      name="privacy"
-                                      aria-describedby="restricted-access-description"
-                                      type="radio"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                                    />
-                                  </div>
-                                  <div className="pl-7 text-sm">
-                                    <label
-                                      htmlFor="restricted-access"
-                                      className="font-medium text-coffee"
-                                    >
-                                      Private to Project Members
-                                    </label>
-                                    <p
-                                      id="restricted-access-description"
-                                      className="text-coffee"
-                                    >
-                                      Only members of this project would be able
-                                      to access
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="relative flex items-start">
-                                  <div className="absolute flex items-center h-5">
-                                    <input
-                                      id="private-access"
-                                      name="privacy"
-                                      aria-describedby="private-access-description"
-                                      type="radio"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                                    />
-                                  </div>
-                                  <div className="pl-7 text-sm">
-                                    <label
-                                      htmlFor="private-access"
-                                      className="font-medium text-coffee"
-                                    >
-                                      Private to you
-                                    </label>
-                                    <p
-                                      id="private-access-description"
-                                      className="text-coffee"
-                                    >
-                                      You are the only one able to access this
-                                      project
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                              <hr className="border-gray-200" />
-                              <div className="flex flex-col space-between space-y-4 sm:flex-row sm:items-center sm:space-between sm:space-y-0">
-                                <div className="flex-1">
-                                  <a
-                                    href="#"
-                                    className="group flex items-center text-sm text-indigo-600 hover:text-indigo-900 font-medium space-x-2.5"
-                                  >
-                                    <LinkIcon
-                                      className="h-5 w-5 text-indigo-500 group-hover:text-indigo-900"
-                                      aria-hidden="true"
-                                    />
-                                    <span>Copy link</span>
-                                  </a>
-                                </div>
-                                <div>
-                                  <a
-                                    href="#"
-                                    className="group flex items-center text-sm text-coffee hover:text-coffee space-x-2.5"
-                                  >
-                                    <QuestionMarkCircleIcon
-                                      className="h-5 w-5 text-gray-400 group-hover:text-coffee"
-                                      aria-hidden="true"
-                                    />
-                                    <span>Learn more about sharing</span>
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </fieldset>
                       </div>
                     </div>
                     {/* <pre>
                       <code>
-                        {JSON.stringify({
-                          data: data.allCells.map((row) => row.value),
-                        })}
+                        {JSON.stringify(
+                          dataModal.values
+                          // JSON.stringify(data, refReplacer())
+                        )}
                       </code>
-                    </pre>
- */}
+                    </pre> */}
                     {/* Action buttons */}
                     <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
@@ -628,22 +500,23 @@ function App({ tableData, tableName }) {
   // const data2 = React.useMemo(() => makeData(10), []);
   return (
     <>
-      <div className="flex flex-col border-2 border-coffee-light rounded-lg overflow-hidden">
-        <div className="-my-2 overflow-x-auto  sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow rounded-md">
-              {/* <button onClick={resetData}>Reset Data</button> */}
-              <Table
-                columns={tableData}
-                data={data}
-                fetchData={fetchData}
-                loading={loading}
-                pageCount={pageCount}
-                formatRowProps={(state) => formatTrProps(state)}
-              ></Table>
-              {showModal === true && <Modal data={dataModal}></Modal>}
-              {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
-              {/* <pre>
+      <div className="">
+        <div
+          className="min-w-full flex flex-col border-2 border-coffee-light 
+          rounded-lg overflow-x-auto"
+        >
+          {/* <button onClick={resetData}>Reset Data</button> */}
+          <Table
+            columns={tableData}
+            data={data}
+            fetchData={fetchData}
+            loading={loading}
+            pageCount={pageCount}
+            formatRowProps={(state: any) => formatTrProps(state)}
+          ></Table>
+          {showModal === true && <Modal></Modal>}
+          {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
+          {/* <pre>
                 <code>
                   {JSON.stringify(
                     {
@@ -658,8 +531,6 @@ function App({ tableData, tableName }) {
                   {console.log(new_data, "ODHAR")}
                 </code>
               </pre> */}
-            </div>
-          </div>
         </div>
       </div>
     </>
