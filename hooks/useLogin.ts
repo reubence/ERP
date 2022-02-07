@@ -1,10 +1,11 @@
 import { useMutation } from "react-query";
 import { supabase } from "../utils/supabaseClient";
-import App from "../components/Tables/SimpleStripedTable";
+
 // interface User {
 //   email: string;
 //   password: string;
 // }
+
 const login = async ({ email, password }: AppProps) => {
   const { user, error } = await supabase.auth.signIn({
     email,

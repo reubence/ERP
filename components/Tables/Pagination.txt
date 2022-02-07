@@ -1,0 +1,56 @@
+<div className="pagination">
+<button
+  onClick={() => previousPage()}
+  disabled={!canPreviousPage}
+  type="button"
+  className="relative inline-flex items-center px-2 py-2 rounded-l-md border-2 border-coffee bg-cream hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+>
+  <span className="sr-only">Previous</span>
+  <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+</button>
+<button
+  onClick={() => nextPage()}
+  disabled={!canNextPage}
+  type="button"
+  className="relative inline-flex items-center px-2 py-2 rounded-r-md border-2 border-coffee bg-cream hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+>
+  <span className="sr-only">Next</span>
+  <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+</button>
+{/* <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+  {"<<"}
+</button>{" "}
+<button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+  {">>"}
+</button>{" "} */}
+<span>
+  Page{" "}
+  <strong>
+    {pageIndex + 1} of {pageOptions.length}
+  </strong>{" "}
+</span>
+<span>
+  | Go to page:{" "}
+  <input
+    type="number"
+    defaultValue={pageIndex + 1}
+    onChange={(e) => {
+      const page = e.target.value ? Number(e.target.value) - 1 : 0;
+      gotoPage(page);
+    }}
+    style={{ width: "100px" }}
+  />
+</span>{" "}
+<select
+  value={pageSize}
+  onChange={(e) => {
+    setPageSize(Number(e.target.value));
+  }}
+>
+  {[10, 20, 30, 40, 50].map((pageSize) => (
+    <option key={pageSize} value={pageSize}>
+      Show {pageSize}
+    </option>
+  ))}
+</select>
+</div>

@@ -39,7 +39,7 @@ export default function HomePage() {
   const tableData = [
     { Header: "ID", accessor: "id" as const },
     { Header: "Name", accessor: "name" as const },
-    { Header: "Email", accessor: "eamil" as const },
+    { Header: "Email", accessor: "email" as const },
     { Header: "Contact", accessor: "contact" as const },
     { Header: "Address", accessor: "address" as const },
     { Header: "Pin", accessor: "pin" as const },
@@ -170,8 +170,14 @@ export default function HomePage() {
             </span>
           ))}
         </span>
-
-        <div className="grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
+          <div className="flex justify-between">
+            <SimpleButton text={"YOLO"} setSolid={true} />
+            <SimpleButton text={"YOLO"} setSolid={true} />
+            <SimpleButton text={"YOLO"} setSolid={true} />
+          </div>
+        </div>
+        <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
           <SimpleStripedTable
             tableData={tableData}
             tableName="company"

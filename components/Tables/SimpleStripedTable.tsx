@@ -5,19 +5,16 @@ import {
   useTable,
   useMountedLayoutEffect,
   usePagination,
+  useFilters,
+  useGlobalFilter,
+  useAsyncDebounce,
 } from "react-table";
 import makeData from "./makeData";
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  LinkIcon,
-  PlusSmIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/react/solid";
+import { PlusSmIcon, SearchIcon } from "@heroicons/react/solid";
 
 interface props {
   table_name: string;
@@ -38,6 +35,36 @@ interface TableProps {
   pageCount: any;
 }
 
+function GlobalFilter({
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter,
+}: any) {
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter);
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+
+  return (
+    <div className="flex items-center bg-gray-200">
+      <SearchIcon className="w-5 h-5 text-gray-600 ml-4" />
+      <input
+        type="text"
+        name="name"
+        id="name"
+        value={value || ""}
+        placeholder={`Search Through ${count} records...`}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        className="block h-12 w-full border-0 border-b-2 border-transparent bg-gray-200 focus:border-accent focus:ring-0 sm:text-sm"
+      />
+    </div>
+  );
+}
+
 // Let's add a fetchData method to our Table component that will be used to fetch
 // new data when pagination state changes
 // We can also add a loading state to let our table know it's loading new data
@@ -54,7 +81,7 @@ function Table({
     getTableBodyProps,
     headerGroups,
     prepareRow,
-
+    state,
     page,
     canPreviousPage,
     canNextPage,
@@ -64,6 +91,9 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+
     state: {
       pageIndex,
       pageSize, // Get the state from the instance
@@ -81,6 +111,8 @@ function Table({
       // pageCount.
       pageCount: controlledPageCount,
     },
+    useFilters, // useFilters!
+    useGlobalFilter, // useGlobalFilter!
     usePagination
   );
 
@@ -106,11 +138,21 @@ function Table({
           )}
         </code>
       </pre> */}
-
       <table
         {...getTableProps()}
         className="min-w-full divide-y divide-gray-200"
       >
+        <thead>
+          <tr>
+            <th colSpan={10000}>
+              <GlobalFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter}
+                setGlobalFilter={setGlobalFilter}
+              />
+            </th>
+          </tr>
+        </thead>
         <thead className="bg-coffee-light">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -156,71 +198,45 @@ function Table({
               // Use our custom loading state to show a loading indicator
               <td colSpan={10000}>Loading...</td>
             ) : (
-              <td colSpan={10000}>
-                Showing {page.length} of ~{controlledPageCount * pageSize}{" "}
-                results
+              <td colSpan={10000} className="relative ">
+                {/* Bottom Nav Bar */}
+                <nav
+                  className="bg-coffee px-4 py-6 flex flex-grow items-center justify-between border-t border-gray-200 sm:px-6"
+                  aria-label="Pagination"
+                >
+                  <div className="p-4" />
+                  <div className="hidden sm:flex fixed left-54">
+                    <p className="text-md text-cream">
+                      Showing <span className="font-medium">{page.length}</span>{" "}
+                      to <span className="font-medium">{pageSize}</span> of{" "}
+                      <span className="font-medium">
+                        {controlledPageCount * pageSize}
+                      </span>{" "}
+                      results
+                    </p>
+                  </div>
+                  <div className="fixed right-12 flex-1 flex justify-start sm:justify-end">
+                    <a
+                      href="#"
+                      onClick={() => previousPage()}
+                      className="relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
+                    >
+                      Previous
+                    </a>
+                    <a
+                      onClick={() => nextPage()}
+                      href="#"
+                      className="ml-3 relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
+                    >
+                      Next
+                    </a>
+                  </div>
+                </nav>
               </td>
             )}
           </tr>
         </tbody>
       </table>
-      <br />
-      <div className="pagination">
-        <button
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-          type="button"
-          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          <span className="sr-only">Previous</span>
-          <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
-        <button
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-          type="button"
-          className="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          <span className="sr-only">Next</span>
-          <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
     </>
   );
 }
