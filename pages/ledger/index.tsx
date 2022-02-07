@@ -1,4 +1,5 @@
 import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
+import ProtectedWrapper from "../../components/layout/Protected";
 
 const tableData = [
   { Header: "ID", accessor: "id" as const },
@@ -20,14 +21,16 @@ const tableData = [
 
 function App() {
   return (
-    <main className="flex-1 pb-8 h-screen overflow-y-auto">
-      <div className="grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
-        <SimpleStripedTable
-          tableData={tableData}
-          tableName="company"
-        ></SimpleStripedTable>
-      </div>
-    </main>
+    <ProtectedWrapper>
+      <main className="flex-1 pb-8 h-screen overflow-y-auto">
+        <div className="grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
+          <SimpleStripedTable
+            tableData={tableData}
+            tableName="company"
+          ></SimpleStripedTable>
+        </div>
+      </main>
+    </ProtectedWrapper>
   );
 }
 
