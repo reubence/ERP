@@ -47,8 +47,8 @@ function GlobalFilter({
   }, 200);
 
   return (
-    <div className="flex items-center bg-gray-200">
-      <SearchIcon className="w-5 h-5 text-gray-600 ml-4" />
+    <div className="flex items-center bg-coffee rounded-md">
+      <SearchIcon className="w-5 h-5 text-cream ml-4" />
       <input
         type="text"
         name="name"
@@ -59,7 +59,7 @@ function GlobalFilter({
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        className="block h-12 w-full border-0 border-b-2 border-transparent bg-gray-200 focus:border-accent focus:ring-0 sm:text-sm"
+        className="block h-12 w-full text-cream placeholder-cream border-0 border-b-2 border-transparent bg-coffee focus:border-accent focus:ring-0 sm:text-sm"
       />
     </div>
   );
@@ -140,7 +140,7 @@ function Table({
       </pre> */}
       <table
         {...getTableProps()}
-        className="min-w-full divide-y divide-gray-200"
+        className="min-w-full divide-y divide-gray-200 bg-coffee"
       >
         <thead>
           <tr>
