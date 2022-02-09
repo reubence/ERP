@@ -59,7 +59,7 @@ function GlobalFilter({
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        className="block h-12 w-full text-cream placeholder-cream border-0 border-b-2 border-transparent bg-coffee focus:border-accent focus:ring-0 sm:text-sm"
+        className="block h-12 w-full text-cream placeholder-cream border-0 border-b-2 border-transparent bg-coffee focus:border-accent focus:ring-0 text-sm"
       />
     </div>
   );
@@ -140,7 +140,7 @@ function Table({
       </pre> */}
       <table
         {...getTableProps()}
-        className="min-w-full divide-y divide-gray-200 bg-coffee"
+        className="min-w-full divide-y-2 divide-gray-200 bg-coffee"
       >
         <thead>
           <tr>
@@ -309,44 +309,6 @@ function App({ tableData, tableName }: AppProps) {
   };
 
   const Modal = () => {
-    const team = [
-      {
-        name: "Tom Cook",
-        email: "tomcook@example.com",
-        href: "#",
-        imageUrl:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      {
-        name: "Whitney Francis",
-        email: "whitneyfrancis@example.com",
-        href: "#",
-        imageUrl:
-          "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      {
-        name: "Leonard Krasner",
-        email: "leonardkrasner@example.com",
-        href: "#",
-        imageUrl:
-          "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      {
-        name: "Floyd Miles",
-        email: "floydmiles@example.com",
-        href: "#",
-        imageUrl:
-          "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      {
-        name: "Emily Selman",
-        email: "emilyselman@example.com",
-        href: "#",
-        imageUrl:
-          "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-    ];
-
     useEffect(() => {
       // Update the document title using the browser API
       data;
@@ -437,42 +399,6 @@ function App({ tableData, tableName }: AppProps) {
                         {/*  No need */}
 
                         {/* Team members */}
-                        <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:px-6 sm:py-5">
-                          <div>
-                            <h3 className="text-sm font-medium text-coffee">
-                              Last Edited By
-                            </h3>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <div className="flex space-x-2">
-                              {team.map((person) => (
-                                <a
-                                  key={person.email}
-                                  href={person.href}
-                                  className="flex-shrink-0 rounded-full hover:opacity-75"
-                                >
-                                  <img
-                                    className="inline-block h-8 w-8 rounded-full"
-                                    src={person.imageUrl}
-                                    alt={person.name}
-                                  />
-                                </a>
-                              ))}
-
-                              <button
-                                type="button"
-                                className="flex-shrink-0 bg-white inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-gray-400 hover:text-coffee hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              >
-                                <span className="sr-only">Add team member</span>
-                                <PlusSmIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-
                         {/* Privacy */}
                       </div>
                     </div>
@@ -514,6 +440,10 @@ function App({ tableData, tableName }: AppProps) {
 
   // const data = React.useMemo(() => makeData(20), []);
   // const data2 = React.useMemo(() => makeData(10), []);
+  const csvdata = React.useMemo(() => {
+    return data.map((d: any) => Object.values(d));
+  }, []);
+
   return (
     <>
       <div className="">
@@ -521,6 +451,8 @@ function App({ tableData, tableName }: AppProps) {
           className="min-w-full flex flex-col border-2 border-coffee-light 
           rounded-lg overflow-x-auto"
         >
+          {/* <CSVLink data={csvdata}>Download me</CSVLink> */}
+
           {/* <button onClick={resetData}>Reset Data</button> */}
           <Table
             columns={tableData}

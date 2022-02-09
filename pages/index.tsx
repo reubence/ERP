@@ -27,6 +27,8 @@ import {
   CheckCircleIcon,
   OfficeBuildingIcon,
   UserIcon,
+  DownloadIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/solid";
 import DataCard from "../components/Cards/Data-Card";
 import SimpleStripedTable from "../components/Tables/SimpleStripedTable";
@@ -34,6 +36,8 @@ import SimpleButton from "../components/Buttons/SimpleButton";
 // @ts-ignore
 import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
+import DropdownButton from "../components/Buttons/DropdownButton";
+import TickerTape from "../components/Cards/TickerTape";
 
 export default function HomePage() {
   const tableData = [
@@ -171,10 +175,17 @@ export default function HomePage() {
           ))}
         </span>
         <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
-          <div className="flex justify-between">
-            <SimpleButton text={"YOLO"} setSolid={true} />
-            <SimpleButton text={"YOLO"} setSolid={true} />
-            <SimpleButton text={"YOLO"} setSolid={true} />
+          <div className="flex justify-end z-10 space-x-4 items-stretch self-stretch">
+            <div className="flex-grow">
+              <TickerTape />
+            </div>
+            <SimpleButton
+              setSolid={true}
+              text="Add Row"
+              icon={PlusCircleIcon}
+            />
+            <DropdownButton />
+            <SimpleButton setSolid={true} text="" icon={DownloadIcon} />
           </div>
         </div>
         <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
