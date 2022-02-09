@@ -138,7 +138,7 @@ function Table({
           )}
         </code>
       </pre> */}
-      <select
+      {/* <select
         value={pageSize}
         onChange={(e) => {
           setPageSize(Number(e.target.value));
@@ -149,7 +149,7 @@ function Table({
             Show {pageSize}
           </option>
         ))}
-      </select>
+      </select> */}
       <div className="flex flex-col">
         <table
           {...getTableProps()}
