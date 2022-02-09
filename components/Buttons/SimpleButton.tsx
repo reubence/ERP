@@ -29,8 +29,8 @@ export default function SimpleButton(props: AppProps) {
           <props.icon
             className={
               props.text
-                ? "-mr-1 ml-2 h-5 w-5 text-cream-light group-hover:text-coffee-light"
-                : "h-5 w-5 text-cream-light group-hover:text-coffee-light"
+                ? "-mr-1 ml-2 h-5 w-5 text-coffee group-hover:text-coffee-light"
+                : "h-5 w-5 text-coffee group-hover:text-coffee-light"
             }
             aria-hidden="true"
           />

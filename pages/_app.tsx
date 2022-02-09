@@ -30,8 +30,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       );
     } else {
       return (
-        <html className="h-full bg-cream-light">
-          <body className="h-full overflow-visible">
+        <html className="bg-cream-light">
+          <body className="relative">
             <QueryClientProvider client={queryClient}>
               <SideNavBar>
                 <Component {...pageProps} />

@@ -180,12 +180,12 @@ export default function HomePage() {
               <TickerTape />
             </div>
             <SimpleButton
-              setSolid={true}
+              setSolid={false}
               text="Add Row"
               icon={PlusCircleIcon}
             />
             <DropdownButton />
-            <SimpleButton setSolid={true} text="" icon={DownloadIcon} />
+            <SimpleButton setSolid={false} text="" icon={DownloadIcon} />
           </div>
         </div>
         <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">

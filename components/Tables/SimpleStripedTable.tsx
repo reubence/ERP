@@ -138,105 +138,120 @@ function Table({
           )}
         </code>
       </pre> */}
-      <table
-        {...getTableProps()}
-        className="min-w-full divide-y-2 divide-gray-200 bg-coffee"
+      <select
+        value={pageSize}
+        onChange={(e) => {
+          setPageSize(Number(e.target.value));
+        }}
       >
-        <thead>
-          <tr>
-            <th colSpan={10000}>
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </th>
-          </tr>
-        </thead>
-        <thead className="bg-coffee-light">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className="px-6 py-3 text-left text-xs font-medium text-cream-light uppercase tracking-wider"
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody
-          {...getTableBodyProps()}
-          className="bg-cream-light divide-y divide-gray-200"
+        {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+          <option key={pageSize} value={pageSize}>
+            Show {pageSize}
+          </option>
+        ))}
+      </select>
+      <div className="flex flex-col">
+        <table
+          {...getTableProps()}
+          className="min-w-full divide-y-2 divide-gray-200 bg-coffee"
         >
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <>
-                <tr
-                  {...row.getRowProps(formatRowProps && formatRowProps(row))}
-                  className="group"
-                >
-                  {row.cells.map((cell) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-coffee group-hover:text-cream group-hover:cursor-pointer"
+          <thead>
+            <tr>
+              <th colSpan={10000}>
+                <GlobalFilter
+                  preGlobalFilteredRows={preGlobalFilteredRows}
+                  globalFilter={state.globalFilter}
+                  setGlobalFilter={setGlobalFilter}
+                />
+              </th>
+            </tr>
+          </thead>
+          <thead className="bg-coffee-light">
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    className="px-6 py-3 text-left text-xs font-medium text-cream-light uppercase tracking-wider"
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody
+            {...getTableBodyProps()}
+            className="bg-cream-light divide-y divide-gray-200"
+          >
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <>
+                  <tr
+                    {...row.getRowProps(formatRowProps && formatRowProps(row))}
+                    className="group"
+                  >
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-coffee group-hover:text-cream group-hover:cursor-pointer"
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </>
+              );
+            })}
+            <tr>
+              {loading ? (
+                // Use our custom loading state to show a loading indicator
+                <td colSpan={10000}>Loading...</td>
+              ) : (
+                <td colSpan={10000} className="relative ">
+                  {/* Bottom Nav Bar */}
+                  <nav
+                    className="bg-coffee px-4 py-6 flex flex-grow items-center justify-between border-t border-gray-200 sm:px-6"
+                    aria-label="Pagination"
+                  >
+                    <div className="p-4" />
+                    <div className="hidden sm:flex fixed left-54">
+                      <p className="text-md text-cream">
+                        Showing{" "}
+                        <span className="font-medium">{page.length}</span> to{" "}
+                        <span className="font-medium">{pageSize}</span> of{" "}
+                        <span className="font-medium">
+                          {controlledPageCount * pageSize}
+                        </span>{" "}
+                        results
+                      </p>
+                    </div>
+                    <div className="fixed right-12 flex-1 flex justify-start sm:justify-end">
+                      <a
+                        href="#"
+                        onClick={() => previousPage()}
+                        className="relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
                       >
-                        {cell.render("Cell")}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </>
-            );
-          })}
-          <tr>
-            {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <td colSpan={10000}>Loading...</td>
-            ) : (
-              <td colSpan={10000} className="relative ">
-                {/* Bottom Nav Bar */}
-                <nav
-                  className="bg-coffee px-4 py-6 flex flex-grow items-center justify-between border-t border-gray-200 sm:px-6"
-                  aria-label="Pagination"
-                >
-                  <div className="p-4" />
-                  <div className="hidden sm:flex fixed left-54">
-                    <p className="text-md text-cream">
-                      Showing <span className="font-medium">{page.length}</span>{" "}
-                      to <span className="font-medium">{pageSize}</span> of{" "}
-                      <span className="font-medium">
-                        {controlledPageCount * pageSize}
-                      </span>{" "}
-                      results
-                    </p>
-                  </div>
-                  <div className="fixed right-12 flex-1 flex justify-start sm:justify-end">
-                    <a
-                      href="#"
-                      onClick={() => previousPage()}
-                      className="relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      onClick={() => nextPage()}
-                      href="#"
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
-                    >
-                      Next
-                    </a>
-                  </div>
-                </nav>
-              </td>
-            )}
-          </tr>
-        </tbody>
-      </table>
+                        Previous
+                      </a>
+                      <a
+                        onClick={() => nextPage()}
+                        href="#"
+                        className="ml-3 relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
+                      >
+                        Next
+                      </a>
+                    </div>
+                  </nav>
+                </td>
+              )}
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

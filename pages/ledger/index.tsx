@@ -33,12 +33,12 @@ function App() {
               <TickerTape />
             </div>
             <SimpleButton
-              setSolid={true}
+              setSolid={false}
               text="Add Row"
               icon={PlusCircleIcon}
             />
             <DropdownButton />
-            <SimpleButton setSolid={true} text="" icon={DownloadIcon} />
+            <SimpleButton setSolid={false} text="" icon={DownloadIcon} />
           </div>
         </div>
 

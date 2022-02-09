@@ -29,7 +29,7 @@ function classNames(...classes: any) {
 export default function DropDownButton() {
   return (
     <Menu as="div" className="relative flex text-left">
-      <Menu.Button className="relative  flex items-center rounded-md border border-2 border-coffee shadow-sm px-4 py-2 bg-cream text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-accent">
+      <Menu.Button className="relative  flex items-center rounded-md border border-2 border-coffee shadow-sm px-4 py-2 bg-cream text-sm font-medium text-coffee hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-accent">
         Options
         <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
       </Menu.Button>
