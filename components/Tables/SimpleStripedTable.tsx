@@ -76,6 +76,7 @@ function Table({
   loading,
   pageCount: controlledPageCount,
 }: TableProps) {
+  const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
@@ -229,20 +230,20 @@ function Table({
                       </p>
                     </div>
                     <div className=" right-12 flex-1 flex justify-start sm:justify-end">
-                      <a
-                        href="#"
+                      <button
                         onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
                         className="relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
                       >
                         Previous
-                      </a>
-                      <a
+                      </button>
+                      <button
                         onClick={() => nextPage()}
-                        href="#"
+                        disabled={!canNextPage}
                         className="ml-3 relative inline-flex items-center px-4 py-2 border-2 border-cream text-sm font-medium rounded-md text-cream bg-coffee hover:bg-accent hover:border-accent"
                       >
                         Next
-                      </a>
+                      </button>
                     </div>
                   </nav>
                 </td>
@@ -291,7 +292,9 @@ function App({ tableData, tableName }: AppProps) {
         }
 
         setData(data);
-        setPageCount(3);
+        if (data != null) {
+          setPageCount(Math.ceil(data.length / pageSize));
+        }
 
         return data;
       };
@@ -316,6 +319,7 @@ function App({ tableData, tableName }: AppProps) {
       onClick: () => {
         console.log(state, "State");
         setShowModal(true);
+        data_row = state;
         setDataModal(state);
         console.log(dataModal, "dataModal");
       },
