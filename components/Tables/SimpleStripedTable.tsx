@@ -124,7 +124,7 @@ function Table({
   // Render the UI for your table
   return (
     <>
-      {/* <pre>
+      <pre>
         <code>
           {JSON.stringify(
             {
@@ -138,7 +138,7 @@ function Table({
             2
           )}
         </code>
-      </pre> */}
+      </pre>
       {/* <select
         value={pageSize}
         onChange={(e) => {
