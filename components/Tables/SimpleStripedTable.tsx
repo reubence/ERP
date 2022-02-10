@@ -144,7 +144,7 @@ function Table({
           setPageSize(Number(e.target.value));
         }}
       >
-        {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+        {[2, 5, 10, 20, 30, 40, 50].map((pageSize) => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
           </option>
@@ -214,11 +214,10 @@ function Table({
                 <td colSpan={10000} className="relative ">
                   {/* Bottom Nav Bar */}
                   <nav
-                    className="bg-coffee px-4 py-6 flex flex-grow items-center justify-between border-t border-gray-200 sm:px-6"
+                    className="bg-coffee relative px-4 py-6 flex flex-grow items-center justify-between border-t border-gray-200 sm:px-6"
                     aria-label="Pagination"
                   >
-                    <div className="p-4" />
-                    <div className="hidden sm:flex fixed left-54">
+                    <div className="hidden sm:flex  left-54">
                       <p className="text-md text-cream">
                         Showing{" "}
                         <span className="font-medium">{page.length}</span> to{" "}
@@ -229,7 +228,7 @@ function Table({
                         results
                       </p>
                     </div>
-                    <div className="fixed right-12 flex-1 flex justify-start sm:justify-end">
+                    <div className=" right-12 flex-1 flex justify-start sm:justify-end">
                       <a
                         href="#"
                         onClick={() => previousPage()}
