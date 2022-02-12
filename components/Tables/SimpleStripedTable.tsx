@@ -1,20 +1,16 @@
 import React from "react";
 import {
-  useExpanded,
-  useRowSelect,
   useTable,
-  useMountedLayoutEffect,
   usePagination,
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
 } from "react-table";
-import makeData from "./makeData";
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
-import { PlusSmIcon, SearchIcon } from "@heroicons/react/solid";
+import { SearchIcon } from "@heroicons/react/solid";
 
 interface props {
   table_name: string;
@@ -124,7 +120,7 @@ function Table({
   // Render the UI for your table
   return (
     <>
-      <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
@@ -138,7 +134,7 @@ function Table({
             2
           )}
         </code>
-      </pre>
+      </pre> */}
       {/* <select
         value={pageSize}
         onChange={(e) => {
@@ -255,7 +251,6 @@ function Table({
     </>
   );
 }
-const serverData = makeData(10000);
 
 function App({ tableData, tableName }: AppProps) {
   // We'll start our table without any data
