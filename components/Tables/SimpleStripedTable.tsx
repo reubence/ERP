@@ -73,6 +73,12 @@ function Table({
   pageCount: controlledPageCount,
 }: TableProps) {
   const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
+  // const skipPageResetRef = React.useRef();
+  // React.useEffect(() => {
+  //   // After the table has updated, always remove the flag
+  //   skipPageResetRef.current = false;
+  // });
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -99,6 +105,14 @@ function Table({
     {
       columns,
       data,
+      autoResetPage: false,
+      // autoResetExpanded: !skipPageResetRef.current,
+      // autoResetGroupBy: !skipPageResetRef.current,
+      // autoResetSelectedRows: !skipPageResetRef.current,
+      // autoResetSortBy: !skipPageResetRef.current,
+      // autoResetFilters: !skipPageResetRef.current,
+      // autoResetRowState: !skipPageResetRef.current,
+
       initialState: {
         pageIndex: 0, // Pass our hoisted table state
       },
@@ -459,7 +473,7 @@ function App({ tableData, tableName }: AppProps) {
 
   return (
     <>
-      <div className="">
+      <div className="pb-16">
         <div
           className="min-w-full flex flex-col border-2 border-coffee-light 
           rounded-lg overflow-x-auto"
