@@ -15,7 +15,7 @@ function ModalHOC({
   }, [selector]);
 
   return mounted
-    ? createPortal(children, document.querySelector(selector))
+    ? createPortal(children, document.querySelector(selector)!)
     : null;
 }
 

@@ -12,7 +12,23 @@ export default function Modal({
   show: boolean;
   close: Function;
   tableName: string;
-  dataModal?: {} | [];
+  dataModal?:
+    | {
+        allCells: [];
+        cells: [];
+        depth: number;
+        getRowProps: Function;
+        id: string;
+        index: number;
+        original: {};
+        originalSubRows: [];
+        subRows: [];
+        values: { [key: string]: string | number };
+      }
+    | {
+        Header: string;
+        accessor: string;
+      }[];
 }) {
   console.log(dataModal);
   return (
@@ -132,14 +148,16 @@ export default function Modal({
                         {/* Privacy */}
                       </div>
                     </div>
-                    {/* <pre>
-                    <code>
-                      {JSON.stringify(
-                        dataModal.values
-                        // JSON.stringify(data, refReplacer())
-                      )}
-                    </code>
-                  </pre> */}
+                    <pre>
+                      <code>
+                        {console.log(dataModal)}
+
+                        {JSON.stringify(
+                          dataModal?.values
+                          // JSON.stringify(data, refReplacer())
+                        )}
+                      </code>
+                    </pre>
                     {/* Action buttons */}
                     <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
