@@ -11,6 +11,7 @@ import {
   TrashIcon,
   UserAddIcon,
 } from "@heroicons/react/solid";
+import ModalHOC from "../HigherOrderComponents/ModalHOC";
 
 const buttonOptions: {
   icon: Function;
@@ -33,7 +34,6 @@ export default function DropDownButton() {
         Options
         <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
       </Menu.Button>
-
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"

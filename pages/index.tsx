@@ -23,6 +23,8 @@
   }
   ```
 */
+import Modal from "../components/Modal/Modal";
+import ModalHOC from "../components/HigherOrderComponents/ModalHOC";
 import {
   CheckCircleIcon,
   OfficeBuildingIcon,
@@ -38,10 +40,11 @@ import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
 import DropdownButton from "../components/Buttons/DropdownButton";
 import TickerTape from "../components/Cards/TickerTape";
+import { useState } from "react";
 
 export default function HomePage() {
   const tableData = [
-    { Header: "ID", accessor: "id" as const },
+    // { Header: "ID", accessor: "id" as const },
     { Header: "Name", accessor: "name" as const },
     { Header: "Email", accessor: "email" as const },
     { Header: "Contact", accessor: "contact" as const },
@@ -97,6 +100,9 @@ export default function HomePage() {
   ];
 
   const { data, isLoading } = useUser();
+
+  const [modal, setModal] = useState(false);
+  const Toggle = () => setModal(!modal);
 
   return (
     <ProtectedWrapper>
@@ -183,8 +189,10 @@ export default function HomePage() {
               setSolid={false}
               text="Add Row"
               icon={PlusCircleIcon}
+              onClick={() => Toggle()}
             />
             <DropdownButton />
+
             <SimpleButton setSolid={false} text="" icon={DownloadIcon} />
           </div>
         </div>
@@ -194,6 +202,14 @@ export default function HomePage() {
             tableName="company"
           ></SimpleStripedTable>
         </div>
+        <ModalHOC selector="#modal">
+          <Modal
+            show={modal}
+            close={Toggle}
+            tableName={"company"}
+            dataModal={tableData}
+          />
+        </ModalHOC>
       </main>
     </ProtectedWrapper>
   );

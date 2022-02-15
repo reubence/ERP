@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "es6", "esnext", "scripthost"],
-    "allowJs": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es6",
+      "esnext",
+      "scripthost",
+      "ES2017.Object"
+    ], "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
