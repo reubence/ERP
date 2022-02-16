@@ -30,7 +30,8 @@ export default function Modal({
         accessor: string;
       }[];
 }) {
-  console.log(dataModal);
+  const [inputFields, setInputFields] = useState();
+
   return (
     <>
       <Transition.Root show={show} as={Fragment}>
@@ -53,7 +54,10 @@ export default function Modal({
                 leaveTo="translate-x-full"
               >
                 <div className="w-screen max-w-2xl">
-                  <form className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+                  <form
+                    className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll"
+                    // onSubmit={}
+                  >
                     <div className="flex-1">
                       {/* Header */}
                       <div className="px-4 py-6 bg-gray-50 sm:px-6">
@@ -93,18 +97,19 @@ export default function Modal({
                                     <label
                                       key={i}
                                       htmlFor="project-name"
+                                      id={item + "-" + i}
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
                                       {item["Header"]}
-                                      {console.log(item["Header"])}
+                                      {/* {console.log(item["Header"])} */}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
                                     <input
                                       key={i}
                                       type="text"
-                                      name="project-name"
-                                      id="project-name"
+                                      name={item + "-" + i}
+                                      id={item + "-" + i}
                                       // onChange={}
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
@@ -118,6 +123,7 @@ export default function Modal({
                                   <div>
                                     <label
                                       key={i}
+                                      id={key + "-" + i}
                                       htmlFor="project-name"
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
@@ -128,8 +134,8 @@ export default function Modal({
                                     <input
                                       key={i}
                                       type="text"
-                                      name="project-name"
-                                      id="project-name"
+                                      name={key + "-" + i}
+                                      id={key + "-" + i}
                                       defaultValue={dataModal.values[key]}
                                       // onChange={}
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
@@ -148,7 +154,7 @@ export default function Modal({
                         {/* Privacy */}
                       </div>
                     </div>
-                    <pre>
+                    {/* <pre>
                       <code>
                         {console.log(dataModal)}
 
@@ -157,7 +163,7 @@ export default function Modal({
                           // JSON.stringify(data, refReplacer())
                         )}
                       </code>
-                    </pre>
+                    </pre> */}
                     {/* Action buttons */}
                     <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
