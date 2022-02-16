@@ -1,5 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useState } from "react";
+import {
+  Fragment,
+  useRef,
+  useState,
+  useEffect,
+  ChangeEvent,
+  EventHandler,
+} from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 
@@ -12,7 +19,7 @@ export default function Modal({
   show: boolean;
   close: Function;
   tableName: string;
-  dataModal?:
+  dataModal:
     | {
         allCells: [];
         cells: [];
@@ -30,7 +37,22 @@ export default function Modal({
         accessor: string;
       }[];
 }) {
-  const [inputFields, setInputFields] = useState();
+  const [inputFields, setInputFields] = useState(dataModal);
+  useEffect(() => {
+    setInputFields(dataModal);
+  }, [dataModal]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("inputFields", inputFields);
+  };
+
+  const handleInputChange = (key: string, event: any) => {
+    inputFields.values[key] = event.target.value;
+    console.log(inputFields);
+
+    setInputFields(inputFields);
+  };
 
   return (
     <>
@@ -56,7 +78,7 @@ export default function Modal({
                 <div className="w-screen max-w-2xl">
                   <form
                     className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll"
-                    // onSubmit={}
+                    onSubmit={handleSubmit}
                   >
                     <div className="flex-1">
                       {/* Header */}
@@ -90,8 +112,8 @@ export default function Modal({
                       <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                         {/* Project name */}
                         <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                          {Array.isArray(dataModal)
-                            ? dataModal.map((item, i) => (
+                          {Array.isArray(inputFields)
+                            ? inputFields.map((item, i) => (
                                 <>
                                   <div>
                                     <label
@@ -101,7 +123,7 @@ export default function Modal({
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
                                       {item["Header"]}
-                                      {/* {console.log(item["Header"])} */}
+                                      {console.log(item["Header"])}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -110,15 +132,13 @@ export default function Modal({
                                       type="text"
                                       name={item + "-" + i}
                                       id={item + "-" + i}
-                                      // onChange={}
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
                                     />
                                   </div>
                                 </>
                               ))
-                            : dataModal
-                            ? Object.keys(dataModal.values).map((key, i) => (
+                            : Object.keys(inputFields.values).map((key, i) => (
                                 <>
                                   <div>
                                     <label
@@ -136,15 +156,16 @@ export default function Modal({
                                       type="text"
                                       name={key + "-" + i}
                                       id={key + "-" + i}
-                                      defaultValue={dataModal.values[key]}
-                                      // onChange={}
+                                      defaultValue={inputFields.values[key]}
+                                      onChange={(event) =>
+                                        handleInputChange(key, event)
+                                      }
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
                                     />
                                   </div>
                                 </>
-                              ))
-                            : null}
+                              ))}
                         </div>
 
                         {/* Project description */}
@@ -177,6 +198,7 @@ export default function Modal({
                         <button
                           type="submit"
                           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-coffee hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          onSubmit={handleSubmit}
                         >
                           Save
                         </button>

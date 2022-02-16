@@ -327,11 +327,11 @@ function App({ tableData, tableName }: AppProps) {
   const formatTrProps = (state = {}) => {
     return {
       onClick: () => {
-        console.log(state, "State");
+        // console.log(state, "State");
         Toggle();
         const data_row: any = state;
         setDataModal(data_row);
-        console.log(dataModal, "dataModal");
+        // console.log(dataModal, "dataModal");
       },
     };
   };
