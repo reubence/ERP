@@ -9,6 +9,7 @@ import {
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
+import { supabase } from "../../utils/supabaseClient";
 
 export default function Modal({
   show,
@@ -42,14 +43,26 @@ export default function Modal({
     setInputFields(dataModal);
   }, [dataModal]);
 
-  const handleSubmit = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log("inputFields", inputFields);
+    // const dataToUpdate = {};
+    // Object.keys(dataModal.values).map((key, i) =>
+    //   Object.assign(dataToUpdate, {})
+    // );
+    const { data, error } = await supabase.from("test").insert([
+      {
+        text: "yolo",
+        text2: "yolo2",
+      },
+    ]);
+    // .match([dataModal.values]);
+
+    console.log("SEND KIYA LAGTA HAI", error);
   };
 
   const handleInputChange = (key: string, event: any) => {
     inputFields.values[key] = event.target.value;
-    console.log(inputFields);
+    console.log(inputFields.values);
 
     setInputFields(inputFields);
   };
@@ -78,7 +91,7 @@ export default function Modal({
                 <div className="w-screen max-w-2xl">
                   <form
                     className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll"
-                    onSubmit={handleSubmit}
+                    onSubmit={handleUpdate}
                   >
                     <div className="flex-1">
                       {/* Header */}
@@ -138,7 +151,8 @@ export default function Modal({
                                   </div>
                                 </>
                               ))
-                            : Object.keys(inputFields.values).map((key, i) => (
+                            : typeof inputFields !== "undefined"
+                            ? Object.keys(inputFields.values).map((key, i) => (
                                 <>
                                   <div>
                                     <label
@@ -165,7 +179,8 @@ export default function Modal({
                                     />
                                   </div>
                                 </>
-                              ))}
+                              ))
+                            : null}
                         </div>
 
                         {/* Project description */}
@@ -198,7 +213,7 @@ export default function Modal({
                         <button
                           type="submit"
                           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-coffee hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                          onSubmit={handleSubmit}
+                          onSubmit={handleUpdate}
                         >
                           Save
                         </button>
