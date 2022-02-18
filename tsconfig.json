@@ -14,7 +14,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "incremental": true,
     "esModuleInterop": true,
     // "sourceMap": false /* simplifies debugging by allowin you to place breakpoints in browser  */,

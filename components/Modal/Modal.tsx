@@ -37,14 +37,24 @@ export default function Modal({
         Header: string;
         accessor: string;
         values?: { [key: string]: string | number };
-      }[];
+      }[]
+    | any;
 }) {
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
     setInputFields(dataModal);
   }, [dataModal]);
 
-  const handleUpdate = async (e) => {
+  const handleDelete = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    const { data, error } = await supabase
+      .from("company")
+      .delete(inputFields.values)
+      .match({ name: dataModal.values.name });
+  };
+
+  const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     typeof inputFields[0] != "undefined"
@@ -53,19 +63,19 @@ export default function Modal({
           .from("company")
           .update(inputFields.values)
           .match({ name: dataModal.values.name });
-
-    // console.log(data, error?.message);
+    return () => close();
   };
-  var obj = {};
+
+  var obj: any = {};
 
   const handleInputChange = (key: string, event: any) => {
     if (typeof inputFields[0] != "undefined") {
       obj[key] = event.target.value;
 
-      console.log(obj);
+      // console.log(obj);
     } else {
       inputFields.values[key] = event.target.value;
-      console.log(inputFields.values);
+      // console.log(inputFields.values);
     }
 
     setInputFields(inputFields);
@@ -140,6 +150,7 @@ export default function Modal({
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
                                       {item["Header"]}
+                                      {/* {console.log(inputFields)} */}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -214,10 +225,10 @@ export default function Modal({
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"
-                          className="bg-white py-2 px-4 border-2 border-coffee rounded-md shadow-sm text-sm font-medium text-gray-700 hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          onClick={() => close()}
+                          className="bg-red-500 py-2 px-4 border-2 border-coffee rounded-md shadow-sm text-sm font-medium text-gray-700 hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          onClick={handleDelete}
                         >
-                          Cancel
+                          Delete
                         </button>
                         <button
                           type="submit"
