@@ -36,6 +36,7 @@ export default function Modal({
     | {
         Header: string;
         accessor: string;
+        values?: { [key: string]: string | number };
       }[];
 }) {
   const [inputFields, setInputFields] = useState(dataModal);
@@ -45,24 +46,27 @@ export default function Modal({
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    // const dataToUpdate = {};
-    // Object.keys(dataModal.values).map((key, i) =>
-    //   Object.assign(dataToUpdate, {})
-    // );
-    const { data, error } = await supabase.from("test").insert([
-      {
-        text: "yolo",
-        text2: "yolo2",
-      },
-    ]);
-    // .match([dataModal.values]);
 
-    console.log("SEND KIYA LAGTA HAI", error);
+    typeof inputFields[0] != "undefined"
+      ? await supabase.from("company").insert(obj)
+      : await supabase
+          .from("company")
+          .update(inputFields.values)
+          .match({ name: dataModal.values.name });
+
+    // console.log(data, error?.message);
   };
+  var obj = {};
 
   const handleInputChange = (key: string, event: any) => {
-    inputFields.values[key] = event.target.value;
-    console.log(inputFields.values);
+    if (typeof inputFields[0] != "undefined") {
+      obj[key] = event.target.value;
+
+      console.log(obj);
+    } else {
+      inputFields.values[key] = event.target.value;
+      console.log(inputFields.values);
+    }
 
     setInputFields(inputFields);
   };
@@ -136,7 +140,6 @@ export default function Modal({
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
                                       {item["Header"]}
-                                      {console.log(item["Header"])}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -145,6 +148,12 @@ export default function Modal({
                                       type="text"
                                       name={item + "-" + i}
                                       id={item + "-" + i}
+                                      onChange={(event) =>
+                                        handleInputChange(
+                                          item["accessor"],
+                                          event
+                                        )
+                                      }
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
                                     />
