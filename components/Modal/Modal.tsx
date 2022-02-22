@@ -51,19 +51,24 @@ export default function Modal({
     const { data, error } = await supabase
       .from("company")
       .delete(inputFields.values)
-      .match({ name: dataModal.values.name });
+      .match({ user_id: dataModal.values.user_id });
+
+    error ? console.log(error) : close();
   };
 
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    typeof inputFields[0] != "undefined"
-      ? await supabase.from("company").insert(obj)
-      : await supabase
-          .from("company")
-          .update(inputFields.values)
-          .match({ name: dataModal.values.name });
-    return () => close();
+    if (typeof inputFields[0] != "undefined") {
+      const { data, error } = await supabase.from("company").insert(obj);
+      error ? console.log(error, "Error") : close();
+    } else {
+      const { data, error } = await supabase
+        .from("company")
+        .update(inputFields.values)
+        .match({ user_id: dataModal.values.user_id });
+      error ? console.log(error) : close();
+    }
   };
 
   var obj: any = {};
@@ -80,6 +85,10 @@ export default function Modal({
 
     setInputFields(inputFields);
   };
+
+  {
+    console.log("EEEEE");
+  }
 
   return (
     <>
@@ -140,7 +149,8 @@ export default function Modal({
                         {/* Project name */}
                         <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
                           {Array.isArray(inputFields)
-                            ? inputFields.map((item, i) => (
+                            ? // ADD ROW MODAL
+                              inputFields.map((item, i) => (
                                 <>
                                   <div>
                                     <label
@@ -165,13 +175,22 @@ export default function Modal({
                                           event
                                         )
                                       }
+                                      placeholder={
+                                        item["Header"] === "ID"
+                                          ? "#auto generated value"
+                                          : ""
+                                      }
+                                      disabled={
+                                        item["Header"] === "ID" ? true : false
+                                      }
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
                                     />
                                   </div>
                                 </>
                               ))
-                            : typeof inputFields !== "undefined"
+                            : // EDIT ROW MODAL
+                            typeof inputFields !== "undefined"
                             ? Object.keys(inputFields.values).map((key, i) => (
                                 <>
                                   <div>
@@ -190,9 +209,24 @@ export default function Modal({
                                       type="text"
                                       name={key + "-" + i}
                                       id={key + "-" + i}
-                                      defaultValue={inputFields.values[key]}
+                                      defaultValue={
+                                        key.toUpperCase() === "USER_ID"
+                                          ? ""
+                                          : inputFields.values[key]
+                                      }
                                       onChange={(event) =>
                                         handleInputChange(key, event)
+                                      }
+                                      placeholder={
+                                        key.toUpperCase() === "USER_ID"
+                                          ? inputFields.values[key] +
+                                            "   #auto generated value"
+                                          : ""
+                                      }
+                                      disabled={
+                                        key.toUpperCase() === "USER_ID"
+                                          ? true
+                                          : false
                                       }
                                       className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                 focus:border-coffee border-gray-300 rounded-md"
@@ -225,14 +259,14 @@ export default function Modal({
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"
-                          className="bg-red-500 py-2 px-4 border-2 border-coffee rounded-md shadow-sm text-sm font-medium text-gray-700 hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          className="bg-red-500 py-2 px-4 text-cream rounded-md shadow-sm text-sm font-medium hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={handleDelete}
                         >
                           Delete
                         </button>
                         <button
                           type="submit"
-                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-coffee hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                           onSubmit={handleUpdate}
                         >
                           Save

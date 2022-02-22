@@ -4,7 +4,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <body>
+        <body className="">
           <Main />
           <div id="modal"></div>
           <NextScript />

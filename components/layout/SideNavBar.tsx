@@ -88,8 +88,8 @@ export default function SideNavBar({ children }: LayoutProps) {
       */}
       <div className="h-full flex">
         {/* Narrow sidebar */}
-        <div className="hidden w-28 bg-cream-light overflow-y-auto md:block border-r-2 border-coffee-light">
-          <div className="w-full py-6 flex flex-col items-center ">
+        <div className="hidden w-16 bg-cream-light overflow-y-auto md:block border-r border-coffee-light">
+          <div className="w-full py-6 flex flex-col items-center">
             <div className="flex-shrink-0 flex items-center">
               <img
                 className="h-8 w-auto"
@@ -97,7 +97,7 @@ export default function SideNavBar({ children }: LayoutProps) {
                 alt="Workflow"
               />
             </div>
-            <div className="flex-1 mt-6 w-full px-2 space-y-1">
+            <div className="flex-1 mt-6 w-full px-2 space-y-2">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -127,9 +127,9 @@ export default function SideNavBar({ children }: LayoutProps) {
                       )}
                       aria-hidden="true"
                     />
-                    <span key={item.name} className="mt-2">
+                    {/* <span key={item.name} className="mt-2">
                       {item.name}
-                    </span>
+                    </span> */}
                   </a>
                 </Link>
               ))}
@@ -239,7 +239,7 @@ export default function SideNavBar({ children }: LayoutProps) {
         {/* Content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="w-full">
-            <div className="relative z-10 flex-shrink-0 h-16 bg-cream border-b-2 border-coffee shadow-sm flex">
+            <div className="relative z-10 flex-shrink-0 h-16 bg-cream border-b border-coffee shadow-sm flex">
               <button
                 type="button"
                 className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-light md:hidden"
@@ -249,8 +249,9 @@ export default function SideNavBar({ children }: LayoutProps) {
                 <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
               </button>
               <div className="flex-1 flex justify-between pr-4 sm:pr-6">
+                <div className="w-[324px]" />
                 <div className="flex-1 flex">
-                  <Breadcrumb></Breadcrumb>
+                  {/* <Breadcrumb></Breadcrumb> */}
                 </div>
                 <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
                   {/* Profile dropdown */}

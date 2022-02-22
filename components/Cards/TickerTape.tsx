@@ -32,7 +32,7 @@ function classNames(...classes: any) {
 export default function TickerTape() {
   return (
     <div>
-      <dl className="hidden lg:grid grid-cols-1 rounded-lg bg-cream overflow-hidden hover:shadow divide-y border-2 border-coffee divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x-2">
+      <dl className="hidden lg:grid grid-cols-1 border-t-0 border-b-0 bg-cream overflow-hidden hover:shadow divide-y border-2 border-coffee divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x-2">
         {stats.map((item) => (
           <div
             key={item.name}
@@ -44,9 +44,9 @@ export default function TickerTape() {
             <dd className="-mt-1 flex justify-between items-baseline md:block lg:flex">
               <div className="flex items-baseline text-sm font-semibold text-accent">
                 {item.stat}
-                <span className="ml-2 text-sm font-medium text-gray-500 group-hover:text-gray-400">
+                {/* <span className="ml-2 text-sm font-medium text-gray-500 group-hover:text-gray-400">
                   from {item.previousStat}
-                </span>
+                </span> */}
               </div>
 
               <div

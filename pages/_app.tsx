@@ -30,9 +30,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       );
     } else {
       return (
-        <html className="h-full bg-cream-light">
+        <html className="h-screen bg-cream-light">
           <QueryClientProvider client={queryClient}>
-            <body className="h-full overflow-hidden">
+            <body className="h-screen">
               <SideNavBar>
                 <Component {...pageProps} />
                 {/* <ReactQueryDevtools position="bottom-right" /> */}

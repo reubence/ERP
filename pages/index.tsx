@@ -102,7 +102,6 @@ export default function HomePage() {
   const { data, isLoading } = useUser();
 
   const [modal, setModal] = useState(false);
-  const Toggle = () => setModal(!modal);
 
   return (
     <ProtectedWrapper>
@@ -142,7 +141,7 @@ export default function HomePage() {
                           className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                           aria-hidden="true"
                         />
-                        NeoKumfurt Pune Branch
+                        NeoKumfurt Pune anch
                       </dd>
                       <dt className="sr-only">Account status</dt>
                       <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
@@ -189,14 +188,14 @@ export default function HomePage() {
               setSolid={false}
               text="Add Row"
               icon={PlusCircleIcon}
-              onClick={() => Toggle()}
+              onClick={() => setModal(!modal)}
             />
             <DropdownButton />
 
             <SimpleButton setSolid={false} text="" icon={DownloadIcon} />
           </div>
         </div>
-        <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 lg:pb-16 mt-6">
           <SimpleStripedTable
             tableData={tableData}
             tableName="company"
@@ -205,7 +204,7 @@ export default function HomePage() {
         <ModalHOC selector="#modal">
           <Modal
             show={modal}
-            close={Toggle}
+            close={setModal}
             tableName={"company"}
             dataModal={tableData}
           />
