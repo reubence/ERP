@@ -1,39 +1,35 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
+import { Fragment, MouseEventHandler } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import {
-  ArchiveIcon,
-  ArrowCircleRightIcon,
-  ChevronDownIcon,
-  DuplicateIcon,
-  HeartIcon,
-  PencilAltIcon,
-  TrashIcon,
-  UserAddIcon,
-} from "@heroicons/react/solid";
-import ModalHOC from "../HigherOrderComponents/ModalHOC";
+import { DuplicateIcon, PencilAltIcon } from "@heroicons/react/solid";
 
-const buttonOptions: {
+interface AppProps {
   icon: Function;
-  buttonText: string;
-}[] = [
-  {
-    icon: PencilAltIcon,
-    buttonText: "View All",
-  },
-];
+  text: string;
+  setSolid?: boolean;
+  onClick?: MouseEventHandler;
+  btnClass?: string;
+  iconClass?: string;
+}
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DropDownButton() {
+export function DropDownButton(props: AppProps) {
   return (
     <Menu as="div" className="relative flex text-left">
-      <Menu.Button className="relative  flex items-center rounded-md border-2 border-coffee shadow-sm px-4 py-2 bg-cream text-sm font-medium text-coffee hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-accent">
-        Options
-        <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-      </Menu.Button>
+      <div className="relative group ml-2">
+        <Menu.Button
+          className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${props.btnClass}`}
+        >
+          <props.icon
+            className={`mr-1 h-4 w-4 ${props.iconClass}`}
+            aria-hidden="true"
+          />
+          {props.text}
+        </Menu.Button>
+      </div>
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -77,97 +73,6 @@ export default function DropDownButton() {
                     aria-hidden="true"
                   />
                   Duplicate
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <ArchiveIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Archive
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <ArrowCircleRightIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Move
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <UserAddIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Share
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <HeartIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Add to favorites
-                </a>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <TrashIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Delete
                 </a>
               )}
             </Menu.Item>

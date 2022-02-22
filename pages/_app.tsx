@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
   },
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   {
     if ("/auth/login" === router.asPath || "/auth/signup" === router.asPath) {
@@ -44,5 +44,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }
 }
-
-export default MyApp;

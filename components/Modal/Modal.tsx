@@ -87,7 +87,7 @@ export default function Modal({
   };
 
   {
-    console.log("EEEEE");
+    console.log(dataModal);
   }
 
   return (

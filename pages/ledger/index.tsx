@@ -2,12 +2,17 @@ import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
 import ProtectedWrapper from "../../components/layout/Protected";
 import { DownloadIcon, FilterIcon } from "@heroicons/react/solid";
 
-import DropdownButton from "../../components/Buttons/DropdownButton";
 import SimpleButton from "../../components/Buttons/SimpleButton";
-import { SearchIcon, PlusSmIcon } from "@heroicons/react/outline";
+import {
+  SearchIcon,
+  PlusSmIcon,
+  RefreshIcon,
+  SwitchVerticalIcon,
+} from "@heroicons/react/outline";
 import { useState } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import Modal from "../../components/Modal/Modal";
+import { DropDownButton } from "../../components/Buttons/DropdownButton";
 
 const tableData = [
   { Header: "ID", accessor: "user_id" as const },
@@ -44,6 +49,7 @@ function classNames(...classes: any) {
 
 function App() {
   const [btnModal, setbtnModal] = useState(false);
+  const [refreshTable, setRefreshTable] = useState(false);
   const Toggle = () => setbtnModal(!btnModal);
 
   return (
@@ -62,18 +68,38 @@ function App() {
               <div className="py-1 flex space-x-2">
                 <SimpleButton
                   setSolid={false}
+                  text="Refresh"
+                  icon={RefreshIcon}
+                  onClick={() => setRefreshTable(!refreshTable)}
+                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  iconClass="text-gray-500 group-hover:text-coffee"
+                />
+
+                <DropDownButton
+                  setSolid={false}
+                  text="Sort by"
+                  icon={SwitchVerticalIcon}
+                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  iconClass="text-gray-500 group-hover:text-coffee"
+                />
+
+                <SimpleButton
+                  setSolid={false}
                   text="Add Row"
                   icon={PlusSmIcon}
                   onClick={() => Toggle()}
-                  className="bg-green-400 group-hover:bg-green-500"
+                  btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
                 />
                 {/* <DropdownButton /> */}
-                <SimpleButton
-                  setSolid={false}
-                  text=""
-                  icon={DownloadIcon}
-                  className="bg-cream group-hover:bg-gray-300"
-                />
+                <div className="right-6 fixed">
+                  <SimpleButton
+                    setSolid={false}
+                    text="Export Data"
+                    icon={DownloadIcon}
+                    iconClass="text-gray-500 group-hover:text-coffee"
+                    btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  />
+                </div>
               </div>
             </div>
 
@@ -81,6 +107,7 @@ function App() {
               tableData={tableData}
               tableName="company"
               btnModal={btnModal}
+              refreshTable={refreshTable}
             ></SimpleStripedTable>
           </div>
         </section>

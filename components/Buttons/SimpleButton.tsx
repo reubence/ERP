@@ -9,7 +9,8 @@ interface AppProps {
   setSolid: boolean;
   icon?: Function;
   onClick?: MouseEventHandler;
-  className?: string;
+  btnClass?: string;
+  iconClass?: string;
 }
 
 export default function SimpleButton(props: AppProps) {
@@ -19,14 +20,18 @@ export default function SimpleButton(props: AppProps) {
         type="button"
         className={
           props.setSolid
-            ? "inline-flex items-center p-2 border border-transparent text-sm font-medium rounded-md text-cream-light bg-coffee-light group-hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-light"
-            : `inline-flex items-center p-2 text-sm font-medium rounded-md text-cream ${props.className}`
+            ? "inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md text-cream-light bg-coffee-light group-hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-light"
+            : `inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${props.btnClass}`
         }
         onClick={props.onClick}
       >
         {props.icon ? (
           <props.icon
-            className={props.text ? "h-5 w-5 text-cream" : "h-5 w-5 text-cream"}
+            className={
+              props.text
+                ? `h-4 w-4 mr-1 ${props.iconClass}`
+                : `h-4 w-4 ${props.iconClass}`
+            }
             aria-hidden="true"
           />
         ) : null}

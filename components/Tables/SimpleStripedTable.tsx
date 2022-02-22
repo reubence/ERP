@@ -23,6 +23,7 @@ interface AppProps {
   tableData: {}[];
   tableName: string;
   btnModal?: boolean;
+  refreshTable?: boolean;
 }
 interface TableProps {
   columns: any;
@@ -174,7 +175,7 @@ function Table({
 
       <div className="overflow-auto flex-grow h-[615px] border-t border-coffee pb-96 pr-96">
         <div {...getTableProps()} className="table relative bg-coffee">
-          <div className="sticky top-0 overflow-auto bg-gray-100 table-header-group z-100">
+          <div className="sticky top-0 bg-gray-100 table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
                 {headerGroup.headers.map((column) => (
@@ -231,12 +232,16 @@ function Table({
         >
           <div className="hidden sm:flex  left-54">
             <p className="text-sm text-coffee">
-              Showing <span className="font-medium">{page.length}</span> to{" "}
-              <span className="font-medium">{pageSize}</span> of{" "}
-              <span className="font-medium">
-                {controlledPageCount * pageSize}
-              </span>{" "}
-              results
+              {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
+              Page{" "}
+              <input
+                className="mx-2 bg-gray-300 w-24 text-gray-500 group-hover:text-coffee group-hover:bg-gray-500 inline-flex items-center px-2 py-1 text-sm font-medium rounded-md"
+                placeholder={String(pageIndex + 1)}
+                type="number"
+                min={pageIndex + 1}
+                max={pageCount}
+              ></input>
+              of {pageCount}
             </p>
           </div>
           <div className="right-12 flex-1 flex justify-start sm:justify-end">
@@ -263,7 +268,7 @@ function Table({
   );
 }
 
-function App({ tableData, tableName, btnModal }: AppProps) {
+function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
   const [dataModal, setDataModal] = useState<any>();
@@ -285,6 +290,7 @@ function App({ tableData, tableName, btnModal }: AppProps) {
   const [loading, setLoading] = React.useState(false);
   const [pageCount, setPageCount] = React.useState<any>(0);
   const fetchIdRef = React.useRef(0);
+  const [filter, setFilter] = useState("");
 
   const fetchData = React.useCallback(
     ({ pageSize, pageIndex }) => {
@@ -308,7 +314,8 @@ function App({ tableData, tableName, btnModal }: AppProps) {
           const { data, error } = await supabase
             .from(table_name)
             .select("*")
-            .range(startRow, 100);
+            .range(startRow, 100)
+            .order("user_id", { ascending: true });
 
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
@@ -331,7 +338,7 @@ function App({ tableData, tableName, btnModal }: AppProps) {
         setLoading(false);
       }
     },
-    [modal, btnModal]
+    [modal, btnModal, refreshTable]
   );
 
   // const columns = React.useMemo(() => [], []);

@@ -38,7 +38,6 @@ import SimpleButton from "../components/Buttons/SimpleButton";
 // @ts-ignore
 import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
-import DropdownButton from "../components/Buttons/DropdownButton";
 import TickerTape from "../components/Cards/TickerTape";
 import { useState } from "react";
 
@@ -190,7 +189,6 @@ export default function HomePage() {
               icon={PlusCircleIcon}
               onClick={() => setModal(!modal)}
             />
-            <DropdownButton />
 
             <SimpleButton setSolid={false} text="" icon={DownloadIcon} />
           </div>
