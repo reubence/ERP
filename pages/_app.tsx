@@ -19,27 +19,23 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   {
     if ("/auth/login" === router.asPath || "/auth/signup" === router.asPath) {
       return (
-        <html className="h-full bg-cream-light">
-          <body className="h-full">
-            <QueryClientProvider client={queryClient}>
-              <Component {...pageProps} />
-              <ReactQueryDevtools position="bottom-right" />
-            </QueryClientProvider>
-          </body>
-        </html>
+        <div className="h-screen">
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+            <ReactQueryDevtools position="bottom-right" />
+          </QueryClientProvider>
+        </div>
       );
     } else {
       return (
-        <html className="h-screen bg-cream-light">
+        <div className="h-screen">
           <QueryClientProvider client={queryClient}>
-            <body className="h-screen">
-              <SideNavBar>
-                <Component {...pageProps} />
-                {/* <ReactQueryDevtools position="bottom-right" /> */}
-              </SideNavBar>
-            </body>
+            <SideNavBar>
+              <Component {...pageProps} />
+              {/* <ReactQueryDevtools position="bottom-right" /> */}
+            </SideNavBar>
           </QueryClientProvider>
-        </html>
+        </div>
       );
     }
   }

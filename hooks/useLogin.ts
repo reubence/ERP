@@ -11,9 +11,10 @@ const login = async ({ email, password }: AppProps) => {
     email,
     password,
   });
+  console.log("Login Mutation");
 
   if (error) {
-    console.log("Error bhai");
+    console.log("Login Mutation Failed");
     throw new Error(error.message);
   }
 

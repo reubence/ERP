@@ -12,6 +12,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { SearchIcon } from "@heroicons/react/solid";
 import Modal from "../Modal/Modal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
+import { DropDownButton } from "../Buttons/DropdownButton";
 
 interface props {
   table_name: string;
@@ -135,6 +136,8 @@ function Table({
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
 
+  const p = pageCount + pageIndex;
+
   // Render the UI for your table
   return (
     <>
@@ -153,18 +156,6 @@ function Table({
           )}
         </code>
       </pre> */}
-      {/* <select
-        value={pageSize}
-        onChange={(e) => {
-          setPageSize(Number(e.target.value));
-        }}
-      >
-        {[2, 5, 10, 20, 30, 40, 50].map((pageSize) => (
-          <option key={pageSize} value={pageSize}>
-            Show {pageSize}
-          </option>
-        ))}
-      </select> */}
       <div className="w-full overflow-auto border-t border-coffee">
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -240,22 +231,50 @@ function Table({
                 type="number"
                 min={pageIndex + 1}
                 max={pageCount}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
               ></input>
-              of {pageCount}
+              of {p}
             </p>
           </div>
+          <div className="ml-2 hidden sm:flex">
+            <select
+              value={pageSize}
+              className="text-sm bg-gray-300 text-gray-500 rounded-md px-2 py-1 pr-8"
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 50, 100, 500, 1000].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize} rows
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="right-12 flex-1 flex justify-start sm:justify-end">
             <button
               onClick={() => previousPage()}
               disabled={!canPreviousPage}
-              className="relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee"
+              className={
+                canPreviousPage
+                  ? `relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
+                  : `relative inline-flex items-center px-4 py-1 bg-gray-300 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+              }
             >
               Previous
             </button>
             <button
               onClick={() => nextPage()}
               disabled={!canNextPage}
-              className="ml-3 relative inline-flex items-center px-4 py-1 text-sm border border-coffee font-medium rounded-md text-coffee hover:bg-coffee hover:text-cream"
+              className={
+                canNextPage
+                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
+                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-300 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+              }
             >
               Next
             </button>
@@ -314,7 +333,7 @@ function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
           const { data, error } = await supabase
             .from(table_name)
             .select("*")
-            .range(startRow, 100)
+            .range(startRow, endRow)
             .order("user_id", { ascending: true });
 
           if (error) {

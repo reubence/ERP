@@ -2,9 +2,9 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html className="h-screen bg-cream-light">
         <Head />
-        <body className="">
+        <body className="h-screen">
           <Main />
           <div id="modal"></div>
           <NextScript />
