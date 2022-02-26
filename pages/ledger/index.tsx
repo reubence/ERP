@@ -1,18 +1,21 @@
 import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
 import ProtectedWrapper from "../../components/layout/Protected";
 import { DownloadIcon, FilterIcon } from "@heroicons/react/solid";
-
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import {
   SearchIcon,
   PlusSmIcon,
   RefreshIcon,
   SwitchVerticalIcon,
+  CheckCircleIcon,
+  XIcon,
 } from "@heroicons/react/outline";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import Modal from "../../components/Modal/Modal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
+import Notification from "../../components/Modal/Notification";
+import { Transition } from "@headlessui/react";
 
 const tableData = [
   { Header: "ID", accessor: "user_id" as const },
@@ -48,9 +51,11 @@ function classNames(...classes: any) {
 }
 
 function App() {
-  const [btnModal, setbtnModal] = useState(false);
+  const [show, setShow] = useState(false);
   const [refreshTable, setRefreshTable] = useState(false);
-  const Toggle = () => setbtnModal(!btnModal);
+  const Toggle = () => {
+    setShow(!show);
+  };
 
   return (
     <ProtectedWrapper>
@@ -106,7 +111,7 @@ function App() {
             <SimpleStripedTable
               tableData={tableData}
               tableName="company"
-              btnModal={btnModal}
+              show={show}
               refreshTable={refreshTable}
             ></SimpleStripedTable>
           </div>
@@ -187,7 +192,7 @@ function App() {
         </aside>
         <ModalHOC selector="#modal">
           <Modal
-            show={btnModal}
+            show={show}
             close={Toggle}
             tableName={"company"}
             dataModal={tableData}
