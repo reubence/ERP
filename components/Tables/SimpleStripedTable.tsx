@@ -12,7 +12,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { SearchIcon } from "@heroicons/react/solid";
 import Modal from "../Modal/Modal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
-import { DropDownButton } from "../Buttons/DropdownButton";
+import Notification from "../Modal/Notification";
 
 interface props {
   table_name: string;
@@ -23,8 +23,9 @@ interface props {
 interface AppProps {
   tableData: {}[];
   tableName: string;
-  btnModal?: boolean;
+  show?: boolean;
   refreshTable?: boolean;
+  notify?: Function;
 }
 interface TableProps {
   columns: any;
@@ -54,7 +55,7 @@ function GlobalFilter({
         name="name"
         id="name"
         value={value || ""}
-        placeholder={`Search Through ${count} records...`}
+        placeholder={`Search Records On This Page`}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
@@ -136,8 +137,6 @@ function Table({
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
 
-  const p = pageCount + pageIndex;
-
   // Render the UI for your table
   return (
     <>
@@ -164,7 +163,7 @@ function Table({
         />
       </div>
 
-      <div className="overflow-auto flex-grow h-[615px] border-t border-coffee pb-96 pr-96">
+      <div className="overflow-auto flex-grow h-[615px] border-t border-coffee pb-40 pr-40">
         <div {...getTableProps()} className="table relative bg-coffee">
           <div className="sticky top-0 bg-gray-100 table-header-group">
             {headerGroups.map((headerGroup) => (
@@ -218,7 +217,7 @@ function Table({
       <div className="w-full">
         {/* Bottom Nav Bar */}
         <nav
-          className="bg-gray-100 border-t fixed bottom-0 lg:left-[389px] left-0 right-0 border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
+          className="border-t fixed bottom-0 lg:left-[389px] left-0 right-0 border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
           aria-label="Pagination"
         >
           <div className="hidden sm:flex  left-54">
@@ -226,29 +225,29 @@ function Table({
               {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
               Page{" "}
               <input
-                className="mx-2 bg-gray-300 w-24 text-gray-500 group-hover:text-coffee group-hover:bg-gray-500 inline-flex items-center px-2 py-1 text-sm font-medium rounded-md"
-                placeholder={String(pageIndex + 1)}
+                className="mx-2 w-24 text-coffee hover:text-coffee inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-coffee focus:ring-coffee focus:text-coffee"
+                value={Number(pageIndex + 1)}
                 type="number"
                 min={pageIndex + 1}
                 max={pageCount}
                 onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  const page = Number(e.target.value) - 1;
                   gotoPage(page);
                 }}
               ></input>
-              of {p}
+              of {pageCount}
             </p>
           </div>
           <div className="ml-2 hidden sm:flex">
             <select
               value={pageSize}
-              className="text-sm bg-gray-300 text-gray-500 rounded-md px-2 py-1 pr-8"
+              className="text-sm text-coffee hover:text-coffee  rounded-md px-2 py-1 pr-8 focus:border-coffee focus:ring-coffee focus:text-coffee"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
             >
               {[10, 50, 100, 500, 1000].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
+                <option key={pageSize} value={pageSize} className="">
                   {pageSize} rows
                 </option>
               ))}
@@ -262,7 +261,7 @@ function Table({
               className={
                 canPreviousPage
                   ? `relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
-                  : `relative inline-flex items-center px-4 py-1 bg-gray-300 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+                  : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
               }
             >
               Previous
@@ -273,7 +272,7 @@ function Table({
               className={
                 canNextPage
                   ? `ml-2 relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
-                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-300 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
               }
             >
               Next
@@ -287,7 +286,7 @@ function Table({
   );
 }
 
-function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
+function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
   const [dataModal, setDataModal] = useState<any>();
@@ -357,7 +356,7 @@ function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
         setLoading(false);
       }
     },
-    [modal, btnModal, refreshTable]
+    [modal, show, refreshTable]
   );
 
   // const columns = React.useMemo(() => [], []);
@@ -371,6 +370,8 @@ function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
   // const csvdata = React.useMemo(() => {
   //   return data.map((d: any) => Object.values(d));
   // }, []);
+
+  const [showNotif, setShowNotif] = useState(false);
 
   return (
     <>
@@ -393,6 +394,12 @@ function App({ tableData, tableName, btnModal, refreshTable }: AppProps) {
             close={Toggle}
             tableName={tableName}
             dataModal={dataModal}
+          />
+        </ModalHOC>
+        <ModalHOC selector="#modal">
+          <Notification
+            show={showNotif}
+            setShow={() => setShowNotif(!showNotif)}
           />
         </ModalHOC>
 

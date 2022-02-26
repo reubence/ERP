@@ -11,6 +11,7 @@ interface AppProps {
   onClick?: MouseEventHandler;
   btnClass?: string;
   iconClass?: string;
+  notify?: Function;
 }
 
 export default function SimpleButton(props: AppProps) {

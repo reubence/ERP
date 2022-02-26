@@ -7,15 +7,11 @@ import {
   PlusSmIcon,
   RefreshIcon,
   SwitchVerticalIcon,
-  CheckCircleIcon,
-  XIcon,
 } from "@heroicons/react/outline";
-import { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import Modal from "../../components/Modal/Modal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
-import Notification from "../../components/Modal/Notification";
-import { Transition } from "@headlessui/react";
 
 const tableData = [
   { Header: "ID", accessor: "user_id" as const },

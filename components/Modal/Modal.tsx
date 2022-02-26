@@ -1,15 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
-import {
-  Fragment,
-  useRef,
-  useState,
-  useEffect,
-  ChangeEvent,
-  EventHandler,
-} from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
+import toast from "react-hot-toast";
 
 export default function Modal({
   show,
@@ -52,22 +46,75 @@ export default function Modal({
       .from("company")
       .delete(inputFields.values)
       .match({ user_id: dataModal.values.user_id });
-
     error ? console.log(error) : close();
+    error
+      ? toast.error("Error Deleting Row", {
+          duration: 6000,
+          position: "top-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        })
+      : toast.success("Row Deleted Successfully", {
+          duration: 6000,
+          position: "top-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        });
   };
 
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (typeof inputFields[0] != "undefined") {
+      // Add Row
       const { data, error } = await supabase.from("company").insert(obj);
       error ? console.log(error, "Error") : close();
-    } else {
+      error
+        ? toast.error("Error Adding Row", {
+            duration: 6000,
+            position: "top-right",
+            style: {
+              background: "#262125",
+              color: "#ffffff",
+            },
+          })
+        : toast.success("Row Added Successfully", {
+            duration: 6000,
+            position: "top-right",
+            style: {
+              background: "#262125",
+              color: "#ffffff",
+            },
+          });
+    }
+    // Update Row
+    else {
       const { data, error } = await supabase
         .from("company")
         .update(inputFields.values)
         .match({ user_id: dataModal.values.user_id });
       error ? console.log(error) : close();
+      error
+        ? toast.error("Error Updating Row", {
+            duration: 6000,
+            position: "top-right",
+            style: {
+              background: "#262125",
+              color: "#ffffff",
+            },
+          })
+        : toast.success("Row Updated Successfully", {
+            duration: 6000,
+            position: "top-right",
+            style: {
+              background: "#262125",
+              color: "#ffffff",
+            },
+          });
     }
   };
 
@@ -118,23 +165,23 @@ export default function Modal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 bg-gray-50 sm:px-6">
+                      <div className="px-4 py-6 bg-coffee sm:px-6 sticky top-0">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
-                            <Dialog.Title className="text-lg font-medium text-coffee">
+                            <Dialog.Title className="text-lg font-medium text-cream">
                               {tableName.charAt(0).toUpperCase() +
                                 tableName.slice(1)}
                               {" Table"}
                             </Dialog.Title>
-                            <p className="text-sm text-coffee">
+                            <p className="text-sm text-cream">
                               Get started by filling in the information below to
-                              create your new project.
+                              create your new Table.
                             </p>
                           </div>
                           <div className="h-7 flex items-center">
                             <button
                               type="button"
-                              className="text-gray-400 hover:text-coffee"
+                              className="text-red-500 border-2 border-red-500 rounded-md"
                               onClick={() => close()}
                             >
                               <span className="sr-only">Close panel</span>
@@ -260,9 +307,13 @@ export default function Modal({
                         <button
                           type="button"
                           className="bg-red-500 py-2 px-4 text-cream rounded-md shadow-sm text-sm font-medium hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          onClick={handleDelete}
+                          onClick={
+                            Array.isArray(inputFields)
+                              ? () => close()
+                              : handleDelete
+                          }
                         >
-                          Delete
+                          {Array.isArray(inputFields) ? "Close" : "Delete"}
                         </button>
                         <button
                           type="submit"

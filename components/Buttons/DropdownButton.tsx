@@ -19,7 +19,7 @@ function classNames(...classes: any) {
 export function DropDownButton(props: AppProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <div className="relative group ml-2">
+      <div className="relative group">
         <Menu.Button
           className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${props.btnClass}`}
         >

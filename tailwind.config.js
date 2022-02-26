@@ -6,6 +6,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      backgroundImage: {
+        sort: "url('')",
+      },
       colors: {
         cyan: colors.cyan,
         coffee: {
