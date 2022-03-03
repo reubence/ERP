@@ -16,7 +16,7 @@ interface AppProps {
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
-function MyLink(props) {
+function MyLink(props: any) {
   let { href, children, ...rest } = props;
   return (
     <>
