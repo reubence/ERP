@@ -18,7 +18,7 @@ import { MouseEventHandler, useState } from "react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { Combobox } from "@headlessui/react";
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 

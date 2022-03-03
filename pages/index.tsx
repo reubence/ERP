@@ -193,10 +193,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="relative grid grid-cols-1 px-4 sm:px-6 lg:px-8 lg:pb-16 mt-6">
-          <SimpleStripedTable
+          {/* <SimpleStripedTable
             tableData={tableData}
             tableName="company"
-          ></SimpleStripedTable>
+          ></SimpleStripedTable> */}
         </div>
         <ModalHOC selector="#modal">
           <Modal

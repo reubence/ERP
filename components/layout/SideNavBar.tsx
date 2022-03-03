@@ -39,7 +39,7 @@ import useUser from "../../hooks/useUser";
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
-  { name: "Ledger", href: "/ledger", icon: LibraryIcon, current: false },
+  { name: "Ledger", href: "/ledger", icon: LibraryIcon, current: true },
   { name: "Sales", href: "/sales", icon: CurrencyRupeeIcon, current: false },
   {
     name: "Purchase",
