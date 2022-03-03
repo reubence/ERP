@@ -4,6 +4,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
 import toast from "react-hot-toast";
+import moment from "moment";
+import useUser from "../../hooks/useUser";
+import { DropDownButton } from "../Buttons/DropdownButton";
+import { LockClosedIcon } from "@heroicons/react/solid";
+import ComboBox from "../Buttons/ComboBox";
 
 export default function Modal({
   show,
@@ -43,12 +48,12 @@ export default function Modal({
     e.preventDefault();
 
     const { data, error } = await supabase
-      .from("company")
+      .from(tableName)
       .delete(inputFields.values)
-      .match({ user_id: dataModal.values.user_id });
+      .match({ id: dataModal.values.id });
     error ? console.log(error) : close();
     error
-      ? toast.error("Error Deleting Row", {
+      ? toast.error(`Error Deleting Row -\n${error.message}`, {
           duration: 6000,
           position: "top-right",
           style: {
@@ -65,16 +70,21 @@ export default function Modal({
           },
         });
   };
+  const { data } = useUser();
+  const id = data.id;
 
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (typeof inputFields[0] != "undefined") {
       // Add Row
-      const { data, error } = await supabase.from("company").insert(obj);
+      obj["created_by"] = id;
+      obj["updated_by"] = id;
+      const { error } = await supabase.from(tableName).insert(obj);
       error ? console.log(error, "Error") : close();
+      console.log(obj);
       error
-        ? toast.error("Error Adding Row", {
+        ? toast.error(`Error Adding Row -\n${error.message}`, {
             duration: 6000,
             position: "top-right",
             style: {
@@ -93,13 +103,13 @@ export default function Modal({
     }
     // Update Row
     else {
-      const { data, error } = await supabase
-        .from("company")
+      const { error } = await supabase
+        .from(tableName)
         .update(inputFields.values)
-        .match({ user_id: dataModal.values.user_id });
+        .match({ id: dataModal.values.id });
       error ? console.log(error) : close();
       error
-        ? toast.error("Error Updating Row", {
+        ? toast.error(`Error Updating Row - \n${error.message}`, {
             duration: 6000,
             position: "top-right",
             style: {
@@ -117,25 +127,34 @@ export default function Modal({
           });
     }
   };
+  const people = [
+    "Buyer",
+    "Seller",
+    // More users...
+  ];
 
   var obj: any = {};
+  const [selectedPerson, setSelectedPerson] = useState(people[0]);
+  obj["group_"] = selectedPerson;
+  useEffect(() => {
+    obj["group_"] = selectedPerson;
+  }, [selectedPerson]);
 
-  const handleInputChange = (key: string, event: any) => {
+  const handleInputChange = (key?: string, event?: any) => {
     if (typeof inputFields[0] != "undefined") {
-      obj[key] = event.target.value;
-
-      // console.log(obj);
+      key === "group_"
+        ? (obj[key] = selectedPerson)
+        : (obj[key!] = event.target.value);
+      console.log(key);
     } else {
-      inputFields.values[key] = event.target.value;
+      key === "group_"
+        ? (obj[key] = selectedPerson)
+        : (inputFields.values[key!] = event.target.value);
       // console.log(inputFields.values);
     }
 
     setInputFields(inputFields);
   };
-
-  {
-    console.log(dataModal);
-  }
 
   return (
     <>
@@ -207,32 +226,68 @@ export default function Modal({
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
                                       {item["Header"]}
-                                      {/* {console.log(inputFields)} */}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    <input
-                                      key={i}
-                                      type="text"
-                                      name={item + "-" + i}
-                                      id={item + "-" + i}
-                                      onChange={(event) =>
-                                        handleInputChange(
-                                          item["accessor"],
-                                          event
-                                        )
-                                      }
-                                      placeholder={
-                                        item["Header"] === "ID"
-                                          ? "#auto generated value"
-                                          : ""
-                                      }
-                                      disabled={
-                                        item["Header"] === "ID" ? true : false
-                                      }
-                                      className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                                focus:border-coffee border-gray-300 rounded-md"
-                                    />
+                                    {item["type"] === "dropdown" ? (
+                                      <ComboBox
+                                        state={selectedPerson}
+                                        setState={setSelectedPerson}
+                                        data={people}
+                                        btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                                      />
+                                    ) : item["accessor"] === "anniversary" ? (
+                                      <input
+                                        type="date"
+                                        onChange={(event) =>
+                                          handleInputChange(
+                                            item["accessor"],
+                                            event
+                                          )
+                                        }
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                      focus:border-coffee border-gray-300 rounded-md"
+                                      />
+                                    ) : (
+                                      <textarea
+                                        key={i}
+                                        // type={item["type"]}
+                                        rows={4}
+                                        name={item + "-" + i}
+                                        id={item + "-" + i}
+                                        onChange={(event) =>
+                                          handleInputChange(
+                                            item["accessor"],
+                                            event
+                                          )
+                                        }
+                                        defaultValue={
+                                          item["accessor"] === "created_at" ||
+                                          item["accessor"] === "last_updated"
+                                            ? moment().format(
+                                                "YYYY-MM-DDTHH:mm"
+                                              )
+                                            : item["accessor"] ===
+                                                "created_by" ||
+                                              item["accessor"] === "updated_by"
+                                            ? data.name
+                                            : ""
+                                        }
+                                        placeholder={
+                                          item["Header"] === "ID"
+                                            ? "auto generated value"
+                                            : ""
+                                        }
+                                        disabled={item["disabled"]}
+                                        className={
+                                          item["disabled"]
+                                            ? `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                        focus:border-coffee bg-gray-300 text-gray-500 border-gray-300 rounded-md`
+                                            : `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                focus:border-coffee border-gray-300 rounded-md`
+                                        }
+                                      />
+                                    )}
                                   </div>
                                 </>
                               ))
@@ -251,33 +306,76 @@ export default function Modal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    <input
-                                      key={i}
-                                      type="text"
-                                      name={key + "-" + i}
-                                      id={key + "-" + i}
-                                      defaultValue={
-                                        key.toUpperCase() === "USER_ID"
-                                          ? ""
-                                          : inputFields.values[key]
-                                      }
-                                      onChange={(event) =>
-                                        handleInputChange(key, event)
-                                      }
-                                      placeholder={
-                                        key.toUpperCase() === "USER_ID"
-                                          ? inputFields.values[key] +
-                                            "   #auto generated value"
-                                          : ""
-                                      }
-                                      disabled={
-                                        key.toUpperCase() === "USER_ID"
-                                          ? true
-                                          : false
-                                      }
-                                      className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                                focus:border-coffee border-gray-300 rounded-md"
-                                    />
+                                    {console.log(inputFields.values[key])}
+
+                                    {key === "anniversary" ? (
+                                      <input
+                                        type="date"
+                                        onChange={(event) =>
+                                          handleInputChange(key, event)
+                                        }
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                        focus:border-coffee border-gray-300 rounded-md"
+                                        value={inputFields.values[key]}
+                                      />
+                                    ) : key === "group_" ? (
+                                      <ComboBox
+                                        state={selectedPerson}
+                                        setState={setSelectedPerson}
+                                        data={people}
+                                        btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                                      />
+                                    ) : (
+                                      <textarea
+                                        key={i}
+                                        // type={
+                                        //   key === "created_at" ||
+                                        //   key === "last_updated"
+                                        //     ? "datetime-local"
+                                        //     : "text"
+                                        // }
+                                        rows={4}
+                                        name={key + "-" + i}
+                                        id={key + "-" + i}
+                                        defaultValue={
+                                          key.toUpperCase() === "ID"
+                                            ? ""
+                                            : key === "created_by" ||
+                                              key === "updated_by"
+                                            ? data.name
+                                            : inputFields.values[key]
+                                        }
+                                        onChange={(event) =>
+                                          handleInputChange(key, event)
+                                        }
+                                        placeholder={
+                                          key.toUpperCase() === "ID"
+                                            ? inputFields.values[key] +
+                                              "   #auto generated value"
+                                            : ""
+                                        }
+                                        disabled={
+                                          key.toUpperCase() === "ID" ||
+                                          key === "created_at" ||
+                                          key === "last_updated" ||
+                                          key === "created_by" ||
+                                          key === "updated_by"
+                                            ? true
+                                            : false
+                                        }
+                                        className={
+                                          key.toUpperCase() === "ID" ||
+                                          key === "created_at" ||
+                                          key === "last_updated" ||
+                                          key === "created_by" ||
+                                          key === "updated_by"
+                                            ? `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                            focus:border-coffee bg-gray-300 text-gray-500 border-gray-300 rounded-md`
+                                            : `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                focus:border-coffee border-gray-300 rounded-md`
+                                        }
+                                      />
+                                    )}
                                   </div>
                                 </>
                               ))
@@ -302,7 +400,7 @@ export default function Modal({
                       </code>
                     </pre> */}
                     {/* Action buttons */}
-                    <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
+                    <div className="flex-shrink-0 sticky bottom-0 bg-cream px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"

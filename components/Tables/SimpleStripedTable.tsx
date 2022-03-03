@@ -13,11 +13,14 @@ import { SearchIcon } from "@heroicons/react/solid";
 import Modal from "../Modal/Modal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
 import Notification from "../Modal/Notification";
+import moment from "moment";
+import useUser from "../../hooks/useUser";
 
 interface props {
   table_name: string;
   startRow: number;
   endRow: number;
+  sortby: string;
 }
 
 interface AppProps {
@@ -26,6 +29,7 @@ interface AppProps {
   show?: boolean;
   refreshTable?: boolean;
   notify?: Function;
+  sortby: string;
 }
 interface TableProps {
   columns: any;
@@ -101,6 +105,7 @@ function Table({
     setPageSize,
     preGlobalFilteredRows,
     setGlobalFilter,
+    setHiddenColumns,
 
     state: {
       pageIndex,
@@ -134,9 +139,10 @@ function Table({
   );
 
   useEffect(() => {
+    setHiddenColumns(["created_by", "updated_by"]);
+
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
-
   // Render the UI for your table
   return (
     <>
@@ -210,10 +216,10 @@ function Table({
       </div>
 
       {/* <div className="w-full"> */}
-      {/* {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <div>Loading...</div>
-            ) : ( */}
+      {loading ? (
+        // Use our custom loading state to show a loading indicator
+        <div>Loading...</div>
+      ) : null}
       <div className="w-full">
         {/* Bottom Nav Bar */}
         <nav
@@ -286,18 +292,36 @@ function Table({
   );
 }
 
-function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
+function App({
+  tableData,
+  tableName,
+  show,
+  refreshTable,
+  notify,
+  sortby,
+}: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
   const [dataModal, setDataModal] = useState<any>();
-  const formatTrProps = (state = {}) => {
+  const formatTrProps = (state: any) => {
     return {
       onClick: () => {
         // console.log(state, "State");
-        Toggle();
         const data_row = state;
+        // data_row["values"].created_at = moment(
+        //   state["values"].created_at
+        // ).format("YYYY-MM-DDTHH:mm");
+
+        // data_row["values"].last_updated = moment(
+        //   state["values"].last_updated
+        // ).format("YYYY-MM-DDTHH:mm");
+
+        data_row["values"].anniversary = moment(
+          state["values"].anniversary
+        ).format("YYYY-MM-DD");
+        Toggle();
+
         setDataModal(data_row);
-        // console.log(dataModal, "dataModal");
       },
     };
   };
@@ -309,7 +333,6 @@ function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
   const [pageCount, setPageCount] = React.useState<any>(0);
   const fetchIdRef = React.useRef(0);
   const [filter, setFilter] = useState("");
-
   const fetchData = React.useCallback(
     ({ pageSize, pageIndex }) => {
       // This will get called when the table needs new data
@@ -327,13 +350,18 @@ function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
         const endRow = startRow + pageSize;
         const table_name = tableName;
 
-        const readData = async ({ table_name, startRow, endRow }: props) => {
+        const readData = async ({
+          table_name,
+          startRow,
+          endRow,
+          sortby,
+        }: props) => {
           console.log("Reaching supabase query function");
           const { data, error } = await supabase
             .from(table_name)
             .select("*")
             .range(startRow, endRow)
-            .order("user_id", { ascending: true });
+            .order(sortby, { ascending: false });
 
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
@@ -343,7 +371,6 @@ function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
           if (data != null) {
             setPageCount(Math.ceil(data.length / pageSize));
           }
-
           return data;
         };
 
@@ -351,6 +378,7 @@ function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
           table_name,
           startRow,
           endRow,
+          sortby,
         });
 
         setLoading(false);
@@ -370,9 +398,15 @@ function App({ tableData, tableName, show, refreshTable, notify }: AppProps) {
   // const csvdata = React.useMemo(() => {
   //   return data.map((d: any) => Object.values(d));
   // }, []);
+  const { data: user } = useUser();
 
   const [showNotif, setShowNotif] = useState(false);
-
+  data.map((key: string, i: number) => {
+    data[i].created_at = moment(data[i].created_at).format("llll");
+    data[i].last_updated = moment(data[i].last_updated).format("llll");
+    data[i].anniversary = moment(data[i].anniversary).format("ll");
+  });
+  // console.log(data);
   return (
     <>
       <div className="">

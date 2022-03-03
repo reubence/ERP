@@ -12,35 +12,9 @@ import { useState } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import Modal from "../../components/Modal/Modal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
-
-const tableData = [
-  { Header: "ID", accessor: "user_id" as const },
-  // { Header: "Edited By", accessor: "edited_by" as const },
-  { Header: "Name", accessor: "company_name" as const },
-  { Header: "Email", accessor: "email" as const },
-  { Header: "Contact", accessor: "contact" as const },
-  { Header: "Address", accessor: "address" as const },
-  { Header: "Pin", accessor: "pin" as const },
-  { Header: "City", accessor: "city" as const },
-  { Header: "States", accessor: "states" as const },
-  { Header: "Country", accessor: "country" as const },
-  { Header: "TypeOfCompany", accessor: "typeofcompany" as const },
-  { Header: "DL NO", accessor: "dl_no" as const },
-  { Header: "Pan No", accessor: "pan_no" as const },
-  { Header: "Responsible Person", accessor: "responsible_person" as const },
-  { Header: "Responsible Phone", accessor: "responsible_phone" as const },
-  { Header: "GSTIN", accessor: "gstin" as const },
-];
+import { columns } from "../../public/data";
 
 /* This example requires Tailwind CSS v2.0+ */
-const navigation = [
-  { name: "Ledger", href: "#", current: true, count: "5" },
-  { name: "Sales", href: "#", current: false },
-  { name: "Purchase", href: "#", current: false, count: "19" },
-  { name: "Payments", href: "#", current: false, count: "20+" },
-  { name: "Inventory", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -49,13 +23,58 @@ function classNames(...classes: any) {
 function App() {
   const [show, setShow] = useState(false);
   const [refreshTable, setRefreshTable] = useState(false);
+  const [menuItem, setMenuItem] = useState("ledger");
+
+  const navigation = [
+    { name: "Ledger", accessor: "ledger", current: menuItem },
+    { name: "Company", accessor: "company", current: menuItem },
+    { name: "Sales", accessor: "sales", current: menuItem },
+    { name: "Purchase", accessor: "purchase", current: menuItem },
+    { name: "Payments", accessor: "payments", current: menuItem },
+    { name: "Inventory", accessor: "inventory", current: menuItem },
+    { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
+  ];
+  let tableData;
+  switch (menuItem) {
+    case "ledger":
+      tableData = columns[0];
+      break;
+    case "company":
+      tableData = columns[1];
+      break;
+    case "sales":
+      tableData = columns[2];
+      break;
+    case "purchase":
+      tableData = columns[3];
+      break;
+    case "payments":
+      tableData = columns[4];
+      break;
+    // case "inventory":
+    //   tableData = columns[5];
+    //   break;
+    // case "reports":
+    //   tableData = columns[6];
+    //   break;
+    default:
+      tableData = columns[0];
+  }
+
   const Toggle = () => {
     setShow(!show);
   };
 
+  const refreshTables = (name: string) => {
+    setMenuItem(String(name).toLowerCase());
+    setRefreshTable(!refreshTable);
+  };
+  const [sortby, setSortBy] = useState("last_updated");
+
   return (
     <ProtectedWrapper>
       <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
+        {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
           className="min-w-0 flex-1 flex flex-col lg:order-last"
@@ -80,6 +99,7 @@ function App() {
                   setSolid={false}
                   text="Sort by"
                   icon={SwitchVerticalIcon}
+                  onClick={setSortBy}
                   btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
                   iconClass="text-gray-500 group-hover:text-coffee"
                 />
@@ -106,12 +126,15 @@ function App() {
 
             <SimpleStripedTable
               tableData={tableData}
-              tableName="company"
+              tableName={menuItem}
               show={show}
               refreshTable={refreshTable}
+              sortby={sortby}
             ></SimpleStripedTable>
           </div>
         </section>
+
+        {/* SECOND MENU */}
         <aside className="hidden lg:block lg:flex-shrink-0 lg:order-first border-r border-coffee">
           <div className="px-6 pt-6 pb-4">
             <h2 className="text-lg font-medium text-gray-900">
@@ -158,11 +181,11 @@ function App() {
                 {navigation.map((item) => (
                   <a
                     key={item.name}
-                    href={item.href}
+                    onClick={() => refreshTables(item.accessor)}
                     className={classNames(
-                      item.current
+                      item.current === String(item.accessor).toLowerCase()
                         ? "bg-coffee text-cream"
-                        : "text-gray-600 hover:bg-gray-300 hover:text-gray-700",
+                        : "text-gray-600 hover:bg-gray-300 hover:text-gray-700 cursor-pointer",
                       "group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                     )}
                     aria-current={item.current ? "page" : undefined}
@@ -171,9 +194,9 @@ function App() {
                     {item.count ? (
                       <span
                         className={classNames(
-                          item.current
+                          item.current === String(item.accessor).toLowerCase()
                             ? "bg-cream text-coffee"
-                            : "bg-gray-100 text-gray-600 group-hover:bg-gray-200",
+                            : "bg-gray-200 text-gray-600 group-hover:bg-gray-200",
                           "ml-auto inline-block py-0.5 px-3 text-xs rounded-full"
                         )}
                       >
@@ -186,15 +209,16 @@ function App() {
             </div>
           </div>
         </aside>
+
+        {/* MODAL FOR ADD-ROW */}
         <ModalHOC selector="#modal">
           <Modal
             show={show}
             close={Toggle}
-            tableName={"company"}
+            tableName={menuItem}
             dataModal={tableData}
           />
         </ModalHOC>
-        {/* </div> */}
       </main>
     </ProtectedWrapper>
   );

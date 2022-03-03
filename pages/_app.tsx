@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
               <Toaster />
 
-              {/* <ReactQueryDevtools position="bottom-right" /> */}
+              <ReactQueryDevtools position="bottom-right" />
             </SideNavBar>
           </QueryClientProvider>
         </div>

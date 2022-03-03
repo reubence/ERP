@@ -40,7 +40,6 @@ import ProtectedWrapper from "../components/layout/Protected";
 import useUser from "../hooks/useUser";
 import TickerTape from "../components/Cards/TickerTape";
 import { useState } from "react";
-
 export default function HomePage() {
   const tableData = [
     // { Header: "ID", accessor: "id" as const },
