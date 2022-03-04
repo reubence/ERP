@@ -99,7 +99,7 @@ function App() {
         {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
-          className="w-full flex flex-col flex-1 overflow-x-hidden order-last"
+          className="min-w-0 flex-1 flex flex-col lg:order-last"
         >
           {/* <div className="grid grid-cols-9 grid-rows-9"> */}
           <div className="relative px-4 sm:px-6 lg:px-0">
