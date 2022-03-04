@@ -95,71 +95,9 @@ function App() {
 
   return (
     <ProtectedWrapper>
-      <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
-        {/* MAIN SECTION */}
-        <section
-          aria-labelledby="primary-heading"
-          className="w-full flex flex-col flex-1 overflow-x-hidden order-last"
-        >
-          {/* <div className="grid grid-cols-9 grid-rows-9"> */}
-          <div className="relative px-4 sm:px-6 lg:px-0">
-            <div className="flex justify-start z-10 space-x-4 items-stretch self-stretch">
-              {/* <div className="flex-grow">
-                <TickerTape />
-              </div> */}
-              <div className="py-1 flex space-x-2">
-                <SimpleButton
-                  setSolid={false}
-                  text="Refresh"
-                  icon={RefreshIcon}
-                  onClick={() => setRefreshTable(!refreshTable)}
-                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  iconClass="text-gray-500 group-hover:text-coffee"
-                />
-
-                <DropDownButton
-                  setSolid={false}
-                  text="Sort by"
-                  icon={SwitchVerticalIcon}
-                  onClick={setSortBy}
-                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  iconClass="text-gray-500 group-hover:text-coffee"
-                />
-
-                <SimpleButton
-                  setSolid={false}
-                  text="Add Row"
-                  icon={PlusSmIcon}
-                  onClick={() => Toggle()}
-                  btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
-                />
-                {/* <DropdownButton /> */}
-                <div className="right-6 fixed">
-                  <SimpleButton
-                    setSolid={false}
-                    text="Export Data"
-                    icon={DownloadIcon}
-                    iconClass="text-gray-500 group-hover:text-coffee"
-                    btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <SimpleStripedTable
-              tableData={tableData}
-              tableName={menuItem}
-              show={show}
-              refreshTable={refreshTable}
-              sortby={sortby}
-              state={selectedPerson}
-              setState={setSelectedPerson}
-            ></SimpleStripedTable>
-          </div>
-        </section>
-
+      <div className="h-full border-gray-200 flex">
         {/* SECOND MENU */}
-        <aside className="w-82 h-screen flex flex-col hide-scrollbar border-r bg-cream border-coffee">
+        <div className="w-82 h-screen flex flex-col hide-scrollbar border-r bg-cream border-coffee">
           <div className="px-6 pt-6 pb-4">
             <h2 className="text-lg font-medium text-gray-900">
               Data Directory
@@ -232,20 +170,70 @@ function App() {
               </nav>
             </div>
           </div>
-        </aside>
+        </div>
 
-        {/* MODAL FOR ADD-ROW */}
-        <ModalHOC selector="#modal">
-          <Modal
-            show={show}
-            close={Toggle}
-            tableName={menuItem}
-            dataModal={tableData}
-            state={selectedPerson}
-            setState={setSelectedPerson}
-          />
-        </ModalHOC>
-      </main>
+        {/* MAIN SECTION */}
+        <div
+          aria-labelledby="primary-heading"
+          className="w-full flex flex-col flex-1 overflow-x-hidden order-last h-screen"
+        >
+          {/* <div className="grid grid-cols-9 grid-rows-9"> */}
+          <div className="relative px-4 sm:px-6 lg:px-0">
+            <div className="flex justify-start z-10 space-x-4 items-stretch self-stretch">
+              {/* <div className="flex-grow">
+                <TickerTape />
+              </div> */}
+              <div className="py-1 flex space-x-2">
+                <SimpleButton
+                  setSolid={false}
+                  text="Refresh"
+                  icon={RefreshIcon}
+                  onClick={() => setRefreshTable(!refreshTable)}
+                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  iconClass="text-gray-500 group-hover:text-coffee"
+                />
+
+                <DropDownButton
+                  setSolid={false}
+                  text="Sort by"
+                  icon={SwitchVerticalIcon}
+                  onClick={setSortBy}
+                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  iconClass="text-gray-500 group-hover:text-coffee"
+                />
+
+                <SimpleButton
+                  setSolid={false}
+                  text="Add Row"
+                  icon={PlusSmIcon}
+                  onClick={() => Toggle()}
+                  btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
+                />
+                {/* <DropdownButton /> */}
+                <div className="right-6 fixed">
+                  <SimpleButton
+                    setSolid={false}
+                    text="Export Data"
+                    icon={DownloadIcon}
+                    iconClass="text-gray-500 group-hover:text-coffee"
+                    btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <SimpleStripedTable
+              tableData={tableData}
+              tableName={menuItem}
+              show={show}
+              refreshTable={refreshTable}
+              sortby={sortby}
+              state={selectedPerson}
+              setState={setSelectedPerson}
+            ></SimpleStripedTable>
+          </div>
+        </div>
+      </div>
     </ProtectedWrapper>
   );
 }
