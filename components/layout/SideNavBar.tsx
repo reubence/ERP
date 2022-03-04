@@ -86,7 +86,7 @@ export default function SideNavBar({ children }: LayoutProps) {
         <body class="h-full overflow-hidden">
         ```
       */}
-      <div className="h-full flex">
+      <div className="h-screen flex">
         {/* Narrow sidebar */}
         <div className="hidden w-16 bg-cream-light overflow-y-auto md:block border-r border-coffee-light">
           <div className="w-full py-6 flex flex-col items-center">
