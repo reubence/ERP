@@ -30,6 +30,8 @@ interface AppProps {
   refreshTable?: boolean;
   notify?: Function;
   sortby: string;
+  state: string;
+  setState: Function;
 }
 interface TableProps {
   columns: any;
@@ -299,6 +301,8 @@ function App({
   refreshTable,
   notify,
   sortby,
+  state,
+  setState,
 }: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
@@ -306,21 +310,20 @@ function App({
   const formatTrProps = (state: any) => {
     return {
       onClick: () => {
-        // console.log(state, "State");
         const data_row = state;
         // data_row["values"].created_at = moment(
         //   state["values"].created_at
         // ).format("YYYY-MM-DDTHH:mm");
 
-        // data_row["values"].last_updated = moment(
-        //   state["values"].last_updated
-        // ).format("YYYY-MM-DDTHH:mm");
+        tableName === "ledger"
+          ? (data_row["values"].anniversary = moment(
+              state["values"].anniversary
+            ).format("YYYY-MM-DD"))
+          : null;
 
-        data_row["values"].anniversary = moment(
-          state["values"].anniversary
-        ).format("YYYY-MM-DD");
+        setState(state["values"].group_);
+
         Toggle();
-
         setDataModal(data_row);
       },
     };
@@ -428,6 +431,8 @@ function App({
             close={Toggle}
             tableName={tableName}
             dataModal={dataModal}
+            state={state}
+            setState={setState}
           />
         </ModalHOC>
         <ModalHOC selector="#modal">

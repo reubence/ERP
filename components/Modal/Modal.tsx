@@ -15,10 +15,14 @@ export default function Modal({
   close,
   tableName,
   dataModal,
+  state,
+  setState,
 }: {
   show: boolean;
   close: Function;
   tableName: string;
+  state: string;
+  setState: Function;
   dataModal:
     | {
         allCells: [];
@@ -42,6 +46,7 @@ export default function Modal({
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
     setInputFields(dataModal);
+    console.log(dataModal);
   }, [dataModal]);
 
   const handleDelete = async (e: { preventDefault: () => void }) => {
@@ -72,7 +77,8 @@ export default function Modal({
   };
   const { data } = useUser();
   const id = data.id;
-
+  // var obj: any = {};
+  const [obj, setObj] = useState(Object);
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -81,6 +87,7 @@ export default function Modal({
       obj["created_by"] = id;
       obj["updated_by"] = id;
       const { error } = await supabase.from(tableName).insert(obj);
+      error ? null : setObj({});
       error ? console.log(error, "Error") : close();
       console.log(obj);
       error
@@ -127,30 +134,32 @@ export default function Modal({
           });
     }
   };
-  const people = [
-    "Buyer",
-    "Seller",
-    // More users...
-  ];
+  const people = {
+    ledger: ["Buyer", "Seller"],
+    inventory: ["High", "Low"],
+    payments: ["Late", "On Time"],
+    purchase: ["Paid", "Not Paid"],
+    sales: ["Paid", "Not Paid"],
+  };
 
-  var obj: any = {};
-  const [selectedPerson, setSelectedPerson] = useState(people[0]);
-  obj["group_"] = selectedPerson;
+  tableName === "ledger" ? (obj["group_"] = state) : null;
   useEffect(() => {
-    obj["group_"] = selectedPerson;
-  }, [selectedPerson]);
+    obj["group_"] = state;
+    if (inputFields) {
+      inputFields.values["group_"] = state;
+    }
+  }, [state]);
 
   const handleInputChange = (key?: string, event?: any) => {
     if (typeof inputFields[0] != "undefined") {
-      key === "group_"
-        ? (obj[key] = selectedPerson)
-        : (obj[key!] = event.target.value);
+      key === "group_" ? (obj[key] = state) : (obj[key!] = event.target.value);
       console.log(key);
+      console.log(typeof obj[key!], obj[key!]);
     } else {
       key === "group_"
-        ? (obj[key] = selectedPerson)
+        ? (obj[key] = state)
         : (inputFields.values[key!] = event.target.value);
-      // console.log(inputFields.values);
+      console.log(typeof inputFields.values[key!]);
     }
 
     setInputFields(inputFields);
@@ -231,12 +240,21 @@ export default function Modal({
                                   <div className="sm:col-span-2">
                                     {item["type"] === "dropdown" ? (
                                       <ComboBox
-                                        state={selectedPerson}
-                                        setState={setSelectedPerson}
-                                        data={people}
+                                        state={state}
+                                        setState={setState}
+                                        data={
+                                          tableName === "ledger"
+                                            ? people.ledger
+                                            : tableName === "inventory"
+                                            ? people.inventory
+                                            : tableName === "purchase" ||
+                                              tableName === "sales"
+                                            ? people.purchase
+                                            : people.payments
+                                        }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
-                                    ) : item["accessor"] === "anniversary" ? (
+                                    ) : item["type"] === "date" ? (
                                       <input
                                         type="date"
                                         onChange={(event) =>
@@ -247,14 +265,37 @@ export default function Modal({
                                         }
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                       focus:border-coffee border-gray-300 rounded-md"
+                                        required
+                                      />
+                                    ) : item["type"] === "number" &&
+                                      item["accessor"] != "variation_" ? (
+                                      <input
+                                        type="number"
+                                        onChange={(event) =>
+                                          handleInputChange(
+                                            item["accessor"],
+                                            event
+                                          )
+                                        }
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                  focus:border-coffee border-gray-300 rounded-md"
+                                      />
+                                    ) : item["accessor"] === "variation_" ? (
+                                      <input
+                                        type="number"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                        focus:border-coffee border-gray-300 rounded-md"
+                                        disabled={true}
+                                        value={
+                                          obj["stock_in_hand"] -
+                                          obj["phy_stock_in_hand"]
+                                        }
                                       />
                                     ) : (
                                       <textarea
                                         key={i}
                                         // type={item["type"]}
                                         rows={4}
-                                        name={item + "-" + i}
-                                        id={item + "-" + i}
                                         onChange={(event) =>
                                           handleInputChange(
                                             item["accessor"],
@@ -306,8 +347,6 @@ export default function Modal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {console.log(inputFields.values[key])}
-
                                     {key === "anniversary" ? (
                                       <input
                                         type="date"
@@ -320,20 +359,50 @@ export default function Modal({
                                       />
                                     ) : key === "group_" ? (
                                       <ComboBox
-                                        state={selectedPerson}
-                                        setState={setSelectedPerson}
-                                        data={people}
+                                        state={state}
+                                        setState={setState}
+                                        data={
+                                          tableName === "ledger"
+                                            ? people.ledger
+                                            : people.inventory
+                                        }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                                      />
+                                    ) : key === "variation_" ? (
+                                      <input
+                                        type="number"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                            focus:border-coffee border-gray-300 rounded-md"
+                                        disabled={true}
+                                        value={
+                                          inputFields.values["stock_in_hand"] -
+                                          inputFields.values[
+                                            "phy_stock_in_hand"
+                                          ]
+                                        }
+                                      />
+                                    ) : // NUMERIC VALUES
+                                    [
+                                        "stock_in_hand",
+                                        "min_stock_value",
+                                        "max_stock_value",
+                                        "mrp",
+                                        "no_of_boxes",
+                                        "phy_stock_in_hand",
+                                        "stock_in_hand",
+                                      ].includes(key) ? (
+                                      <input
+                                        type="number"
+                                        onChange={(event) =>
+                                          handleInputChange(key, event)
+                                        }
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                focus:border-coffee border-gray-300 rounded-md"
+                                        defaultValue={inputFields.values[key]}
                                       />
                                     ) : (
                                       <textarea
                                         key={i}
-                                        // type={
-                                        //   key === "created_at" ||
-                                        //   key === "last_updated"
-                                        //     ? "datetime-local"
-                                        //     : "text"
-                                        // }
                                         rows={4}
                                         name={key + "-" + i}
                                         id={key + "-" + i}
@@ -381,12 +450,6 @@ export default function Modal({
                               ))
                             : null}
                         </div>
-
-                        {/* Project description */}
-                        {/*  No need */}
-
-                        {/* Team members */}
-                        {/* Privacy */}
                       </div>
                     </div>
                     {/* <pre>
@@ -400,7 +463,7 @@ export default function Modal({
                       </code>
                     </pre> */}
                     {/* Action buttons */}
-                    <div className="flex-shrink-0 sticky bottom-0 bg-cream px-4 border-t border-gray-200 py-5 sm:px-6">
+                    <div className="flex-shrink-0 bg-cream px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"

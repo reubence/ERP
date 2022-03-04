@@ -8,11 +8,12 @@ import {
   RefreshIcon,
   SwitchVerticalIcon,
 } from "@heroicons/react/outline";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import Modal from "../../components/Modal/Modal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
-import { columns } from "../../public/data";
+
+import { columns } from "../../public/data/data";
 
 /* This example requires Tailwind CSS v2.0+ */
 
@@ -27,7 +28,6 @@ function App() {
 
   const navigation = [
     { name: "Ledger", accessor: "ledger", current: menuItem },
-    { name: "Company", accessor: "company", current: menuItem },
     { name: "Sales", accessor: "sales", current: menuItem },
     { name: "Purchase", accessor: "purchase", current: menuItem },
     { name: "Payments", accessor: "payments", current: menuItem },
@@ -39,24 +39,18 @@ function App() {
     case "ledger":
       tableData = columns[0];
       break;
-    case "company":
+    case "inventory":
       tableData = columns[1];
       break;
-    case "sales":
+    case "payments":
       tableData = columns[2];
       break;
     case "purchase":
       tableData = columns[3];
       break;
-    case "payments":
+    case "sales":
       tableData = columns[4];
       break;
-    // case "inventory":
-    //   tableData = columns[5];
-    //   break;
-    // case "reports":
-    //   tableData = columns[6];
-    //   break;
     default:
       tableData = columns[0];
   }
@@ -69,7 +63,35 @@ function App() {
     setMenuItem(String(name).toLowerCase());
     setRefreshTable(!refreshTable);
   };
+
   const [sortby, setSortBy] = useState("last_updated");
+  const [selectedPerson, setSelectedPerson] = useState(
+    `${
+      menuItem === "ledger"
+        ? `Buyer`
+        : menuItem === "inventory"
+        ? `High`
+        : menuItem === "purchase" || menuItem === "sales"
+        ? "Paid"
+        : "Late"
+    }`
+  );
+
+  console.log(menuItem, selectedPerson);
+  var obj: any = {};
+  useEffect(() => {
+    setSelectedPerson(
+      `${
+        menuItem === "ledger"
+          ? `Buyer`
+          : menuItem === "inventory"
+          ? `High`
+          : menuItem === "purchase" || menuItem === "sales"
+          ? "Paid"
+          : "Late"
+      }`
+    );
+  }, [menuItem]);
 
   return (
     <ProtectedWrapper>
@@ -77,7 +99,7 @@ function App() {
         {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
-          className="min-w-0 flex-1 flex flex-col lg:order-last"
+          className="w-full flex flex-col flex-1 overflow-x-hidden order-last"
         >
           {/* <div className="grid grid-cols-9 grid-rows-9"> */}
           <div className="relative px-4 sm:px-6 lg:px-0">
@@ -130,12 +152,14 @@ function App() {
               show={show}
               refreshTable={refreshTable}
               sortby={sortby}
+              state={selectedPerson}
+              setState={setSelectedPerson}
             ></SimpleStripedTable>
           </div>
         </section>
 
         {/* SECOND MENU */}
-        <aside className="hidden lg:block lg:flex-shrink-0 lg:order-first border-r border-coffee">
+        <aside className="w-82 h-screen flex flex-col hide-scrollbar border-r bg-cream border-coffee">
           <div className="px-6 pt-6 pb-4">
             <h2 className="text-lg font-medium text-gray-900">
               Data Directory
@@ -217,6 +241,8 @@ function App() {
             close={Toggle}
             tableName={menuItem}
             dataModal={tableData}
+            state={selectedPerson}
+            setState={setSelectedPerson}
           />
         </ModalHOC>
       </main>

@@ -198,14 +198,15 @@ export default function HomePage() {
             tableName="company"
           ></SimpleStripedTable> */}
         </div>
-        <ModalHOC selector="#modal">
+        {/* <ModalHOC selector="#modal">
           <Modal
             show={modal}
             close={setModal}
             tableName={"company"}
             dataModal={tableData}
+            
           />
-        </ModalHOC>
+        </ModalHOC> */}
       </main>
     </ProtectedWrapper>
   );
