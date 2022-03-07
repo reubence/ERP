@@ -41,24 +41,6 @@ import useUser from "../hooks/useUser";
 import TickerTape from "../components/Cards/TickerTape";
 import { useState } from "react";
 export default function HomePage() {
-  const tableData = [
-    // { Header: "ID", accessor: "id" as const },
-    { Header: "Name", accessor: "name" as const },
-    { Header: "Email", accessor: "email" as const },
-    { Header: "Contact", accessor: "contact" as const },
-    { Header: "Address", accessor: "address" as const },
-    { Header: "Pin", accessor: "pin" as const },
-    { Header: "City", accessor: "city" as const },
-    { Header: "States", accessor: "states" as const },
-    { Header: "Country", accessor: "country" as const },
-    { Header: "Typeofcompany", accessor: "typeofcompany" as const },
-    { Header: "DL NO", accessor: "dl_no" as const },
-    { Header: "Pan No", accessor: "pan_no" as const },
-    { Header: "Responsible Person", accessor: "responsible_person" as const },
-    { Header: "Responsible Phone", accessor: "responsible_phone" as const },
-    { Header: "GSTIN", accessor: "gstin" as const },
-  ];
-
   const cards: {
     id: number;
     name: string;
