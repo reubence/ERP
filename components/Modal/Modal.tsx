@@ -6,8 +6,6 @@ import { supabase } from "../../utils/supabaseClient";
 import toast from "react-hot-toast";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
-import { DropDownButton } from "../Buttons/DropdownButton";
-import { LockClosedIcon } from "@heroicons/react/solid";
 import ComboBox from "../Buttons/ComboBox";
 
 export default function Modal({
