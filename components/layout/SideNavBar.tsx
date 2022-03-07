@@ -30,6 +30,7 @@ import {
   MenuAlt2Icon,
   BellIcon,
   XIcon,
+  PrinterIcon,
 } from "@heroicons/react/outline";
 import Breadcrumb from "./Breadcrumbs";
 import Link from "next/link";
@@ -40,7 +41,7 @@ import useUser from "../../hooks/useUser";
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
   { name: "Ledger", href: "/ledger", icon: LibraryIcon, current: true },
-  { name: "Sales", href: "/sales", icon: CurrencyRupeeIcon, current: false },
+  { name: "Invoicing", href: "/invoicing", icon: PrinterIcon, current: false },
   {
     name: "Purchase",
     href: "/purchase",

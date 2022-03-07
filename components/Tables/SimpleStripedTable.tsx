@@ -1,5 +1,5 @@
 import ReactTable from "react-table";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import {
   useTable,
   usePagination,
@@ -9,12 +9,13 @@ import {
 } from "react-table";
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
-import { SearchIcon } from "@heroicons/react/solid";
+import { SearchIcon, DownloadIcon } from "@heroicons/react/solid";
 import Modal from "../Modal/Modal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
 import Notification from "../Modal/Notification";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
+import { CSVLink } from "react-csv";
 
 interface props {
   table_name: string;
@@ -171,7 +172,7 @@ function Table({
         />
       </div>
 
-      <div className="scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow h-[615px] border-t border-coffee pb-40 pr-40">
+      <div className="scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow h-[] border-t border-coffee pb-40 pr-40">
         <div {...getTableProps()} className="table relative bg-coffee">
           <div className="sticky top-0 bg-gray-100 table-header-group">
             {headerGroups.map((headerGroup) => (
@@ -390,7 +391,7 @@ function App({
     [modal, show, refreshTable]
   );
 
-  // const columns = React.useMemo(() => [], []);
+  useMemo(() => data, [modal, show, refreshTable]);
 
   // useEffect(() => {
   //   // Update the document title using the browser API
@@ -398,10 +399,9 @@ function App({
   //   fetchData;
   // }, [formatTrProps]);
 
-  // const csvdata = React.useMemo(() => {
-  //   return data.map((d: any) => Object.values(d));
-  // }, []);
-  const { data: user } = useUser();
+  const csvdata = React.useMemo(() => {
+    return data.map((d: any) => Object.values(d));
+  }, []);
 
   const [showNotif, setShowNotif] = useState(false);
   data.map((key: string, i: number) => {
@@ -413,7 +413,9 @@ function App({
   return (
     <>
       <div className="">
-        {/* <CSVLink data={csvdata}>Download me</CSVLink> */}
+        <ModalHOC selector="#download">
+          <CSVLink data={data}>Export Data</CSVLink>
+        </ModalHOC>
 
         {/* <button onClick={resetData}>Reset Data</button> */}
 

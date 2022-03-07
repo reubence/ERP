@@ -14,6 +14,8 @@ import Modal from "../../components/Modal/Modal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
 
 import { columns } from "../../public/data/data";
+import { supabase } from "../../utils/supabaseClient";
+import { CSVDownload, CSVLink } from "react-csv";
 
 /* This example requires Tailwind CSS v2.0+ */
 
@@ -93,6 +95,15 @@ function App() {
     );
   }, [menuItem]);
 
+  const [data, setData] = useState<string>("");
+  const getData = async () => {
+    const { data: string, error } = await supabase.from("ledger").select("*");
+    if (string) {
+      setData(String(string));
+    }
+    return true;
+  };
+
   return (
     <ProtectedWrapper>
       <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
@@ -116,7 +127,6 @@ function App() {
                   btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
                   iconClass="text-gray-500 group-hover:text-coffee"
                 />
-
                 <DropDownButton
                   setSolid={false}
                   text="Sort by"
@@ -125,7 +135,6 @@ function App() {
                   btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
                   iconClass="text-gray-500 group-hover:text-coffee"
                 />
-
                 <SimpleButton
                   setSolid={false}
                   text="Add Row"
@@ -134,14 +143,19 @@ function App() {
                   btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
                 />
                 {/* <DropdownButton /> */}
-                <div className="right-6 fixed">
-                  <SimpleButton
+                <div
+                  className="right-6 fixed inline-flex items-center px-2 py-1 text-sm font-medium rounded-md text-gray-500 hover:text-coffee hover:bg-gray-300"
+                  id="download"
+                >
+                  {/* <SimpleButton
                     setSolid={false}
                     text="Export Data"
                     icon={DownloadIcon}
+                    // onClick={downloadData}
                     iconClass="text-gray-500 group-hover:text-coffee"
+                    onClick={getData}
                     btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
@@ -251,3 +265,25 @@ function App() {
 }
 
 export default App;
+
+// export async function getServerSideProps() {
+//   const { data, error } = await supabase
+//     .from("ledger")
+//     .select("*")
+//     .order("created_at", { ascending: false });
+
+//   !error ? null : null;
+
+//   const fastcsv = require("fast-csv");
+//   const fs = require("fs");
+//   const ws = fs.createWriteStream("NewFile.csv");
+//   const jsonData = data;
+//   fastcsv
+//     .write(jsonData, { headers: true })
+//     .on("finish", function () {
+//       console.log("Write to bezkoder_postgresql_fastcsv.csv successfully!");
+//     })
+//     .pipe(ws);
+
+//   return { props: {} };
+// }
