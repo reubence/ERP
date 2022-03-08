@@ -16,7 +16,6 @@ import Notification from "../Modal/Notification";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
 import { CSVLink } from "react-csv";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 interface props {
   table_name: string;
