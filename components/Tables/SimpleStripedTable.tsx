@@ -148,9 +148,9 @@ function Table({
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
   // Render the UI for your table
-  const { width, height } = useWindowDimensions();
-  const h = height - 205;
-  console.log(height - 205);
+  // const { width, height } = useWindowDimensions();
+  // const h = height - 205;
+  // console.log(height - 205);
   return (
     <>
       {/* <pre>
@@ -177,7 +177,7 @@ function Table({
       </div>
 
       <div
-        className={`scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow h-[${h}px] border-t border-coffee pb-40 pr-40`}
+        className={`scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
       >
         <div {...getTableProps()} className="table relative bg-coffee">
           <div className="sticky top-0 bg-gray-100 table-header-group">
