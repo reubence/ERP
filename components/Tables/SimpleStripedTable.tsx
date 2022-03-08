@@ -177,6 +177,7 @@ function Table({
       </div>
 
       <div
+        style={{ height: h }}
         className={`scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
       >
         <div {...getTableProps()} className="table relative bg-coffee">
