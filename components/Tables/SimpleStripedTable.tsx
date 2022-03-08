@@ -16,6 +16,7 @@ import Notification from "../Modal/Notification";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
 import { CSVLink } from "react-csv";
+import useWindowDimensions from "../../hooks/useDynamicDimensions";
 
 interface props {
   table_name: string;
@@ -147,9 +148,9 @@ function Table({
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
   // Render the UI for your table
-  // const { width, height } = useWindowDimensions();
-  // const h = height - 205;
-  // console.log(height - 205);
+  const { width, height } = useWindowDimensions();
+  const h = height - 205;
+  console.log(height - 205);
   return (
     <>
       {/* <pre>
