@@ -149,7 +149,7 @@ function Table({
   }, [fetchData, pageIndex, pageSize]);
   // Render the UI for your table
   const { width, height } = useWindowDimensions();
-  const h = height - 205;
+  const h = height - 196;
   console.log(height - 205);
   return (
     <>
