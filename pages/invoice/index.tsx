@@ -60,7 +60,7 @@ function App() {
       .select("company_name");
     let arr: string[] = [];
     data!.map((key, i) => {
-      arr.push(Object.values(key)[0]);
+      arr.push(String(Object.values(key)[0]));
     });
     setCompany(arr);
     setSelectedOption(arr[0]);
