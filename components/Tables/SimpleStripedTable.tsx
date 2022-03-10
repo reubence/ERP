@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { SearchIcon, DownloadIcon } from "@heroicons/react/solid";
-import Modal from "../Modal/Modal";
+import SideModal from "../Modal/SideModal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
 import Notification from "../Modal/Notification";
 import moment from "moment";
@@ -385,7 +385,7 @@ function App({
           return data;
         };
 
-        const data = readData({
+        readData({
           table_name,
           startRow,
           endRow,
@@ -435,7 +435,7 @@ function App({
           formatRowProps={(state: any) => formatTrProps(state)}
         ></Table>
         <ModalHOC selector="#modal">
-          <Modal
+          <SideModal
             show={modal}
             close={Toggle}
             tableName={tableName}

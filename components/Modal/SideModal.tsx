@@ -8,7 +8,7 @@ import moment from "moment";
 import useUser from "../../hooks/useUser";
 import ComboBox from "../Buttons/ComboBox";
 
-export default function Modal({
+export default function SideModal({
   show,
   close,
   tableName,

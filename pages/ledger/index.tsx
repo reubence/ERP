@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/outline";
 import { useState, useEffect } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
-import Modal from "../../components/Modal/Modal";
+import SideModal from "../../components/Modal/SideModal";
 import { DropDownButton } from "../../components/Buttons/DropdownButton";
 
 import { columns } from "../../public/data/data";
@@ -36,27 +36,7 @@ function App() {
     { name: "Inventory", accessor: "inventory", current: menuItem },
     { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
   ];
-  let tableData;
-  switch (menuItem) {
-    case "ledger":
-      tableData = columns[0];
-      break;
-    case "inventory":
-      tableData = columns[1];
-      break;
-    case "payments":
-      tableData = columns[2];
-      break;
-    case "purchase":
-      tableData = columns[3];
-      break;
-    case "sales":
-      tableData = columns[4];
-      break;
-    default:
-      tableData = columns[0];
-  }
-
+  let tableData = columns[2];
   const Toggle = () => {
     setShow(!show);
   };
@@ -250,7 +230,7 @@ function App() {
 
         {/* MODAL FOR ADD-ROW */}
         <ModalHOC selector="#modal">
-          <Modal
+          <SideModal
             show={show}
             close={Toggle}
             tableName={menuItem}

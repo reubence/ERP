@@ -23,7 +23,7 @@
   }
   ```
 */
-import Modal from "../components/Modal/Modal";
+import SideModal from "../components/Modal/SideModal";
 import ModalHOC from "../components/HigherOrderComponents/ModalHOC";
 import {
   CheckCircleIcon,
