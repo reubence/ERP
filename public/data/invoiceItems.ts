@@ -21,11 +21,11 @@ export const invoiceItems = [
     disabled: true,
   },
   {
-    Header: "S. No",
+    Header: "S.No",
     accessor: "s_no" as const,
     type: "number",
     required: true,
-    disabled: false,
+    disabled: true,
   },
   {
     Header: "Qty.",
@@ -49,7 +49,7 @@ export const invoiceItems = [
     disabled: false,
   },
   {
-    Header: "item_name",
+    Header: "Product Name",
     accessor: "item_name" as const,
     type: "text",
     required: true,

@@ -33,7 +33,7 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/solid";
 import DataCard from "../components/Cards/Data-Card";
-import SimpleStripedTable from "../components/Tables/SimpleStripedTable";
+import SimpleStripedTable from "../components/Tables/AdvancedTable";
 import SimpleButton from "../components/Buttons/SimpleButton";
 // @ts-ignore
 import ProtectedWrapper from "../components/layout/Protected";

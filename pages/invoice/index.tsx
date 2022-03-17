@@ -1,17 +1,5 @@
-import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
+import SimpleTable from "../../components/Tables/SimpleTable";
 import ProtectedWrapper from "../../components/layout/Protected";
-import {
-  ArchiveIcon,
-  CashIcon,
-  ChartPieIcon,
-  CogIcon,
-  DownloadIcon,
-  FilterIcon,
-  HomeIcon,
-  LibraryIcon,
-  PrinterIcon,
-  ShoppingCartIcon,
-} from "@heroicons/react/solid";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import {
   SearchIcon,
@@ -21,38 +9,34 @@ import {
 } from "@heroicons/react/outline";
 import { useState, useEffect } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
-import SideModal from "../../components/Modal/SideModal";
-import { DropDownButton } from "../../components/Buttons/DropdownButton";
+import SimpleSideModal from "../../components/Modal/SimpleSideModal";
 
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
-import { CSVDownload, CSVLink } from "react-csv";
-import ReactTable from "react-table";
 import React, { useMemo, useRef } from "react";
-import {
-  useTable,
-  usePagination,
-  useFilters,
-  useGlobalFilter,
-  useAsyncDebounce,
-} from "react-table";
-import moment from "moment";
-import useUser from "../../hooks/useUser";
-import Link from "next/link";
-import router, { useRouter } from "next/router";
-import SimpleModal from "../../components/Modal/SimpleModal";
 import ComboBox from "../../components/Buttons/ComboBox";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
+// tableData={tableData}
+// tableName={menuItem}
+// sortby={sortby}
+// state={show}
+// setState={setShow}
+
+interface invoiceData {}
 
 function App() {
+  const [invoiceData, setInvoiceData] = useState<any>([]);
   const [show, setShow] = useState(false);
-  let [company, setCompany] = useState([""]);
   const Toggle = () => {
     setShow(!show);
   };
+  const [selectedPerson, setSelectedPerson] = useState("Something");
+  let [company, setCompany] = useState([""]);
+
+  let tableData = columns[5];
 
   const getData = async () => {
     const { data, error } = await supabase
@@ -79,7 +63,7 @@ function App() {
           aria-labelledby="primary-heading"
           className="w-full flex flex-col lg:order-last items-center overflow-auto"
         >
-          <div className="flex border-b border-coffee relative px-4 sm:px-6 lg:px-0 justify-start z-10 space-x-4 items-stretch self-stretch">
+          <div className="flex border-b border-coffee relative px-4 justify-start z-10 space-x-4 items-stretch self-stretch">
             {/* <div className="flex-1">
                 <TickerTape />
               </div> */}
@@ -99,42 +83,101 @@ function App() {
             </div>
           </div>
           <div className="lg:p-24 flex md:pl-96 md:p-24">
-            <div className="block h-[1000px] object-scale-down justify-center overflow-scroll">
-              <div className="flex flex-col overflow-scroll bg-black w-[1200px] h-[800px]">
-                <div className="flex flex-row justify-between w-full h-1/4">
-                  <span className="bg-red-500 w-full">01</span>
-                  <span className="bg-green-500 w-full">02</span>
-                  <span className="bg-blue-500 w-full">03</span>
+            <div className="block shadow-2xl object-scale-down justify-center">
+              <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[800px]">
+                <div className="flex flex-row border-b-2 border-black justify-between w-full h-1/4">
+                  <div className=" w-full border-r-2 border-black px-4 py-2 text-blue-900">
+                    <h1 className="font-extrabold text-lg mb-2">
+                      NEO KUMFURT SOLUTIONS PVT. LTD
+                    </h1>
+                    <p className="text-sm font-bold leading-tight">
+                      SCO - 155,GROUND FLOOR, SEC-7 MAIN MARKET,KARNAL-132001
+                      <br />
+                      HARYANA Phone : 9817413886, 0184-7960686
+                      <br />
+                      Licence No. : 20B&21B-332058-OW/H,W/H
+                      <br />
+                      GSTIN : 06AAFCN0531K1ZN
+                    </p>
+                  </div>
+                  <span className=" w-full border-r-2 leading-none border-black px-4 py-2 text-blue-900 text-center">
+                    <h1 className="font-extrabold text-3xl">GST INVOICE</h1>
+                    {/* <h1 className="font-extrabold text-md">CREDIT</h1> */}
+                    <div className="p-4">
+                      <dl className="bg-white grid grid-cols-2">
+                        <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-r">
+                          <dt className="order-2 mt-2 text-lg leading-6 font-medium">
+                            #21313213
+                          </dt>
+                          <dd className="order-1 font-bold">Invoice No</dd>
+                        </div>
+                        <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-l">
+                          <dt className="order-2 mt-2 text-lg leading-6 font-medium">
+                            23/03/2021
+                          </dt>
+                          <dd className="order-1 font-bold">Invoice Date</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </span>
+                  <span className=" w-full px-4 py-2 leading-none">
+                    {/* <div className="w-6/6 px-4 py-2 border-r-2 border-dotted border-black"> */}
+                    <h1 className="font-extrabold text-lg mb-2">
+                      BILLING ADDRESS
+                    </h1>
+                    <p className="text-sm font-bold leading-tight">
+                      AB-8, BASEMENT, COMMUNITY CENTRE, SAFDARJANG ENCLAVE, NEW
+                      DELHI-29 <br />
+                      State : 07 (110029)
+                      <br /> PHONE. : 01126161817, 4051560, 9811283881
+                      <br /> GSTIN : 07ANDPP2450P1ZN
+                    </p>
+                    {/* </div> */}
+                    {/* <div className="w-3/6 px-4 py-2">
+                      <span className="font-bold">Shipping Address :-</span>
+                    </div> */}
+                  </span>
                 </div>
-                <div className="flex flex-col justify-between">
-                  <span className="bg-yellow-500 h-96">04</span>
+                <div className="flex border-b-2 border-black flex-col justify-between">
+                  <div className="border-b-2 border-black h-96">
+                    <SimpleTable
+                      tableData={tableData}
+                      show={show}
+                      tableName={"invoice_items"}
+                      state={selectedPerson}
+                      setState={setSelectedPerson}
+                      invoiceData={invoiceData}
+                      setInvoiceData={setInvoiceData}
+                    />
+                  </div>
                   <div className="flex flex-row justify-between w-full h-28">
-                    <span className="bg-purple-500 w-9/12">05</span>
-                    <span className="bg-pink-500 w-3/12">06</span>
+                    <span className="border-r-2 border-black w-9/12">05</span>
+                    <span className=" w-3/12">06</span>
                   </div>
                 </div>
                 <div className="flex flex-row justify-between w-full h-1/4">
-                  <span className="bg-yellow-300 w-5/12">07</span>
-                  <span className="bg-gray-600 w-4/12">08</span>
-                  <span className="bg-red-200 w-3/12">09</span>
+                  <span className="border-r-2 border-black w-5/12">07</span>
+                  <span className="border-r-2 border-black w-4/12">08</span>
+                  <span className=" w-3/12">09</span>
                 </div>
               </div>
             </div>
           </div>
-
-          <SimpleModal show={show} close={Toggle} />
         </section>
 
-        {/* <ModalHOC selector="#modal">
-          <Modal
+        {/* MODAL FOR ADD-ROW */}
+        <ModalHOC selector="#modal">
+          <SimpleSideModal
             show={show}
             close={Toggle}
-            tableName={menuItem}
+            tableName={"invoice_items"}
             dataModal={tableData}
             state={selectedPerson}
             setState={setSelectedPerson}
+            invoiceData={invoiceData}
+            setInvoiceData={setInvoiceData}
           />
-        </ModalHOC> */}
+        </ModalHOC>
       </main>
     </ProtectedWrapper>
   );

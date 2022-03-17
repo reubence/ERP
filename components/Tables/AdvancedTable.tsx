@@ -22,7 +22,7 @@ interface props {
   table_name: string;
   startRow: number;
   endRow: number;
-  sortby: string;
+  sortby?: string;
 }
 
 interface AppProps {
@@ -30,8 +30,7 @@ interface AppProps {
   tableName: string;
   show?: boolean;
   refreshTable?: boolean;
-  notify?: Function;
-  sortby: string;
+  sortby?: string;
   state: string;
   setState: Function;
 }
@@ -302,12 +301,11 @@ function Table({
   );
 }
 
-function App({
+function AdvancedTable({
   tableData,
   tableName,
   show,
   refreshTable,
-  notify,
   sortby,
   state,
   setState,
@@ -372,7 +370,9 @@ function App({
             .from(table_name)
             .select("*")
             .range(startRow, endRow)
-            .order(sortby, { ascending: false });
+            .order(`${sortby ? sortby : "last_updated"}`, {
+              ascending: false,
+            });
 
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
@@ -385,12 +385,18 @@ function App({
           return data;
         };
 
-        readData({
-          table_name,
-          startRow,
-          endRow,
-          sortby,
-        });
+        sortby
+          ? readData({
+              table_name,
+              startRow,
+              endRow,
+              sortby,
+            })
+          : readData({
+              table_name,
+              startRow,
+              endRow,
+            });
 
         setLoading(false);
       }
@@ -410,7 +416,6 @@ function App({
     return data.map((d: any) => Object.values(d));
   }, []);
 
-  const [showNotif, setShowNotif] = useState(false);
   data.map((key: string, i: number) => {
     data[i].created_at = moment(data[i].created_at).format("llll");
     data[i].last_updated = moment(data[i].last_updated).format("llll");
@@ -420,12 +425,10 @@ function App({
   return (
     <>
       <div className="">
-        <ModalHOC selector="#download">
+        {/* <ModalHOC selector="#download">
           <CSVLink data={data}>Export Data</CSVLink>
-        </ModalHOC>
-
+        </ModalHOC> */}
         {/* <button onClick={resetData}>Reset Data</button> */}
-
         <Table
           columns={tableData}
           data={data}
@@ -444,14 +447,7 @@ function App({
             setState={setState}
           />
         </ModalHOC>
-        <ModalHOC selector="#modal">
-          <Notification
-            show={showNotif}
-            setShow={() => setShowNotif(!showNotif)}
-          />
-        </ModalHOC>
-
-        {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
+        = {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
         {/* <pre>
                 <code>
                   {JSON.stringify(
@@ -472,4 +468,4 @@ function App({
   );
 }
 
-export default App;
+export default AdvancedTable;

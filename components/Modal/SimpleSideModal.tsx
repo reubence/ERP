@@ -8,20 +8,23 @@ import moment from "moment";
 import useUser from "../../hooks/useUser";
 import ComboBox from "../Buttons/ComboBox";
 
-export default function SideModal({
+export default function SimpleSideModal({
   show,
   close,
   tableName,
   dataModal,
   state,
   setState,
+  invoiceData,
+  setInvoiceData,
 }: {
   show: boolean;
   close: Function;
   tableName: string;
   state: string;
   setState: Function;
-
+  invoiceData: any[];
+  setInvoiceData: Function;
   dataModal:
     | {
         allCells: [];
@@ -76,8 +79,8 @@ export default function SideModal({
   };
   const { data } = useUser();
   const id = data.id;
-  // var obj: any = {};
   const [obj, setObj] = useState(Object);
+
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -85,29 +88,10 @@ export default function SideModal({
       // Add Row
       obj["created_by"] = id;
       obj["updated_by"] = id;
-      const { error } = await supabase.from(tableName).insert(obj);
-      error ? null : setObj({});
-      error ? console.log(error, "Error") : close();
-      console.log(obj);
-      error
-        ? toast.error(`Error Adding Row -\n${error.message}`, {
-            duration: 6000,
-            position: "top-right",
-            style: {
-              background: "#262125",
-              color: "#ffffff",
-            },
-          })
-        : toast.success("Row Added Successfully", {
-            duration: 6000,
-            position: "top-right",
-            style: {
-              background: "#262125",
-              color: "#ffffff",
-            },
-          });
-
-      !error ? setSerial(serial + 1) : null;
+      invoiceData.push(obj);
+      setInvoiceData(invoiceData);
+      console.log(invoiceData);
+      close();
     }
     // Update Row
     else {
@@ -116,6 +100,7 @@ export default function SideModal({
         .update(inputFields.values)
         .match({ id: dataModal.values.id });
       error ? console.log(error) : close();
+      console.log(inputFields.values);
       error
         ? toast.error(`Error Updating Row - \n${error.message}`, {
             duration: 6000,
@@ -145,7 +130,11 @@ export default function SideModal({
   const [serial, setSerial] = useState(1);
   tableName === "ledger" ? (obj["group_"] = state) : null;
   useEffect(() => {
+    //ADD ROW
     obj["group_"] = state;
+    obj["s_no"] = serial;
+
+    //EDIT ROW
     if (inputFields) {
       inputFields.values["group_"] = state;
     }
@@ -155,18 +144,15 @@ export default function SideModal({
     //ADD ROW
     if (typeof inputFields[0] != "undefined") {
       key === "group_" ? (obj[key] = state) : (obj[key!] = event.target.value);
-      console.log(key);
-      console.log(typeof obj[key!], obj[key!]);
     }
+
     //EDIT ROW
     else {
       key === "group_"
-        ? (obj[key] = state)
+        ? (inputFields.values[key] = state)
         : (inputFields.values[key!] = event.target.value);
-      console.log(typeof inputFields.values[key!]);
     }
-
-    setInputFields(inputFields);
+    // setInputFields(inputFields);
   };
 
   return (
@@ -271,8 +257,18 @@ export default function SideModal({
                                       focus:border-coffee border-gray-300 rounded-md"
                                         required
                                       />
+                                    ) : item["accessor"] === "s_no" ? (
+                                      <input
+                                        type="number"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                      focus:border-coffee border-gray-300 rounded-md"
+                                        disabled={true}
+                                        value={serial}
+                                        defaultValue={serial}
+                                      />
                                     ) : item["type"] === "number" &&
-                                      item["accessor"] != ["variation_"] ? (
+                                      item["accessor"] !=
+                                        ["variation_", "s_no"] ? (
                                       <input
                                         type="number"
                                         onChange={(event) =>

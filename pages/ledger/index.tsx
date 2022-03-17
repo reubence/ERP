@@ -1,4 +1,4 @@
-import SimpleStripedTable from "../../components/Tables/SimpleStripedTable";
+import AdvancedTable from "../../components/Tables/AdvancedTable";
 import ProtectedWrapper from "../../components/layout/Protected";
 import { DownloadIcon, FilterIcon } from "@heroicons/react/solid";
 import SimpleButton from "../../components/Buttons/SimpleButton";
@@ -36,7 +36,31 @@ function App() {
     { name: "Inventory", accessor: "inventory", current: menuItem },
     { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
   ];
-  let tableData = columns[2];
+  let tableData;
+  switch (menuItem) {
+    case "ledger":
+      tableData = columns[0];
+      break;
+    case "inventory":
+      tableData = columns[1];
+      break;
+    case "payments":
+      tableData = columns[2];
+      break;
+    case "purchase":
+      tableData = columns[3];
+      break;
+    case "sales":
+      tableData = columns[4];
+      break;
+    case "invoice_items":
+      tableData = columns[5];
+      break;
+
+    default:
+      tableData = columns[0];
+  }
+
   const Toggle = () => {
     setShow(!show);
   };
@@ -140,7 +164,7 @@ function App() {
               </div>
             </div>
 
-            <SimpleStripedTable
+            <AdvancedTable
               tableData={tableData}
               tableName={menuItem}
               show={show}
@@ -148,7 +172,7 @@ function App() {
               sortby={sortby}
               state={selectedPerson}
               setState={setSelectedPerson}
-            ></SimpleStripedTable>
+            ></AdvancedTable>
           </div>
         </section>
 
