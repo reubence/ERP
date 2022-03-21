@@ -101,6 +101,7 @@ function Table({
       "last_updated",
       "updated_by",
       "comments_",
+      "invoice_no",
     ]);
 
     fetchData();
@@ -205,7 +206,6 @@ function SimpleTable({
     // even a server. But for this example, we'll just fake it.
 
     setData(invoiceData);
-    console.log(data);
 
     // Give this fetch an ID
     const fetchId = ++fetchIdRef.current;

@@ -35,6 +35,13 @@ export const ledgerData = [
     disabled: false,
   },
   {
+    Header: "Company Name",
+    accessor: "company_name" as const,
+    type: "text",
+    required: true,
+    disabled: false,
+  },
+  {
     Header: "Company Type",
     accessor: "company_type" as const,
     type: "text",

@@ -1,5 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useState, useEffect } from "react";
+import {
+  Fragment,
+  useRef,
+  useState,
+  useEffect,
+  FormEvent,
+  useMemo,
+} from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
@@ -17,6 +24,7 @@ export default function SimpleSideModal({
   setState,
   invoiceData,
   setInvoiceData,
+  invoiceNo,
 }: {
   show: boolean;
   close: Function;
@@ -25,6 +33,7 @@ export default function SimpleSideModal({
   setState: Function;
   invoiceData: any[];
   setInvoiceData: Function;
+  invoiceNo: string;
   dataModal:
     | {
         allCells: [];
@@ -79,8 +88,7 @@ export default function SimpleSideModal({
   };
   const { data } = useUser();
   const id = data.id;
-  const [obj, setObj] = useState(Object);
-
+  let [obj, setObj] = useState<any>({});
   const handleUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -88,9 +96,9 @@ export default function SimpleSideModal({
       // Add Row
       obj["created_by"] = id;
       obj["updated_by"] = id;
-      invoiceData.push(obj);
-      setInvoiceData(invoiceData);
-      console.log(invoiceData);
+      setInvoiceData({ obj });
+      setObj({});
+      setSerial(serial + 1);
       close();
     }
     // Update Row
@@ -129,6 +137,7 @@ export default function SimpleSideModal({
   };
   const [serial, setSerial] = useState(1);
   tableName === "ledger" ? (obj["group_"] = state) : null;
+
   useEffect(() => {
     //ADD ROW
     obj["group_"] = state;
@@ -143,7 +152,9 @@ export default function SimpleSideModal({
   const handleInputChange = (key?: string, event?: any) => {
     //ADD ROW
     if (typeof inputFields[0] != "undefined") {
+      console.log(obj);
       key === "group_" ? (obj[key] = state) : (obj[key!] = event.target.value);
+      console.log(invoiceData);
     }
 
     //EDIT ROW
@@ -152,7 +163,6 @@ export default function SimpleSideModal({
         ? (inputFields.values[key] = state)
         : (inputFields.values[key!] = event.target.value);
     }
-    // setInputFields(inputFields);
   };
 
   return (
@@ -261,7 +271,7 @@ export default function SimpleSideModal({
                                       <input
                                         type="number"
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                      focus:border-coffee border-gray-300 rounded-md"
+                      focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
                                         disabled={true}
                                         value={serial}
                                         defaultValue={serial}
@@ -284,12 +294,20 @@ export default function SimpleSideModal({
                                       <input
                                         type="number"
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                        focus:border-coffee border-gray-300 rounded-md"
+                        focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
                                         disabled={true}
                                         value={
                                           obj["stock_in_hand"] -
                                           obj["phy_stock_in_hand"]
                                         }
+                                      />
+                                    ) : item["accessor"] === "invoice_no" ? (
+                                      <input
+                                        type="text"
+                                        className="block w-full text-gray-500 bg-gray-300 shadow-sm sm:text-sm focus:ring-coffee 
+                        focus:border-coffee border-gray-300 rounded-md"
+                                        disabled={true}
+                                        value={invoiceNo}
                                       />
                                     ) : (
                                       <textarea
@@ -372,7 +390,7 @@ export default function SimpleSideModal({
                                       <input
                                         type="number"
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                            focus:border-coffee border-gray-300 rounded-md"
+                            focus:border-coffee border-gray-300 text-gray-500 bg-gray-300 rounded-md"
                                         disabled={true}
                                         value={
                                           inputFields.values["stock_in_hand"] -
