@@ -28,6 +28,7 @@ interface AppProps {
   setState: Function;
   invoiceData: any[];
   setInvoiceData: Function;
+  footer: boolean;
 }
 interface TableProps {
   columns: any;
@@ -36,6 +37,7 @@ interface TableProps {
   fetchData: any;
   loading: any;
   pageCount: any;
+  footer: boolean;
 }
 
 // Let's add a fetchData method to our Table component that will be used to fetch
@@ -48,6 +50,7 @@ function Table({
   fetchData,
   loading,
   pageCount: controlledPageCount,
+  footer,
 }: TableProps) {
   const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
   // const skipPageResetRef = React.useRef();
@@ -60,6 +63,7 @@ function Table({
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    footerGroups,
     prepareRow,
     page,
     setHiddenColumns,
@@ -67,6 +71,7 @@ function Table({
     state: {
       pageIndex,
       pageSize,
+
       // Get the state from the instance
     },
   } = useTable(
@@ -84,6 +89,14 @@ function Table({
       // This means we'll also have to provide our own
       // pageCount.
       pageCount: controlledPageCount,
+      initialState: {
+        sortBy: [
+          {
+            id: "s_no",
+            desc: true,
+          },
+        ],
+      },
     },
     useFilters, // useFilters!
     useGlobalFilter, // useGlobalFilter!
@@ -113,9 +126,9 @@ function Table({
       <div className={`scrollbar-none flex-grow h-full w-full`}>
         <div
           {...getTableProps()}
-          className="table w-full h-full relative bg-coffee"
+          className="table w-full h-full relative bg-cream"
         >
-          <div className="sticky top-0 bg-gray-100 table-header-group">
+          <div className="sticky top-0 bg-gray-300 table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
                 {headerGroup.headers.map((column) => (
@@ -156,6 +169,23 @@ function Table({
               );
             })}
           </div>
+
+          {footer && (
+            <div className="bg-gray-300 table-footer-group">
+              {footerGroups.map((group) => (
+                <div className="table-row" {...group.getFooterGroupProps()}>
+                  {group.headers.map((column) => (
+                    <div
+                      className="border-r border-coffee px-2 py font-bold table-cell"
+                      {...column.getFooterProps()}
+                    >
+                      {column.render("Footer")}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -172,6 +202,7 @@ function SimpleTable({
   setState,
   invoiceData,
   setInvoiceData,
+  footer,
 }: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
@@ -187,7 +218,7 @@ function SimpleTable({
             ).format("YYYY-MM-DD"))
           : null;
 
-        setState(state["values"].group_);
+        setState(state["values"].igst);
 
         Toggle();
         setDataModal(data_row);
@@ -196,7 +227,7 @@ function SimpleTable({
   };
 
   // We'll start our table without any data
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState<any>(0);
   const fetchIdRef = useRef(0);
@@ -218,13 +249,14 @@ function SimpleTable({
     }
   }, [invoiceData]);
 
-  useMemo(() => data, [data, invoiceData, modal, show, refreshTable]);
+  useMemo(() => data, [invoiceData, modal, show, refreshTable]);
 
   useEffect(() => {
     // Update the document title using the browser API
     setData(invoiceData);
-    fetchData;
-  }, [data, invoiceData, modal, show, refreshTable]);
+    console.log(data);
+    // fetchData;
+  }, [invoiceData, modal, show, refreshTable]);
 
   data.map((key: string, i: number) => {
     data[i].created_at = moment(data[i].created_at).format("llll");
@@ -240,6 +272,7 @@ function SimpleTable({
         loading={loading}
         pageCount={pageCount}
         formatRowProps={(state: any) => formatTrProps(state)}
+        footer={footer}
       ></Table>
       <ModalHOC selector="#modal">
         <SimpleSideModal
