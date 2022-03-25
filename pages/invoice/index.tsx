@@ -215,11 +215,11 @@ function App() {
           }
           let temp = prevState; // COPY OF STATE
           temp[i].total = Number(prevState[i].total) + Number(obj.total); // result is = 0 + 1 === 1
-          console.log(temp[0].total);
-          console.log(temp, temp[0].total);
-          return temp; // but here, the value is 2 not 1
+          temp[i].discount =
+            Number(prevState[i].discount) + Number(obj.discount); // result is = 0 + 1 === 1
+          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst); // result is = 0 + 1 === 1
+          return [...temp]; // but here, the value is 2 not 1
         });
-        console.log(gstData);
       }
       return arr;
     });
