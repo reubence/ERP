@@ -210,6 +210,7 @@ function App() {
           } else if (Number(obj["igst"]) === 12) {
             i = 1;
           } else {
+            //
             i = 2;
           }
           let temp = prevState; // COPY OF STATE
