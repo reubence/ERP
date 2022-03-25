@@ -196,18 +196,42 @@ function App() {
               i = 2;
             }
             let temp = prevState; // COPY OF STATE
-            temp[i].total =
-              Number(prevState[i].total) +
-              Number(obj.total) -
-              Number(oldArray[index].total); // result is = 0 + 1 === 1
-            temp[i].discount =
-              Number(prevState[i].discount) +
-              Number(obj.discount) -
-              Number(oldArray[index].discount); // result is = 0 + 1 === 1
-            temp[i].igst =
-              Number(prevState[i].igst) +
-              Number(obj.igst) -
-              Number(oldArray[index].igst); // result is = 0 + 1 === 1
+            if (oldArray[index].igst === obj.igst) {
+              temp[i].total =
+                Number(prevState[i].total) +
+                Number(obj.total) -
+                Number(oldArray[index].total); // result is = 0 + 1 === 1
+              temp[i].discount =
+                Number(prevState[i].discount) +
+                Number(obj.discount) -
+                Number(oldArray[index].discount); // result is = 0 + 1 === 1
+              temp[i].igst =
+                Number(prevState[i].igst) +
+                Number(obj.igst) -
+                Number(oldArray[index].igst); // result is = 0 + 1 === 1
+            } else {
+              let j = 0;
+              if (Number(oldArray["index"].igst) === 5) {
+                j = 0;
+              } else if (Number(oldArray["index"].igst) === 12) {
+                j = 1;
+              } else {
+                //
+                j = 2;
+              }
+              temp[j].total =
+                Number(prevState[i].total) - Number(oldArray["index"].total);
+              temp[j].discount =
+                Number(prevState[i].discount) -
+                Number(oldArray["index"].discount);
+              temp[j].igst =
+                Number(prevState[i].igst) - Number(oldArray["index"].igst);
+
+              temp[i].total = Number(prevState[i].total) + Number(obj.total);
+              temp[i].discount =
+                Number(prevState[i].discount) + Number(obj.discount);
+              temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
+            }
 
             return [...temp]; // but here, the value is 2 not 1
           });
