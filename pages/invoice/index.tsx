@@ -210,22 +210,22 @@ function App() {
                 Number(obj.igst) -
                 Number(oldArray[index].igst); // result is = 0 + 1 === 1
             } else {
-              let j = 0;
-              if (Number(oldArray["index"].igst) === 5) {
+              let j = null;
+              if (Number(oldArray[index].igst) === 5) {
                 j = 0;
-              } else if (Number(oldArray["index"].igst) === 12) {
+              } else if (Number(oldArray[index].igst) === 12) {
                 j = 1;
               } else {
                 //
                 j = 2;
               }
               temp[j].total =
-                Number(prevState[i].total) - Number(oldArray["index"].total);
+                Number(prevState[j].total) - Number(oldArray["index"].total);
               temp[j].discount =
-                Number(prevState[i].discount) -
+                Number(prevState[j].discount) -
                 Number(oldArray["index"].discount);
               temp[j].igst =
-                Number(prevState[i].igst) - Number(oldArray["index"].igst);
+                Number(prevState[j].igst) - Number(oldArray["index"].igst);
 
               temp[i].total = Number(prevState[i].total) + Number(obj.total);
               temp[i].discount =
