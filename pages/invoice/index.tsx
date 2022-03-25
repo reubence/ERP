@@ -183,33 +183,15 @@ function App() {
               console.log(arr[i]);
             }
           }
-
-          setGstData((prevState) => {
-            let i = null;
-            if (Number(obj["igst"]) === 5) {
-              i = 0;
-            } else if (Number(obj["igst"]) === 12) {
-              i = 1;
-            } else {
-              //
-              i = 2;
-            }
-            let temp = prevState; // COPY OF STATE
-            temp[i].total =
-              Number(prevState[i].total) - Number(oldArray[index].total);
-            temp[i].discount =
-              Number(prevState[i].discount) - Number(oldArray[index].discount);
-            temp[i].igst =
-              Number(prevState[i].igst) - Number(oldArray[index].igst);
-            return [...temp]; // but here, the value is 2 not 1
-          });
-
           // EDIT
         } else if (item["s_no"] === obj["s_no"] && obj["edit"]) {
           oldArray[index] = obj;
           setQty((prevState) => {
             return prevState - Number(item["qty"]) + Number(obj["qty"]);
           });
+          arr = [...oldArray];
+
+          // ADDING IGST TOTALS
           setGstData((prevState) => {
             let i = null;
             if (Number(obj["igst"]) === 5) {
@@ -224,19 +206,13 @@ function App() {
             temp[i].total =
               Number(prevState[i].total) +
               Number(obj.total) -
-              Number(oldArray[index].total);
+              Number(oldArray[index].total); // result is = 0 + 1 === 1
             temp[i].discount =
-              Number(prevState[i].discount) +
-              Number(obj.discount) -
-              Number(oldArray[index].discount);
-            temp[i].igst =
-              Number(prevState[i].igst) +
-              Number(obj.igst) -
-              Number(oldArray[index].igst);
-            return [...temp];
-          });
+              Number(prevState[i].discount) + Number(obj.discount); // result is = 0 + 1 === 1
+            temp[i].igst = Number(prevState[i].igst) + Number(obj.igst); // result is = 0 + 1 === 1
 
-          arr = [...oldArray];
+            return [...temp]; // but here, the value is 2 not 1
+          });
         }
       });
 
@@ -261,10 +237,11 @@ function App() {
             i = 2;
           }
           let temp = prevState; // COPY OF STATE
-          temp[i].total = Number(prevState[i].total) + Number(obj.total);
+          temp[i].total = Number(prevState[i].total) + Number(obj.total); // result is = 0 + 1 === 1
           temp[i].discount =
-            Number(prevState[i].discount) + Number(obj.discount);
-          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
+            Number(prevState[i].discount) + Number(obj.discount); // result is = 0 + 1 === 1
+          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst); // result is = 0 + 1 === 1
+
           return [...temp]; // but here, the value is 2 not 1
         });
       }
