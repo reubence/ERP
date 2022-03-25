@@ -195,13 +195,13 @@ function App() {
             setTotalTable((prevState) => {
               let temp = prevState;
               temp[0].num =
-                Number(prevState[0].num) - Number(oldArray[index].discount);
+                Number(prevState[0].num) - Number(oldArray[index]?.discount);
               temp[1].num =
-                Number(prevState[1].num) - Number(oldArray[index].discount);
+                Number(prevState[1].num) - Number(oldArray[index]?.discount);
               temp[2].num =
-                Number(prevState[2].num) - Number(oldArray[index].total);
+                Number(prevState[2].num) - Number(oldArray[index]?.total);
               temp[3].num =
-                Number(prevState[3].num) - Number(oldArray[index].igst);
+                Number(prevState[3].num) - Number(oldArray[index]?.igst);
               temp[4].num = 1;
               return [...temp];
             });
