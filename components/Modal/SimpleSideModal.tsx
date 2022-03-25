@@ -111,7 +111,7 @@ export default function SimpleSideModal({
   const handleInputChange = (key?: string, event?: any) => {
     //ADD ROW
     if (typeof inputFields[0] != "undefined") {
-      console.log(obj);
+      console.log("HANDLE INPUT CHANGE", obj);
       key === "igst" ? (obj[key] = state) : (obj[key!] = event.target.value);
     }
 

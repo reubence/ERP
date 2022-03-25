@@ -154,16 +154,12 @@ function App() {
   const [selectedCompany, setSelectedCompany] = useState(""); // SELECTED COMPANY
   const [selectedGST, setSelectedGST] = useState("5"); // REQUIRED COMBO BOX IN MODAL
   const [serial, setSerial] = useState(1); // SERIAL NOs
-  let [gstData, setGstData] = useState<any[]>([]); //GST DATA TABLE
+  const [gstData, setGstData] = useState<any[]>(gstDataMeta); //GST DATA TABLE
   const [totalTable, setTotalTable] = useState<any[]>(totalData);
-
-  useEffect(() => {
-    setGstData(gstDataMeta);
-  });
 
   // DATA STATES :- INV. NO, QTY, IGST, TOTAL, DIS, SCHEME
   const [invoiceNo, setInvoiceNo] = useState<string>("");
-  let [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(0);
 
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
@@ -173,8 +169,9 @@ function App() {
       oldArray.map((item: { [key: string]: any }, index: number) => {
         //DELETE
         if (item["s_no"] === obj["s_no"] && obj["delete"]) {
-          qty = qty - Number(item["qty"]);
-          setQty(qty);
+          setQty((prevState) => {
+            return prevState - Number(item["qty"]);
+          });
           oldArray.splice(index, 1);
           delRowIndex = index;
           arr = [...oldArray];
@@ -189,6 +186,9 @@ function App() {
           // EDIT
         } else if (item["s_no"] === obj["s_no"] && obj["edit"]) {
           oldArray[index] = obj;
+          setQty((prevState) => {
+            return prevState - Number(item["qty"]) + Number(obj["qty"]);
+          });
           arr = [...oldArray];
         }
       });
@@ -196,23 +196,30 @@ function App() {
       // ADD ROW
       if (obj["add"]) {
         setSerial(serial + 1);
-        setQty(Number(obj["qty"]) + qty);
+        setQty((prevState) => {
+          return Number(obj["qty"]) + prevState;
+        });
+
         arr = [...oldArray, obj];
+
+        // ADDING IGST TOTALS
+        setGstData((prevState) => {
+          let i = null;
+          if (Number(obj["igst"]) === 5) {
+            i = 0;
+          } else if (Number(obj["igst"]) === 12) {
+            i = 1;
+          } else {
+            i = 2;
+          }
+          let temp = prevState; // COPY OF STATE
+          temp[i].total = Number(prevState[i].total) + Number(obj.total); // result is = 0 + 1 === 1
+          console.log(temp[0].total);
+          console.log(temp, temp[0].total);
+          return temp; // but here, the value is 2 not 1
+        });
+        console.log(gstData);
       }
-
-      let temp: any[] = [];
-      // ADDING IGST TOTALS
-      Number(obj["igst"]) === 5
-        ? (gstData[0]["total"] =
-            Number(gstData[0]["total"]) + Number(obj["igst"]))
-        : Number(obj["igst"]) === 12
-        ? (gstData[1]["total"] =
-            Number(gstData[1]["total"]) + Number(obj["igst"]))
-        : (gstData[2]["total"] =
-            Number(gstData[2]["total"]) + Number(obj["igst"]));
-      setGstData(gstData);
-
-      // setTotalTable(totalTable);
       return arr;
     });
   };
@@ -382,7 +389,7 @@ function App() {
                         <SimpleTable
                           tableData={gstDataColumns}
                           show={show}
-                          tableName={"invoice"}
+                          tableName={"gst_data"}
                           state={selectedGST}
                           setState={setSelectedGST}
                           invoiceData={gstData}
@@ -406,7 +413,7 @@ function App() {
                         <SimpleTable
                           tableData={totalDataColumn}
                           show={show}
-                          tableName={"invoice_items"}
+                          tableName={"total_data"}
                           state={selectedGST}
                           setState={setSelectedGST}
                           invoiceData={totalTable}

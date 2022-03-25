@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import SimpleSideModal from "../Modal/SimpleSideModal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
 import moment from "moment";
+import { invoiceItems } from "../../public/data/invoice";
 
 interface props {
   table_name: string;
@@ -254,14 +255,14 @@ function SimpleTable({
   useEffect(() => {
     // Update the document title using the browser API
     setData(invoiceData);
-    console.log(data);
     // fetchData;
   }, [invoiceData, modal, show, refreshTable]);
 
-  data.map((key: string, i: number) => {
-    data[i].created_at = moment(data[i].created_at).format("llll");
-    data[i].last_updated = moment(data[i].last_updated).format("llll");
-  });
+  tableName === "invoice_items" &&
+    data.map((key: string, i: number) => {
+      data[i].created_at = moment(data[i].created_at).format("llll");
+      data[i].last_updated = moment(data[i].last_updated).format("llll");
+    });
 
   return (
     <>
