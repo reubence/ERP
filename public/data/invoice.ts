@@ -115,7 +115,7 @@ export const invoiceItems = [
   {
     Header: "IGST",
     accessor: "igst" as const,
-    type: "number",
+    type: "dropdown",
     required: false,
     disabled: false,
   },
@@ -133,13 +133,13 @@ export const invoiceItems = [
     required: true,
     disabled: false,
   },
-  {
-    Header: "Group",
-    accessor: "group_" as const,
-    type: "dropdown",
-    required: true,
-    disabled: false,
-  },
+  // {
+  //   Header: "Group",
+  //   accessor: "group_" as const,
+  //   type: "dropdown",
+  //   required: true,
+  //   disabled: false,
+  // },
   {
     Header: "Last Updated",
     accessor: "last_updated" as const,

@@ -10,28 +10,214 @@ import { supabase } from "../../utils/supabaseClient";
 import React, { useMemo, useRef } from "react";
 import ComboBox from "../../components/Buttons/ComboBox";
 import moment from "moment";
+import _, { toNumber } from "lodash";
+
+// GST DATA COLUMNS
+const totalDataColumn = [
+  {
+    Header: "TOTAL",
+    accessor: "total" as const,
+    type: "text",
+  },
+  {
+    Header: "400021",
+    accessor: "num" as const,
+    type: "text",
+  },
+];
+
+// GST DATA
+const totalData = [
+  {
+    total: "ITEM DIS AMT.",
+    num: 0,
+  },
+  {
+    total: " BILL DIS AMT.",
+    num: 0,
+  },
+  {
+    total: "TOTAL DIS",
+    num: 0,
+  },
+  {
+    total: "IGST PAYBLE",
+    num: 0,
+  },
+  {
+    total: "Round off",
+    num: 0,
+  },
+];
+
+// GST DATA COLUMNS
+const gstDataColumns = [
+  {
+    Header: "Class",
+    Footer: "TOTAL",
+    accessor: "class" as const,
+    type: "text",
+  },
+  {
+    Header: "Total",
+    accessor: "total" as const,
+    type: "number",
+    Footer: (info: { rows: any[] }) => {
+      // Only calculate total visits if rows change
+      const total = React.useMemo(
+        () => info.rows.reduce((sum, row) => row.values.total + sum, 0),
+        [info.rows]
+      );
+
+      return <>{total}</>;
+    },
+  },
+  // {
+  //   Header: "Scheme",
+  //   accessor: "scheme" as const,
+  //   type: "text",
+  //   Footer: (info: { rows: any[] }) => {
+  //     // Only calculate total visits if rows change
+  //     const total = React.useMemo(
+  //       () => info.rows.reduce((sum, row) => row.values.scheme + sum, 0),
+  //       [info.rows]
+  //     );
+
+  //     return <>{total}</>;
+  //   },
+  // },
+  {
+    Header: "discount",
+    accessor: "discount" as const,
+    type: "number",
+    Footer: (info: { rows: any[] }) => {
+      // Only calculate total visits if rows change
+      const total = React.useMemo(
+        () => info.rows.reduce((sum, row) => row.values.discount + sum, 0),
+        [info.rows]
+      );
+
+      return <>{total}</>;
+    },
+  },
+  {
+    Header: "igst",
+    accessor: "igst" as const,
+    type: "number",
+    Footer: (info: { rows: any[] }) => {
+      // Only calculate total visits if rows change
+      const total = React.useMemo(
+        () => info.rows.reduce((sum, row) => row.values.igst + sum, 0),
+        [info.rows]
+      );
+
+      return <>{total}</>;
+    },
+  },
+];
+
+// GST DATA
+const gstDataMeta: any[] = [
+  {
+    class: "IGST 5.00%",
+    total: 0,
+    // scheme: 2000,
+    discount: 0,
+    igst: 0,
+  },
+  {
+    class: "IGST 12.00%",
+    total: 0,
+    // scheme: 0,
+    discount: 0,
+    igst: 0,
+  },
+  {
+    class: "IGST 18.00%",
+    total: 0,
+    // scheme: 0,
+    discount: 0,
+    igst: 0,
+  },
+];
 
 function App() {
+  // INITIALIZE STATE
   const [invoiceData, setInvoiceData] = useState<any[]>([]); // LOCAL COPY OF ROWS
   const [show, setShow] = useState(false); // MODAL
   const Toggle = () => {
     setShow(!show);
   };
-  const [selectedPerson, setSelectedPerson] = useState("Something"); // REQUIRED COMBO BOX IN MODAL
   let [company, setCompany] = useState<string[]>([]); // LIST OF COMPANIES AVAILABLE TO CHOOSE FROM
   let tableData = columns[5];
   const [invoiceBillData, setInvoiceBillData] = useState<any[]>([]); // INVOICE DATA
   const [selectedCompany, setSelectedCompany] = useState(""); // SELECTED COMPANY
+  const [selectedGST, setSelectedGST] = useState("5"); // REQUIRED COMBO BOX IN MODAL
+  const [serial, setSerial] = useState(1); // SERIAL NOs
+  let [gstData, setGstData] = useState<any[]>([]); //GST DATA TABLE
+  const [totalTable, setTotalTable] = useState<any[]>(totalData);
+
+  useEffect(() => {
+    setGstData(gstDataMeta);
+  });
+
+  // DATA STATES :- INV. NO, QTY, IGST, TOTAL, DIS, SCHEME
   const [invoiceNo, setInvoiceNo] = useState<string>("");
+  let [qty, setQty] = useState(0);
+
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
     setInvoiceData((oldArray: any) => {
-      console.log(oldArray);
-      console.log([...oldArray, obj]);
-      return [...oldArray, obj];
+      let arr: any[] = [];
+      let delRowIndex = 2000;
+      oldArray.map((item: { [key: string]: any }, index: number) => {
+        //DELETE
+        if (item["s_no"] === obj["s_no"] && obj["delete"]) {
+          qty = qty - Number(item["qty"]);
+          setQty(qty);
+          oldArray.splice(index, 1);
+          delRowIndex = index;
+          arr = [...oldArray];
+          setSerial(serial - 1);
+          for (let i = 0; i < arr.length; i++) {
+            console.log(arr[i]["s_no"]);
+            if (i >= delRowIndex) {
+              arr[i]["s_no"] = Number(arr[i]["s_no"] - 1);
+              console.log(arr[i]);
+            }
+          }
+          // EDIT
+        } else if (item["s_no"] === obj["s_no"] && obj["edit"]) {
+          oldArray[index] = obj;
+          arr = [...oldArray];
+        }
+      });
+
+      // ADD ROW
+      if (obj["add"]) {
+        setSerial(serial + 1);
+        setQty(Number(obj["qty"]) + qty);
+        arr = [...oldArray, obj];
+      }
+
+      let temp: any[] = [];
+      // ADDING IGST TOTALS
+      Number(obj["igst"]) === 5
+        ? (gstData[0]["total"] =
+            Number(gstData[0]["total"]) + Number(obj["igst"]))
+        : Number(obj["igst"]) === 12
+        ? (gstData[1]["total"] =
+            Number(gstData[1]["total"]) + Number(obj["igst"]))
+        : (gstData[2]["total"] =
+            Number(gstData[2]["total"]) + Number(obj["igst"]));
+      setGstData(gstData);
+
+      // setTotalTable(totalTable);
+      return arr;
     });
   };
 
+  // COMPANY NAME DROPDOWN DATA
   const getCompanyName = async () => {
     const { data, error } = await supabase
       .from("ledger")
@@ -48,10 +234,12 @@ function App() {
     getCompanyName();
   }, []);
 
+  // GENERATE INVOICE NO
   useEffect(() => {
     setInvoiceNo(Math.random().toString(36).substring(2, 8).toUpperCase());
   }, [selectedCompany]);
 
+  // INVOICE BILL DATA
   const getInvoiceData = async () => {
     const { data: work_address } = await supabase
       .from("ledger")
@@ -96,10 +284,8 @@ function App() {
           aria-labelledby="primary-heading"
           className="w-full flex flex-col lg:order-last items-center overflow-auto"
         >
+          {/* TOP INPUT COMBO BOX && BUTTONS */}
           <div className="flex border-b border-coffee relative px-4 justify-start z-10 space-x-4 items-stretch self-stretch">
-            {/* <div className="flex-1">
-                <TickerTape />
-              </div> */}
             <div className="py-1 flex space-x-2">
               <ComboBox
                 data={company}
@@ -183,21 +369,57 @@ function App() {
                         tableData={tableData}
                         show={show}
                         tableName={"invoice_items"}
-                        state={selectedPerson}
-                        setState={setSelectedPerson}
+                        state={selectedGST}
+                        setState={setSelectedGST}
                         invoiceData={invoiceData}
-                        setInvoiceData={setInvoiceData}
+                        setInvoiceData={updataData}
+                        footer={false}
                       />
                     </div>
-                    <div className="flex flex-row justify-between w-full h-28">
-                      <span className="border-r-2 border-black w-9/12">05</span>
-                      <span className=" w-3/12">06</span>
+                    <div className="flex flex-row justify-between w-full h-32">
+                      {/* GST DATA TABLE */}
+                      <span className="border-r border-black w-6/12">
+                        <SimpleTable
+                          tableData={gstDataColumns}
+                          show={show}
+                          tableName={"invoice"}
+                          state={selectedGST}
+                          setState={setSelectedGST}
+                          invoiceData={gstData}
+                          setInvoiceData={updataData}
+                          footer={true}
+                        />
+                      </span>
+                      {/* TOTAL ITEMS && TOTAL QTY. */}
+                      <span className="border-r-2 border-black w-3/12">
+                        <div className="flex flex-col h-full justify-center items-center space-y-4">
+                          <div className="font-normal text-xl">
+                            Total Items : {invoiceData.length}
+                          </div>
+                          <div className="font-normal text-xl">
+                            Total Qty : {qty}
+                          </div>
+                        </div>
+                      </span>
+                      {/* TOTAL TABLE */}
+                      <span className=" w-3/12">
+                        <SimpleTable
+                          tableData={totalDataColumn}
+                          show={show}
+                          tableName={"invoice_items"}
+                          state={selectedGST}
+                          setState={setSelectedGST}
+                          invoiceData={totalTable}
+                          setInvoiceData={updataData}
+                          footer={false}
+                        />
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-row justify-between w-full h-1/4">
-                    <span className="border-r-2 border-black w-5/12">07</span>
-                    <span className="border-r-2 border-black w-4/12">08</span>
-                    <span className=" w-3/12">09</span>
+                    <span className="border-r-2 border-black w-5/12">08</span>
+                    <span className="border-r-2 border-black w-4/12">09</span>
+                    <span className=" w-3/12">10</span>
                   </div>
                 </div>
               )}
@@ -213,11 +435,12 @@ function App() {
             close={Toggle}
             tableName={"invoice_items"}
             dataModal={tableData}
-            state={selectedPerson}
-            setState={setSelectedPerson}
+            state={selectedGST}
+            setState={setSelectedGST}
             invoiceData={invoiceData}
             setInvoiceData={updataData}
             invoiceNo={invoiceNo}
+            serial={serial}
           />
         </ModalHOC>
       </main>

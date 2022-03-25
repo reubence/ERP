@@ -275,6 +275,7 @@ export default function SideModal({
                                       item["accessor"] != ["variation_"] ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         onChange={(event) =>
                                           handleInputChange(
                                             item["accessor"],
@@ -287,6 +288,7 @@ export default function SideModal({
                                     ) : item["accessor"] === "variation_" ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                         focus:border-coffee border-gray-300 rounded-md"
                                         disabled={true}
@@ -375,6 +377,7 @@ export default function SideModal({
                                     ) : key === "variation_" ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                             focus:border-coffee border-gray-300 rounded-md"
                                         disabled={true}
@@ -397,6 +400,7 @@ export default function SideModal({
                                       ].includes(key) ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         onChange={(event) =>
                                           handleInputChange(key, event)
                                         }

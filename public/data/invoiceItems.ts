@@ -134,13 +134,6 @@ export const invoiceItems = [
     disabled: false,
   },
   {
-    Header: "Group",
-    accessor: "group_" as const,
-    type: "dropdown",
-    required: true,
-    disabled: false,
-  },
-  {
     Header: "Last Updated",
     accessor: "last_updated" as const,
     type: "datetime-local",

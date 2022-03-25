@@ -1,12 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import {
-  Fragment,
-  useRef,
-  useState,
-  useEffect,
-  FormEvent,
-  useMemo,
-} from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { supabase } from "../../utils/supabaseClient";
@@ -25,6 +18,7 @@ export default function SimpleSideModal({
   invoiceData,
   setInvoiceData,
   invoiceNo,
+  serial,
 }: {
   show: boolean;
   close: Function;
@@ -33,7 +27,9 @@ export default function SimpleSideModal({
   setState: Function;
   invoiceData: any[];
   setInvoiceData: Function;
-  invoiceNo: string;
+  invoiceNo?: string;
+  serial?: number;
+
   dataModal:
     | {
         allCells: [];
@@ -60,32 +56,16 @@ export default function SimpleSideModal({
     console.log(dataModal);
   }, [dataModal]);
 
+  // DELETE ROW
   const handleDelete = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
-    const { data, error } = await supabase
-      .from(tableName)
-      .delete(inputFields.values)
-      .match({ id: dataModal.values.id });
-    error ? console.log(error) : close();
-    error
-      ? toast.error(`Error Deleting Row -\n${error.message}`, {
-          duration: 6000,
-          position: "top-right",
-          style: {
-            background: "#262125",
-            color: "#ffffff",
-          },
-        })
-      : toast.success("Row Deleted Successfully", {
-          duration: 6000,
-          position: "top-right",
-          style: {
-            background: "#262125",
-            color: "#ffffff",
-          },
-        });
+    obj = inputFields.values;
+    obj["delete"] = true;
+    setInvoiceData({ obj });
+    close();
   };
+
+  // MAIN ADD && EDIT ROW
   const { data } = useUser();
   const id = data.id;
   let [obj, setObj] = useState<any>({});
@@ -93,73 +73,51 @@ export default function SimpleSideModal({
     e.preventDefault();
 
     if (typeof inputFields[0] != "undefined") {
-      // Add Row
+      // ADD ROW
       obj["created_by"] = id;
       obj["updated_by"] = id;
+      obj["invoice_no"] = invoiceNo;
+      obj["igst"] = state;
+      console.log(obj);
+      obj["add"] = true;
       setInvoiceData({ obj });
       setObj({});
-      setSerial(serial + 1);
       close();
     }
-    // Update Row
+    // EDIT ROW
     else {
-      const { error } = await supabase
-        .from(tableName)
-        .update(inputFields.values)
-        .match({ id: dataModal.values.id });
-      error ? console.log(error) : close();
-      console.log(inputFields.values);
-      error
-        ? toast.error(`Error Updating Row - \n${error.message}`, {
-            duration: 6000,
-            position: "top-right",
-            style: {
-              background: "#262125",
-              color: "#ffffff",
-            },
-          })
-        : toast.success("Row Updated Successfully", {
-            duration: 6000,
-            position: "top-right",
-            style: {
-              background: "#262125",
-              color: "#ffffff",
-            },
-          });
+      obj = inputFields.values;
+      obj["igst"] = state;
+      obj["edit"] = true;
+      console.log(obj);
+      setInvoiceData({ obj });
+      close();
     }
   };
-  const people = {
-    ledger: ["Buyer", "Seller"],
-    inventory: ["High", "Low"],
-    payments: ["Late", "On Time"],
-    purchase: ["Paid", "Not Paid"],
-    sales: ["Paid", "Not Paid"],
-  };
-  const [serial, setSerial] = useState(1);
-  tableName === "ledger" ? (obj["group_"] = state) : null;
+  const people = ["5", "12", "18"];
 
   useEffect(() => {
     //ADD ROW
-    obj["group_"] = state;
+    // obj["igst"] = state;
     obj["s_no"] = serial;
 
     //EDIT ROW
     if (inputFields) {
-      inputFields.values["group_"] = state;
+      // inputFields.values["igst"] = state;
+      inputFields.values["invoiceNo"] = invoiceNo;
     }
-  }, [state, serial]);
+  }, [serial]);
 
   const handleInputChange = (key?: string, event?: any) => {
     //ADD ROW
     if (typeof inputFields[0] != "undefined") {
       console.log(obj);
-      key === "group_" ? (obj[key] = state) : (obj[key!] = event.target.value);
-      console.log(invoiceData);
+      key === "igst" ? (obj[key] = state) : (obj[key!] = event.target.value);
     }
 
     //EDIT ROW
     else {
-      key === "group_"
+      key === "igst"
         ? (inputFields.values[key] = state)
         : (inputFields.values[key!] = event.target.value);
     }
@@ -193,7 +151,7 @@ export default function SimpleSideModal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 bg-coffee sm:px-6 sticky top-0">
+                      <div className="px-4 py-6 z-100 bg-coffee sm:px-6 sticky top-0">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-lg font-medium text-cream">
@@ -238,20 +196,11 @@ export default function SimpleSideModal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {item["type"] === "dropdown" ? (
+                                    {item["accessor"] === "igst" ? (
                                       <ComboBox
                                         state={state}
                                         setState={setState}
-                                        data={
-                                          tableName === "ledger"
-                                            ? people.ledger
-                                            : tableName === "inventory"
-                                            ? people.inventory
-                                            : tableName === "purchase" ||
-                                              tableName === "sales"
-                                            ? people.purchase
-                                            : people.payments
-                                        }
+                                        data={people}
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
                                     ) : item["type"] === "date" ? (
@@ -275,12 +224,14 @@ export default function SimpleSideModal({
                                         disabled={true}
                                         value={serial}
                                         defaultValue={serial}
+                                        onWheel={(e) => e.currentTarget.blur()}
                                       />
                                     ) : item["type"] === "number" &&
                                       item["accessor"] !=
                                         ["variation_", "s_no"] ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         onChange={(event) =>
                                           handleInputChange(
                                             item["accessor"],
@@ -293,6 +244,7 @@ export default function SimpleSideModal({
                                     ) : item["accessor"] === "variation_" ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                         focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
                                         disabled={true}
@@ -304,6 +256,7 @@ export default function SimpleSideModal({
                                     ) : item["accessor"] === "invoice_no" ? (
                                       <input
                                         type="text"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         className="block w-full text-gray-500 bg-gray-300 shadow-sm sm:text-sm focus:ring-coffee 
                         focus:border-coffee border-gray-300 rounded-md"
                                         disabled={true}
@@ -365,7 +318,14 @@ export default function SimpleSideModal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {key === "anniversary" ? (
+                                    {key === "igst" ? (
+                                      <ComboBox
+                                        state={state}
+                                        setState={setState}
+                                        data={people}
+                                        btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                                      />
+                                    ) : key === "expiry" ? (
                                       <input
                                         type="date"
                                         onChange={(event) =>
@@ -373,44 +333,39 @@ export default function SimpleSideModal({
                                         }
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                         focus:border-coffee border-gray-300 rounded-md"
+                                        defaultValue={inputFields.values[key]}
+                                      />
+                                    ) : key === "invoice_no" ? (
+                                      <input
+                                        type="text"
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                        className="block w-full text-gray-500 bg-gray-300 shadow-sm sm:text-sm focus:ring-coffee 
+                        focus:border-coffee border-gray-300 rounded-md"
+                                        disabled={true}
                                         value={inputFields.values[key]}
                                       />
-                                    ) : key === "group_" ? (
-                                      <ComboBox
-                                        state={state}
-                                        setState={setState}
-                                        data={
-                                          tableName === "ledger"
-                                            ? people.ledger
-                                            : people.inventory
-                                        }
-                                        btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                    ) : key === "variation_" ? (
+                                    ) : ["s_no"].includes(key) ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                             focus:border-coffee border-gray-300 text-gray-500 bg-gray-300 rounded-md"
                                         disabled={true}
-                                        value={
-                                          inputFields.values["stock_in_hand"] -
-                                          inputFields.values[
-                                            "phy_stock_in_hand"
-                                          ]
-                                        }
+                                        value={inputFields.values[key]}
                                       />
                                     ) : // NUMERIC VALUES
                                     [
-                                        "stock_in_hand",
-                                        "min_stock_value",
-                                        "max_stock_value",
+                                        "qty",
+                                        "rate",
+                                        "discount",
+                                        "ptr",
                                         "mrp",
-                                        "no_of_boxes",
-                                        "phy_stock_in_hand",
-                                        "stock_in_hand",
+                                        "value_igst",
+                                        "total",
                                       ].includes(key) ? (
                                       <input
                                         type="number"
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         onChange={(event) =>
                                           handleInputChange(key, event)
                                         }

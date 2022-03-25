@@ -31,6 +31,7 @@ interface AppProps {
   data: string[];
   state: any;
   setState: any;
+  defaultState?: boolean;
 }
 
 export default function ComboBox(props: AppProps) {
