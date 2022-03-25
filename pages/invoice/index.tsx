@@ -220,12 +220,12 @@ function App() {
                 j = 2;
               }
               temp[j].total =
-                Number(prevState[j].total) - Number(oldArray["index"].total);
+                Number(prevState[j].total) - Number(oldArray[index].total);
               temp[j].discount =
                 Number(prevState[j].discount) -
-                Number(oldArray["index"].discount);
+                Number(oldArray[index].discount);
               temp[j].igst =
-                Number(prevState[j].igst) - Number(oldArray["index"].igst);
+                Number(prevState[j].igst) - Number(oldArray[index].igst);
 
               temp[i].total = Number(prevState[i].total) + Number(obj.total);
               temp[i].discount =
