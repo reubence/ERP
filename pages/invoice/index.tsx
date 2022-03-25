@@ -195,20 +195,20 @@ function App() {
               //
               i = 2;
             }
-            let temp = prevState; // COPY OF STATE
+            let temp = prevState;
             if (oldArray[index].igst === obj.igst) {
               temp[i].total =
                 Number(prevState[i].total) +
                 Number(obj.total) -
-                Number(oldArray[index].total); // result is = 0 + 1 === 1
+                Number(oldArray[index].total);
               temp[i].discount =
                 Number(prevState[i].discount) +
                 Number(obj.discount) -
-                Number(oldArray[index].discount); // result is = 0 + 1 === 1
+                Number(oldArray[index].discount);
               temp[i].igst =
                 Number(prevState[i].igst) +
                 Number(obj.igst) -
-                Number(oldArray[index].igst); // result is = 0 + 1 === 1
+                Number(oldArray[index].igst);
             } else {
               let j = null;
               if (Number(oldArray[index].igst) === 5) {
@@ -233,7 +233,29 @@ function App() {
               temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
             }
 
-            return [...temp]; // but here, the value is 2 not 1
+            return [...temp];
+          });
+
+          setTotalTable((prevState) => {
+            let temp = prevState;
+            temp[0].num =
+              Number(prevState[0].num) +
+              Number(obj.discount) -
+              Number(oldArray[index].discount);
+            temp[1].num =
+              Number(prevState[1].num) +
+              Number(obj.discount) -
+              Number(oldArray[index].discount);
+            temp[2].num =
+              Number(prevState[2].num) +
+              Number(obj.total) -
+              Number(oldArray[index].total);
+            temp[3].num =
+              Number(prevState[3].num) +
+              Number(obj.igst) -
+              Number(oldArray[index].igst);
+            temp[4].num = 1;
+            return [...temp];
           });
 
           oldArray[index] = obj;
@@ -266,13 +288,22 @@ function App() {
             //
             i = 2;
           }
-          let temp = prevState; // COPY OF STATE
-          temp[i].total = Number(prevState[i].total) + Number(obj.total); // result is = 0 + 1 === 1
+          let temp = prevState;
+          temp[i].total = Number(prevState[i].total) + Number(obj.total);
           temp[i].discount =
-            Number(prevState[i].discount) + Number(obj.discount); // result is = 0 + 1 === 1
-          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst); // result is = 0 + 1 === 1
+            Number(prevState[i].discount) + Number(obj.discount);
+          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
 
-          return [...temp]; // but here, the value is 2 not 1
+          return [...temp];
+        });
+        setTotalTable((prevState) => {
+          let temp = prevState;
+          temp[0].num = Number(prevState[0].num) + Number(obj.discount);
+          temp[1].num = Number(prevState[1].num) + Number(obj.discount);
+          temp[2].num = Number(prevState[2].num) + Number(obj.total);
+          temp[3].num = Number(prevState[3].num) + Number(obj.igst);
+          temp[4].num = 1;
+          return [...temp];
         });
       }
       return arr;
