@@ -191,11 +191,11 @@ function App() {
 
             setTotalTable((prevState) => {
               let temp = prevState;
-              temp[0].num = Number(prevState[0].num);
-              temp[1].num = Number(prevState[1].num);
-              temp[2].num = Number(prevState[2].num);
-              temp[3].num = Number(prevState[3].num);
-              temp[4].num = 1;
+              temp[0].num = Number(prevState[0].num) - Number(item.discount); // ITEM DIS
+              temp[1].num = Number(prevState[1].num) - Number(item.discount); // BILL DIS
+              temp[2].num = Number(prevState[2].num) - Number(item.discount); // TOTAL DIS
+              temp[3].num = Number(prevState[3].num) - Number(item.igst); // IGST PAYABLE
+              temp[4].num = 1; // ROUND OFF
               return [...temp];
             });
             //DELETE
