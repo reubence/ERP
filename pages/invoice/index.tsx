@@ -167,6 +167,41 @@ function App() {
       let arr: any[] = [];
       let delRowIndex = 2000;
       oldArray.map((item: { [key: string]: any }, index: number) => {
+        setGstData((prevState) => {
+          let temp = prevState;
+
+          let j = null;
+          if (Number(oldArray[index].igst) === 5) {
+            j = 0;
+          } else if (Number(oldArray[index].igst) === 12) {
+            j = 1;
+          } else {
+            //
+            j = 2;
+          }
+          temp[j].total =
+            Number(prevState[j].total) - Number(oldArray[index].total);
+          temp[j].discount =
+            Number(prevState[j].discount) - Number(oldArray[index].discount);
+          temp[j].igst =
+            Number(prevState[j].igst) - Number(oldArray[index].igst);
+
+          return [...temp];
+        });
+
+        setTotalTable((prevState) => {
+          let temp = prevState;
+          temp[0].num =
+            Number(prevState[0].num) - Number(oldArray[index].discount);
+          temp[1].num =
+            Number(prevState[1].num) - Number(oldArray[index].discount);
+          temp[2].num =
+            Number(prevState[2].num) - Number(oldArray[index].total);
+          temp[3].num = Number(prevState[3].num) - Number(oldArray[index].igst);
+          temp[4].num = 1;
+          return [...temp];
+        });
+
         //DELETE
         if (item["s_no"] === obj["s_no"] && obj["delete"]) {
           setQty((prevState) => {
@@ -196,64 +231,21 @@ function App() {
               i = 2;
             }
             let temp = prevState;
-            if (oldArray[index].igst === obj.igst) {
-              temp[i].total =
-                Number(prevState[i].total) +
-                Number(obj.total) -
-                Number(oldArray[index].total);
-              temp[i].discount =
-                Number(prevState[i].discount) +
-                Number(obj.discount) -
-                Number(oldArray[index].discount);
-              temp[i].igst =
-                Number(prevState[i].igst) +
-                Number(obj.igst) -
-                Number(oldArray[index].igst);
-            } else {
-              let j = null;
-              if (Number(oldArray[index].igst) === 5) {
-                j = 0;
-              } else if (Number(oldArray[index].igst) === 12) {
-                j = 1;
-              } else {
-                //
-                j = 2;
-              }
-              temp[j].total =
-                Number(prevState[j].total) - Number(oldArray[index].total);
-              temp[j].discount =
-                Number(prevState[j].discount) -
-                Number(oldArray[index].discount);
-              temp[j].igst =
-                Number(prevState[j].igst) - Number(oldArray[index].igst);
 
-              temp[i].total = Number(prevState[i].total) + Number(obj.total);
-              temp[i].discount =
-                Number(prevState[i].discount) + Number(obj.discount);
-              temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
-            }
+            temp[i].total = Number(prevState[i].total) + Number(obj.total);
+            temp[i].discount =
+              Number(prevState[i].discount) + Number(obj.discount);
+            temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
 
             return [...temp];
           });
 
           setTotalTable((prevState) => {
             let temp = prevState;
-            temp[0].num =
-              Number(prevState[0].num) +
-              Number(obj.discount) -
-              Number(oldArray[index].discount);
-            temp[1].num =
-              Number(prevState[1].num) +
-              Number(obj.discount) -
-              Number(oldArray[index].discount);
-            temp[2].num =
-              Number(prevState[2].num) +
-              Number(obj.total) -
-              Number(oldArray[index].total);
-            temp[3].num =
-              Number(prevState[3].num) +
-              Number(obj.igst) -
-              Number(oldArray[index].igst);
+            temp[0].num = Number(prevState[0].num) + Number(obj.discount);
+            temp[1].num = Number(prevState[1].num) + Number(obj.discount);
+            temp[2].num = Number(prevState[2].num) + Number(obj.total);
+            temp[3].num = Number(prevState[3].num) + Number(obj.igst);
             temp[4].num = 1;
             return [...temp];
           });
