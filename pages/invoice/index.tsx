@@ -185,13 +185,6 @@ function App() {
           }
           // EDIT
         } else if (item["s_no"] === obj["s_no"] && obj["edit"]) {
-          oldArray[index] = obj;
-          setQty((prevState) => {
-            return prevState - Number(item["qty"]) + Number(obj["qty"]);
-          });
-          arr = [...oldArray];
-
-          // ADDING IGST TOTALS
           setGstData((prevState) => {
             let i = null;
             if (Number(obj["igst"]) === 5) {
@@ -208,11 +201,24 @@ function App() {
               Number(obj.total) -
               Number(oldArray[index].total); // result is = 0 + 1 === 1
             temp[i].discount =
-              Number(prevState[i].discount) + Number(obj.discount); // result is = 0 + 1 === 1
-            temp[i].igst = Number(prevState[i].igst) + Number(obj.igst); // result is = 0 + 1 === 1
+              Number(prevState[i].discount) +
+              Number(obj.discount) -
+              Number(oldArray[index].discount); // result is = 0 + 1 === 1
+            temp[i].igst =
+              Number(prevState[i].igst) +
+              Number(obj.igst) -
+              Number(oldArray[index].igst); // result is = 0 + 1 === 1
 
             return [...temp]; // but here, the value is 2 not 1
           });
+
+          oldArray[index] = obj;
+          setQty((prevState) => {
+            return prevState - Number(item["qty"]) + Number(obj["qty"]);
+          });
+          arr = [...oldArray];
+
+          // ADDING IGST TOTALS
         }
       });
 
