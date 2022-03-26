@@ -46,7 +46,7 @@ export default function ComboBox(props: AppProps) {
       : props.data.filter((person) => {
           return person.toLowerCase().includes(query.toLowerCase());
         });
-
+  console.log(props.data);
   return (
     <Combobox as="div" value={props.state} onChange={props.setState}>
       {/* <Combobox.Label className="block text-sm font-medium text-gray-700">

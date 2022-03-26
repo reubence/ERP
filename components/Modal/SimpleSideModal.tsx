@@ -51,8 +51,8 @@ export default function SimpleSideModal({
     | any;
 }) {
   // PULLING ITEMS NAMES FROM SUPABASE
-  const [itemsData, setItemsData] = useState<string>("Placeholder");
-  let itemsNameList: any[] = [];
+  const [itemsState, setItemsState] = useState<string>("Placeholder");
+  const [itemsNameList, setItemsNameList] = useState<string[]>([]);
   const getItemsData = async () => {
     const { data, error } = await supabase
       .from("inventory")
@@ -61,16 +61,33 @@ export default function SimpleSideModal({
     data!.map((key, i) => {
       arr.push(String(Object.values(key)[0]));
     });
-    data && setItemsData(data[0].item_name);
+    data && setItemsState(data[0].item_name);
     console.log(data);
-    data && (itemsNameList = data.map((item) => item.item_name));
+    data && setItemsNameList(data.map((item) => item.item_name));
     console.log(itemsNameList);
   };
 
   useEffect(() => {
     getItemsData();
-    console.log(itemsData);
+    console.log(itemsState);
   }, []);
+
+  const [itemData, setItemData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getItemData = async () => {
+      // const cols = ["mfr", "mrp"];
+      const { data, error } = await supabase
+        .from("inventory")
+        .select("*")
+        .match({ item_name: itemsState });
+
+      data && setItemData(data);
+      console.log(itemsState);
+    };
+    getItemData();
+    console.log(itemData);
+  }, [itemsState]);
 
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
@@ -100,6 +117,7 @@ export default function SimpleSideModal({
       obj["updated_by"] = id;
       obj["invoice_no"] = invoiceNo;
       obj["igst"] = state;
+      obj["item_name"] = itemsState;
       console.log(obj);
       obj["add"] = true;
       setInvoiceData({ obj });
@@ -110,6 +128,7 @@ export default function SimpleSideModal({
     else {
       obj = inputFields.values;
       obj["igst"] = state;
+      obj["item_name"] = itemsState;
       obj["edit"] = true;
       console.log(obj);
       setInvoiceData({ obj });
@@ -224,12 +243,12 @@ export default function SimpleSideModal({
                                         state={
                                           item["accessor"] === "igst"
                                             ? state
-                                            : itemsData
+                                            : itemsState
                                         }
                                         setState={
                                           item["accessor"] === "igst"
                                             ? setState
-                                            : setItemsData
+                                            : setItemsState
                                         }
                                         data={
                                           item["accessor"] === "igst"
@@ -355,9 +374,19 @@ export default function SimpleSideModal({
                                   <div className="sm:col-span-2">
                                     {key === "igst" || key === "item_name" ? (
                                       <ComboBox
-                                        state={state}
-                                        setState={setState}
-                                        data={people}
+                                        state={
+                                          key === "igst" ? state : itemsState
+                                        }
+                                        setState={
+                                          key === "igst"
+                                            ? setState
+                                            : setItemsState
+                                        }
+                                        data={
+                                          key === "igst"
+                                            ? people
+                                            : itemsNameList
+                                        }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
                                     ) : key === "expiry" ? (
