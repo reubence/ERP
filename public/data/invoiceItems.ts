@@ -35,6 +35,13 @@ export const invoiceItems = [
     disabled: true,
   },
   {
+    Header: "Product Name",
+    accessor: "item_name" as const,
+    type: "text",
+    required: true,
+    disabled: false,
+  },
+  {
     Header: "Qty.",
     accessor: "qty" as const,
     type: "number",
@@ -52,13 +59,6 @@ export const invoiceItems = [
     Header: "Dis",
     accessor: "discount" as const,
     type: "number",
-    required: true,
-    disabled: false,
-  },
-  {
-    Header: "Product Name",
-    accessor: "item_name" as const,
-    type: "text",
     required: true,
     disabled: false,
   },
