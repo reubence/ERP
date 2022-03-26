@@ -50,6 +50,28 @@ export default function SimpleSideModal({
       }[]
     | any;
 }) {
+  // PULLING ITEMS NAMES FROM SUPABASE
+  const [itemsData, setItemsData] = useState<string>("Placeholder");
+  let itemsNameList: any[] = [];
+  const getItemsData = async () => {
+    const { data, error } = await supabase
+      .from("inventory")
+      .select("item_name");
+    let arr: string[] = [];
+    data!.map((key, i) => {
+      arr.push(String(Object.values(key)[0]));
+    });
+    data && setItemsData(data[0].item_name);
+    console.log(data);
+    data && (itemsNameList = data.map((item) => item.item_name));
+    console.log(itemsNameList);
+  };
+
+  useEffect(() => {
+    getItemsData();
+    console.log(itemsData);
+  }, []);
+
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
     setInputFields(dataModal);
@@ -196,11 +218,24 @@ export default function SimpleSideModal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {item["accessor"] === "igst" ? (
+                                    {item["accessor"] === "igst" ||
+                                    item["accessor"] === "item_name" ? (
                                       <ComboBox
-                                        state={state}
-                                        setState={setState}
-                                        data={people}
+                                        state={
+                                          item["accessor"] === "igst"
+                                            ? state
+                                            : itemsData
+                                        }
+                                        setState={
+                                          item["accessor"] === "igst"
+                                            ? setState
+                                            : setItemsData
+                                        }
+                                        data={
+                                          item["accessor"] === "igst"
+                                            ? people
+                                            : itemsNameList
+                                        }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
                                     ) : item["type"] === "date" ? (
@@ -318,7 +353,7 @@ export default function SimpleSideModal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {key === "igst" ? (
+                                    {key === "igst" || key === "item_name" ? (
                                       <ComboBox
                                         state={state}
                                         setState={setState}
