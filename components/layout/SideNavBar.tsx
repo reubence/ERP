@@ -32,6 +32,7 @@ import {
   XIcon,
   PrinterIcon,
 } from "@heroicons/react/outline";
+import { UserIcon } from "@heroicons/react/solid";
 import Breadcrumb from "./Breadcrumbs";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -40,17 +41,17 @@ import useUser from "../../hooks/useUser";
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
-  { name: "Ledger", href: "/ledger", icon: LibraryIcon, current: true },
+  { name: "Directory", href: "/ledger", icon: LibraryIcon, current: true },
   { name: "Invoicing", href: "/invoice", icon: PrinterIcon, current: false },
-  {
-    name: "Purchase",
-    href: "/purchase",
-    icon: ShoppingCartIcon,
-    current: false,
-  },
-  { name: "Payments", href: "/payments", icon: CashIcon, current: false },
-  { name: "Inventory", href: "/inventory", icon: ArchiveIcon, current: false },
-  { name: "Analytics", href: "/analytics", icon: ChartPieIcon, current: false },
+  // {
+  //   name: "Purchase",
+  //   href: "/purchase",
+  //   icon: ShoppingCartIcon,
+  //   current: false,
+  // },
+  // { name: "Payments", href: "/payments", icon: CashIcon, current: false },
+  // { name: "Inventory", href: "/inventory", icon: ArchiveIcon, current: false },
+  // { name: "Analytics", href: "/analytics", icon: ChartPieIcon, current: false },
   { name: "Settings", href: "/settings", icon: CogIcon, current: false },
 ];
 const userNavigation = [
@@ -89,7 +90,7 @@ export default function SideNavBar({ children }: LayoutProps) {
       */}
       <div className="h-screen flex">
         {/* Narrow sidebar */}
-        <div className="hidden w-16 bg-cream-light overflow-y-auto md:block border-r border-coffee-light">
+        <div className="hidden w-24 bg-cream-light overflow-y-auto md:block border-r border-coffee-light">
           <div className="w-full py-6 flex flex-col items-center">
             <div className="flex-shrink-0 flex items-center">
               <img
@@ -128,9 +129,9 @@ export default function SideNavBar({ children }: LayoutProps) {
                       )}
                       aria-hidden="true"
                     />
-                    {/* <span key={item.name} className="mt-2">
+                    <span key={item.name} className="mt-2">
                       {item.name}
-                    </span> */}
+                    </span>
                   </a>
                 </Link>
               ))}
@@ -262,7 +263,7 @@ export default function SideNavBar({ children }: LayoutProps) {
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYPRLSISP2uoEdGxNPVFrz02gI2KWiJ_VwNA&usqp=CAU"
                           alt=""
                         />
                       </Menu.Button>
@@ -302,13 +303,13 @@ export default function SideNavBar({ children }: LayoutProps) {
                     </Transition>
                   </Menu>
 
-                  <button
+                  {/* <button
                     type="button"
                     className="flex p-1 items-center justify-center text-coffee-light hover:text-accent-light focus-within:rounded-full focus-within:ring-2 focus-within:ring-accent-light focus-within:text-accent-light"
                   >
                     <BellIcon className="h-7 w-7" aria-hidden="true" />
                     <span className="sr-only">Add file</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

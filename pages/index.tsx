@@ -95,7 +95,7 @@ export default function HomePage() {
                 <div className="flex items-center">
                   {/* <UserCircleIcon className="hidden h-24 w-24 rounded-full sm:block text-coffee-light text-opacity-75" /> */}
                   <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYPRLSISP2uoEdGxNPVFrz02gI2KWiJ_VwNA&usqp=CAU"
                     alt=""
                     className="hidden h-16 w-16 rounded-full sm:block text-coffee-light text-opacity-75"
                   />
@@ -110,7 +110,7 @@ export default function HomePage() {
                         {isLoading ? (
                           <span>Loading... </span>
                         ) : (
-                          "Good Morning, " + data?.name
+                          "Good Morning," + " " + data?.name
                         )}
                       </h1>
                     </div>
@@ -121,7 +121,7 @@ export default function HomePage() {
                           className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                           aria-hidden="true"
                         />
-                        NeoKumfurt Pune anch
+                        NeoKumfurt
                       </dd>
                       <dt className="sr-only">Account status</dt>
                       <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
@@ -136,9 +136,13 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-                <SimpleButton text="Testing" setSolid={false}></SimpleButton>
+                {/* <SimpleButton text="Profile" setSolid={false}></SimpleButton> */}
 
-                <SimpleButton text="Testing" setSolid={true}></SimpleButton>
+                <SimpleButton
+                  text="Sign Out"
+                  setSolid={false}
+                  btnClass="px-6 py-4 text-lg rounded-xl border-2 border-coffee bg-cream text-coffee group-hover:text-coffee group-hover:bg-coffee group-hover:text-white"
+                ></SimpleButton>
               </div>
             </div>
           </div>

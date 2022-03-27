@@ -537,7 +537,7 @@ function App() {
         {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
-          className="w-full flex flex-col lg:order-last items-center overflow-auto"
+          className="w-full flex flex-col lg:order-last items-center overflow-y-scroll"
         >
           {/* TOP INPUT COMBO BOX && BUTTONS */}
           <div className="absolute w-full flex border-b border-coffee bg-white px-4 justify-start z-5 space-x-4 self-stretch">
@@ -558,7 +558,7 @@ function App() {
                   selectedCompany
                     ? "bg-green-400"
                     : "bg-gray-300 group-hover:bg-gray-300 text-cream cursor-default"
-                } group-hover:bg-green-500 text-cream`}
+                } text-cream`}
               />
 
               <div
@@ -576,7 +576,7 @@ function App() {
                     selectedCompany
                       ? "bg-green-400"
                       : "bg-gray-300 group-hover:bg-gray-300 text-cream cursor-default"
-                  } group-hover:bg-green-500 text-cream`}
+                  } text-cream`}
                 />
               </div>
             </div>

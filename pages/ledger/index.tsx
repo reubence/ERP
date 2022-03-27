@@ -178,7 +178,7 @@ function App() {
         </section>
 
         {/* SECOND MENU */}
-        <aside className="hidden lg:block lg:flex-shrink-0 lg:order-first border-r border-coffee">
+        <aside className="hidden w-64 lg:block lg:flex-shrink-0 lg:order-first border-r border-coffee">
           <div className="px-6 pt-6 pb-4">
             <h2 className="text-lg font-medium text-gray-900">
               Data Directory
@@ -219,7 +219,7 @@ function App() {
               </button>
             </form>
 
-            <div className="h-full relative flex flex-col w-64 border-r- border-coffee bg-cream overflow-y-auto mt-10">
+            <div className="h-full relative flex flex-col w-52 border-r- border-coffee bg-cream overflow-y-auto mt-10">
               <nav className="space-y-1" aria-label="Sidebar">
                 {navigation.map((item) => (
                   <a

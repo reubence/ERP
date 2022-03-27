@@ -232,7 +232,7 @@ function Table({
       <div className="w-full">
         {/* Bottom Nav Bar */}
         <nav
-          className="border-t fixed bottom-0 bg-cream lg:left-[389px] left-0 right-0 overflow-hidden border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
+          className="border-t fixed bottom-0 bg-cream lg:left-[352px] left-0 right-0 overflow-hidden border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
           aria-label="Pagination"
         >
           <div className="hidden sm:flex  left-54">
@@ -447,7 +447,7 @@ function AdvancedTable({
             setState={setState}
           />
         </ModalHOC>
-        = {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
+        {/* <p>Selected Rows: {selectedRowKeys.length}</p> */}
         {/* <pre>
                 <code>
                   {JSON.stringify(
