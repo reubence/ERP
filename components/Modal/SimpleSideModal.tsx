@@ -66,26 +66,26 @@ export default function SimpleSideModal({
     data && setItemsNameList(data.map((item) => item.item_name));
     console.log(itemsNameList);
   };
-
   useEffect(() => {
     getItemsData();
-    console.log(itemsState);
   }, []);
 
-  let [itemData, setItemData] = useState<any[]>([]);
+  const [itemData, setItemData] = useState<any>([{ mrp: 0, hsn_code: "" }]);
   const getItemData = async () => {
     const { data, error } = await supabase
       .from("inventory")
       .select("*")
       .match({ item_name: itemsState });
-    data && (itemData = data);
-    data !== null && setItemData(itemData);
+    setItemData(data);
   };
 
   useEffect(() => {
     getItemData();
-    console.log(itemData);
   }, [itemsState, itemsNameList]);
+
+  useEffect(() => {
+    console.log(itemData);
+  }, [itemData]);
 
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
@@ -116,6 +116,16 @@ export default function SimpleSideModal({
       obj["invoice_no"] = invoiceNo;
       obj["igst"] = state;
       obj["item_name"] = itemsState;
+      obj["mrp"] = itemData[0].mrp;
+      obj["ptr"] = itemData[0].ptr;
+      obj["mfr"] = itemData[0].mfr;
+      obj["rate"] = itemData[0].rate;
+      obj["hsn_code"] = itemData[0].hsn_code;
+      obj["batch_no"] = itemData[0].batch_no;
+      obj["pack_size"] = itemData[0].pack_size;
+      obj["expiry"] = itemData[0].expiry;
+      obj["value_igst"] = obj["ptr"] + (obj["igst"] / obj["ptr"]) * 100;
+      obj["total"] = obj["qty"] * ((obj["igst"] / obj["ptr"]) * 100);
       console.log(obj);
       obj["add"] = true;
       setInvoiceData({ obj });
@@ -255,6 +265,69 @@ export default function SimpleSideModal({
                                         }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
+                                    ) : ["mrp", "rate", "ptr"].includes(
+                                        item["accessor"]
+                                      ) ? (
+                                      <input
+                                        type="number"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                      focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                      />
+                                    ) : [
+                                        "pack_size",
+                                        "batch_no",
+                                        "mfr",
+                                        "hsn_code",
+                                      ].includes(item["accessor"]) ? (
+                                      <input
+                                        type="text"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                    focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                      />
+                                    ) : ["expiry"].includes(
+                                        item["accessor"]
+                                      ) ? (
+                                      <input
+                                        type="date"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                  focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[item["accessor"]]
+                                            ? itemData[0]?.[item["accessor"]]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                      />
                                     ) : item["type"] === "date" ? (
                                       <input
                                         type="date"
@@ -268,19 +341,28 @@ export default function SimpleSideModal({
                                       focus:border-coffee border-gray-300 rounded-md"
                                         required
                                       />
-                                    ) : item["accessor"] === "s_no" ? (
+                                    ) : [
+                                        "s_no",
+                                        "total",
+                                        "value_igst",
+                                      ].includes(item["accessor"]) ? (
                                       <input
-                                        type="number"
+                                        type="text"
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                       focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
                                         disabled={true}
-                                        value={serial}
+                                        value={
+                                          ["total", "value_igst"].includes(
+                                            item["accessor"]
+                                          )
+                                            ? "auto generated value"
+                                            : serial
+                                        }
                                         defaultValue={serial}
                                         onWheel={(e) => e.currentTarget.blur()}
                                       />
                                     ) : item["type"] === "number" &&
-                                      item["accessor"] !=
-                                        ["variation_", "s_no"] ? (
+                                      item["accessor"] != ["s_no", "mrp"] ? (
                                       <input
                                         type="number"
                                         onWheel={(e) => e.currentTarget.blur()}
@@ -293,19 +375,9 @@ export default function SimpleSideModal({
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                   focus:border-coffee border-gray-300 rounded-md"
                                       />
-                                    ) : item["accessor"] === "variation_" ? (
-                                      <input
-                                        type="number"
-                                        onWheel={(e) => e.currentTarget.blur()}
-                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                        focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
-                                        disabled={true}
-                                        value={
-                                          obj["stock_in_hand"] -
-                                          obj["phy_stock_in_hand"]
-                                        }
-                                      />
-                                    ) : item["accessor"] === "invoice_no" ? (
+                                    ) : ["invoice_no"].includes(
+                                        item["accessor"]
+                                      ) ? (
                                       <input
                                         type="text"
                                         onWheel={(e) => e.currentTarget.blur()}
