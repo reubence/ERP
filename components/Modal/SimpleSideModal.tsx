@@ -74,20 +74,19 @@ export default function SimpleSideModal({
 
   const [itemData, setItemData] = useState<any[]>([]);
 
-  useEffect(() => {
-    const getItemData = async () => {
-      // const cols = ["mfr", "mrp"];
-      const { data, error } = await supabase
-        .from("inventory")
-        .select("*")
-        .match({ item_name: itemsState });
+  const getItemData = async () => {
+    const { data, error } = await supabase
+      .from("inventory")
+      .select("*")
+      .match({ item_name: itemsState });
+    data && setItemData(data);
+  };
 
-      data && setItemData(data);
-      console.log(itemsState);
-    };
+  useEffect(() => {
+    console.log(itemData);
     getItemData();
     console.log(itemData);
-  }, [itemsState]);
+  }, [itemsState, itemsNameList]);
 
   const [inputFields, setInputFields] = useState(dataModal);
   useEffect(() => {
