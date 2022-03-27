@@ -72,18 +72,17 @@ export default function SimpleSideModal({
     console.log(itemsState);
   }, []);
 
-  const [itemData, setItemData] = useState<any[]>([]);
-
+  let [itemData, setItemData] = useState<any[]>([]);
   const getItemData = async () => {
     const { data, error } = await supabase
       .from("inventory")
       .select("*")
       .match({ item_name: itemsState });
-    data && setItemData(data);
+    data && (itemData = data);
+    data !== null && setItemData(itemData);
   };
 
   useEffect(() => {
-    console.log(itemData);
     getItemData();
     console.log(itemData);
   }, [itemsState, itemsNameList]);
