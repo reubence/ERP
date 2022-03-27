@@ -34,6 +34,7 @@ function App() {
     { name: "Purchase", accessor: "purchase", current: menuItem },
     { name: "Payments", accessor: "payments", current: menuItem },
     { name: "Inventory", accessor: "inventory", current: menuItem },
+    { name: "Invoice", accessor: "invoice", current: menuItem },
     { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
   ];
   let tableData;
@@ -147,11 +148,11 @@ function App() {
                   btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
                 />
                 {/* <DropdownButton /> */}
-                <div
+                {/* <div
                   className="right-6 fixed inline-flex items-center px-2 py-1 text-sm font-medium rounded-md text-gray-500 hover:text-coffee hover:bg-gray-300"
                   id="download"
                 >
-                  {/* <SimpleButton
+                  <SimpleButton
                     setSolid={false}
                     text="Export Data"
                     icon={DownloadIcon}
@@ -159,8 +160,8 @@ function App() {
                     iconClass="text-gray-500 group-hover:text-coffee"
                     onClick={getData}
                     btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  /> */}
-                </div>
+                  />
+                </div> */}
               </div>
             </div>
 

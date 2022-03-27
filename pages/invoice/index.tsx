@@ -8,9 +8,11 @@ import SimpleSideModal from "../../components/Modal/SimpleSideModal";
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
 import React, { useMemo, useRef } from "react";
+import toast from "react-hot-toast";
 import ComboBox from "../../components/Buttons/ComboBox";
 import moment from "moment";
 import _, { toNumber } from "lodash";
+import useUser from "../../hooks/useUser";
 
 // GST DATA COLUMNS
 const totalDataColumn = [
@@ -29,22 +31,27 @@ const totalDataColumn = [
 // GST DATA
 const totalData = [
   {
+    // 0
     total: "ITEM DIS AMT.",
     num: 0,
   },
   {
+    // 1
     total: " BILL DIS AMT.",
     num: 0,
   },
   {
+    // 2
     total: "TOTAL DIS",
     num: 0,
   },
   {
+    // 3
     total: "IGST PAYBLE",
     num: 0,
   },
   {
+    // 4
     total: "Round off",
     num: 0,
   },
@@ -181,25 +188,67 @@ function App() {
                 //
                 j = 2;
               }
-              temp[j].total = Number(prevState[j].total) - Number(item.total);
+              temp[j].total =
+                Math.round(
+                  (Number(prevState[j].total) -
+                    Number(item.total) +
+                    Number.EPSILON) *
+                    100
+                ) / 100;
               temp[j].discount =
-                Number(prevState[j].discount) - Number(item.discount);
-              temp[j].igst = Number(prevState[j].igst) - Number(item.igst);
+                Math.round(
+                  (Number(prevState[j].discount) -
+                    Number(item.discount) +
+                    Number.EPSILON) *
+                    100
+                ) / 100;
+              temp[j].igst =
+                Math.round(
+                  (Number(prevState[j].igst) -
+                    Number(item.igst) +
+                    Number.EPSILON) *
+                    100
+                ) / 100;
 
               return [...temp];
             });
 
             setTotalTable((prevState) => {
               let temp = prevState;
-              temp[0].num = Number(prevState[0].num) - Number(item.discount); // ITEM DIS
-              temp[1].num = Number(prevState[1].num) - Number(item.discount); // BILL DIS
-              temp[2].num = Number(prevState[2].num) - Number(item.discount); // TOTAL DIS
-              temp[3].num = Number(prevState[3].num) - Number(item.igst); // IGST PAYABLE
-              temp[4].num = 1; // ROUND OFF
+              temp[0].num =
+                Math.round(
+                  (Number(prevState[0].num) -
+                    Number(item.discount) +
+                    Number.EPSILON) *
+                    100
+                ) / 100; // ITEM DIS
+              temp[1].num =
+                Math.round(
+                  (Number(prevState[1].num) -
+                    Number(item.discount) +
+                    Number.EPSILON) *
+                    100
+                ) / 100; // BILL DIS
+              temp[2].num =
+                Math.round(
+                  (Number(prevState[2].num) -
+                    Number(item.total) +
+                    Number.EPSILON) *
+                    100
+                ) / 100; // TOTAL DIS
+              temp[3].num =
+                Math.round(
+                  (Number(prevState[3].num) -
+                    Number(item.igst) +
+                    Number.EPSILON) *
+                    100
+                ) / 100; // IGST PAYABLE
+              temp[4].num = 1 - 1; // ROUND OFF
               return [...temp];
             });
             //DELETE
             if (obj["delete"]) {
+              delete obj.delete;
               setQty((prevState) => {
                 return prevState - Number(item["qty"]);
               });
@@ -216,6 +265,7 @@ function App() {
               }
               // EDIT
             } else if (obj["edit"]) {
+              delete obj.edit;
               setGstData((prevState) => {
                 let i = null;
                 if (Number(obj["igst"]) === 5) {
@@ -228,20 +278,61 @@ function App() {
                 }
                 let temp = prevState;
 
-                temp[i].total = Number(prevState[i].total) + Number(obj.total);
+                temp[i].total =
+                  Math.round(
+                    (Number(prevState[i].total) +
+                      Number(obj.total) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
                 temp[i].discount =
-                  Number(prevState[i].discount) + Number(obj.discount);
-                temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
+                  Math.round(
+                    (Number(prevState[i].discount) +
+                      Number(obj.discount) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
+                temp[i].igst =
+                  Math.round(
+                    (Number(prevState[i].igst) +
+                      Number(obj.igst) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
 
                 return [...temp];
               });
 
               setTotalTable((prevState) => {
                 let temp = prevState;
-                temp[0].num = Number(prevState[0].num) + Number(obj.discount);
-                temp[1].num = Number(prevState[1].num) + Number(obj.discount);
-                temp[2].num = Number(prevState[2].num) + Number(obj.discount);
-                temp[3].num = Number(prevState[3].num) + Number(obj.igst);
+                temp[0].num =
+                  Math.round(
+                    (Number(prevState[0].num) +
+                      Number(obj.discount) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
+                temp[1].num =
+                  Math.round(
+                    (Number(prevState[1].num) +
+                      Number(obj.discount) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
+                temp[2].num =
+                  Math.round(
+                    (Number(prevState[2].num) +
+                      Number(obj.discount) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
+                temp[3].num =
+                  Math.round(
+                    (Number(prevState[3].num) +
+                      Number(obj.igst) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100;
                 temp[4].num = 1;
                 return [...temp];
               });
@@ -260,6 +351,7 @@ function App() {
 
       // ADD ROW
       if (obj["add"]) {
+        delete obj.add;
         setSerial(serial + 1);
         setQty((prevState) => {
           return Number(obj["qty"]) + prevState;
@@ -279,19 +371,54 @@ function App() {
             i = 2;
           }
           let temp = prevState;
-          temp[i].total = Number(prevState[i].total) + Number(obj.total);
+          temp[i].total =
+            Math.round(
+              (Number(prevState[i].total) +
+                Number(obj.total) +
+                Number.EPSILON) *
+                100
+            ) / 100;
           temp[i].discount =
-            Number(prevState[i].discount) + Number(obj.discount);
-          temp[i].igst = Number(prevState[i].igst) + Number(obj.igst);
+            Math.round(
+              (Number(prevState[i].discount) +
+                Number(obj.discount) +
+                Number.EPSILON) *
+                100
+            ) / 100;
+          temp[i].igst =
+            Math.round(
+              (Number(prevState[i].igst) + Number(obj.igst) + Number.EPSILON) *
+                100
+            ) / 100;
 
           return [...temp];
         });
         setTotalTable((prevState) => {
           let temp = prevState;
-          temp[0].num = Number(prevState[0].num) + Number(obj.discount);
-          temp[1].num = Number(prevState[1].num) + Number(obj.discount);
-          temp[2].num = Number(prevState[2].num) + Number(obj.total);
-          temp[3].num = Number(prevState[3].num) + Number(obj.igst);
+          temp[0].num =
+            Math.round(
+              (Number(prevState[0].num) +
+                Number(obj.discount) +
+                Number.EPSILON) *
+                100
+            ) / 100;
+          temp[1].num =
+            Math.round(
+              (Number(prevState[1].num) +
+                Number(obj.discount) +
+                Number.EPSILON) *
+                100
+            ) / 100;
+          temp[2].num =
+            Math.round(
+              (Number(prevState[2].num) + Number(obj.total) + Number.EPSILON) *
+                100
+            ) / 100;
+          temp[3].num =
+            Math.round(
+              (Number(prevState[3].num) + Number(obj.igst) + Number.EPSILON) *
+                100
+            ) / 100;
           temp[4].num = 1;
           return [...temp];
         });
@@ -359,6 +486,51 @@ function App() {
     selectedCompany !== "" && getInvoiceData();
   }, [selectedCompany]);
 
+  // SEND DATA TO SERVER
+  const { data } = useUser();
+  const submitInvoiceData = async () => {
+    const { error: er } = await supabase
+      .from("invoice_items")
+      .insert(invoiceData);
+    const id = data.id;
+    const { error } = await supabase.from("invoice").insert({
+      created_by: id,
+      updated_by: id,
+      created_at: moment().format("YYYY-MM-DDTHH:mm"),
+      last_updated: moment().format("YYYY-MM-DDTHH:mm"),
+      invoice_no: invoiceNo,
+      company_name: selectedCompany,
+      meta: invoiceData,
+      total: Number(totalDataColumn[1].Header),
+      items_discount: totalTable[0].num,
+      bill_discount: totalTable[1].num,
+      total_discount: totalTable[2].num,
+      total_igst: totalTable[3].num,
+      round_off: totalTable[4].num,
+      total_items: invoiceData.length,
+      total_qty: qty,
+      grand_total: Number(totalDataColumn[1].Header) - totalTable[2].num,
+    });
+    console.log(totalData);
+    error
+      ? toast.error(`Error Creating Invoice - \n${error.message}`, {
+          duration: 6000,
+          position: "top-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        })
+      : toast.success("Invoice Created Successfully", {
+          duration: 6000,
+          position: "top-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        });
+  };
+
   return (
     <ProtectedWrapper>
       <main className="flex w-full h-screen border-gray-200">
@@ -368,7 +540,7 @@ function App() {
           className="w-full flex flex-col lg:order-last items-center overflow-auto"
         >
           {/* TOP INPUT COMBO BOX && BUTTONS */}
-          <div className="flex border-b border-coffee relative px-4 justify-start z-10 space-x-4 items-stretch self-stretch">
+          <div className="absolute w-full flex border-b border-coffee bg-white px-4 justify-start z-5 space-x-4 self-stretch">
             <div className="py-1 flex space-x-2">
               <ComboBox
                 data={company}
@@ -379,9 +551,34 @@ function App() {
                 setSolid={false}
                 text="Add Row"
                 icon={PlusSmIcon}
-                onClick={() => Toggle()}
-                btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
+                onClick={
+                  selectedCompany ? () => Toggle() : () => setShow(false)
+                }
+                btnClass={`${
+                  selectedCompany
+                    ? "bg-green-400"
+                    : "bg-gray-300 group-hover:bg-gray-300 text-cream cursor-default"
+                } group-hover:bg-green-500 text-cream`}
               />
+
+              <div
+                className="right-6 fixed inline-flex items-center text-sm font-medium rounded-md text-gray-500 "
+                id="download"
+              >
+                <SimpleButton
+                  setSolid={false}
+                  text="Create Invoice"
+                  icon={PlusSmIcon}
+                  onClick={
+                    invoiceData ? submitInvoiceData : () => setShow(false)
+                  }
+                  btnClass={`${
+                    selectedCompany
+                      ? "bg-green-400"
+                      : "bg-gray-300 group-hover:bg-gray-300 text-cream cursor-default"
+                  } group-hover:bg-green-500 text-cream`}
+                />
+              </div>
             </div>
           </div>
           <div className="lg:p-24 flex md:pl-96 md:p-24">
@@ -511,7 +708,6 @@ function App() {
         </section>
 
         {/* MODAL FOR ADD-ROW */}
-
         <ModalHOC selector="#modal">
           <SimpleSideModal
             show={show}

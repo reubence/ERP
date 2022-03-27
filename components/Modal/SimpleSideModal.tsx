@@ -124,8 +124,15 @@ export default function SimpleSideModal({
       obj["batch_no"] = itemData[0].batch_no;
       obj["pack_size"] = itemData[0].pack_size;
       obj["expiry"] = itemData[0].expiry;
-      obj["value_igst"] = obj["ptr"] + (obj["igst"] / obj["ptr"]) * 100;
-      obj["total"] = obj["qty"] * ((obj["igst"] / obj["ptr"]) * 100);
+      obj["value_igst"] =
+        Math.round(
+          (obj["ptr"] + (obj["igst"] / obj["ptr"]) * 100 + Number.EPSILON) * 100
+        ) / 100;
+      obj["total"] =
+        Math.round(
+          (obj["qty"] * ((obj["igst"] / obj["ptr"]) * 100) + Number.EPSILON) *
+            100
+        ) / 100;
       console.log(obj);
       obj["add"] = true;
       setInvoiceData({ obj });
