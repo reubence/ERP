@@ -207,7 +207,7 @@ export default function SimpleSideModal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 z-100 bg-coffee sm:px-6 sticky top-0 z-50">
+                      <div className="px-4 py-6 z-100 bg-secondary-100 sm:px-6 sticky top-0 z-50">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-lg font-medium text-white">
@@ -223,7 +223,7 @@ export default function SimpleSideModal({
                           <div className="h-7 flex items-center">
                             <button
                               type="button"
-                              className="text-red-500 border-2 border-red-500 rounded-md"
+                              className="text-primary-50 border-2 border-primary-50 rounded-md"
                               onClick={() => close()}
                             >
                               <span className="sr-only">Close panel</span>

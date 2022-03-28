@@ -1,4 +1,4 @@
-export const invoiceItems = [
+export const invoice = [
   {
     Header: "ID",
     accessor: "id" as const,

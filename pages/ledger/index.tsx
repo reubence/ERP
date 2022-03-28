@@ -11,11 +11,12 @@ import {
 import { useState, useEffect } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import SideModal from "../../components/Modal/SideModal";
-import { DropDownButton } from "../../components/Buttons/DropdownButton";
 
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
 import { CSVDownload, CSVLink } from "react-csv";
+import { useRouter } from "next/router";
+import DropDownButton from "../../components/Buttons/DropdownButton";
 
 /* This example requires Tailwind CSS v2.0+ */
 
@@ -35,6 +36,7 @@ function App() {
     { name: "Payments", accessor: "payments", current: menuItem },
     { name: "Inventory", accessor: "inventory", current: menuItem },
     { name: "Invoice", accessor: "invoice", current: menuItem },
+    { name: "Invoice Items", accessor: "invoice_items", current: menuItem },
     { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
   ];
   let tableData;
@@ -57,11 +59,15 @@ function App() {
     case "invoice_items":
       tableData = columns[5];
       break;
+    case "invoice":
+      tableData = columns[6];
+      break;
 
     default:
       tableData = columns[0];
   }
 
+  console.log(tableData);
   const Toggle = () => {
     setShow(!show);
   };
@@ -129,16 +135,24 @@ function App() {
                   text="Refresh"
                   icon={RefreshIcon}
                   onClick={() => setRefreshTable(!refreshTable)}
-                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  iconClass="text-gray-500 group-hover:text-coffee"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-primary-50 group-hover:bg-secondary-50"
+                  iconClass="text-gray-500 group-hover:text-primary-50"
                 />
                 <DropDownButton
                   setSolid={false}
                   text="Sort by"
                   icon={SwitchVerticalIcon}
                   onClick={setSortBy}
-                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  iconClass="text-gray-500 group-hover:text-coffee"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-primary-50 group-hover:bg-secondary-50"
+                  iconClass="text-gray-500 group-hover:text-primary-50"
+                  menuItems={[
+                    "last_updated",
+                    "id",
+                    "created_at",
+                    "anniversary",
+                  ]}
+                  state={sortby}
+                  setState={setSortBy}
                 />
                 <SimpleButton
                   setSolid={false}
@@ -225,8 +239,8 @@ function App() {
                     onClick={() => refreshTables(item.accessor)}
                     className={classNames(
                       item.current === String(item.accessor).toLowerCase()
-                        ? "bg-[#EFFDFA] text-[#14B8A6]"
-                        : "text-gray-400 hover:bg-[#14B8A6] hover:text-white cursor-pointer",
+                        ? "bg-[#EFFDFA] font-bold text-[#14B8A6]"
+                        : "text-gray-400 font-medium hover:bg-[#14B8A6] hover:text-white cursor-pointer",
                       "group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                     )}
                     aria-current={item.current ? "page" : undefined}

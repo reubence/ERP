@@ -1,5 +1,6 @@
 import { inventoryData } from "./inventory";
 import { invoiceItems } from "./invoiceItems";
+import { invoice } from "./invoice";
 import { ledgerData } from "./ledger";
 import { paymentsData } from "./payments";
 import { purchaseData } from "./purchase";
@@ -22,4 +23,7 @@ export const columns = {
 
   //INVOICE ITEMS
   5: invoiceItems,
+
+  //INVOICE
+  6: invoice,
 };

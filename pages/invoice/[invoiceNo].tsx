@@ -425,11 +425,11 @@ function Print({ data, error }: any) {
   return (
     <>
       <ProtectedWrapper>
-        <main className="flex w-full h-screen border-gray-200 overflow-hidden">
+        <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
           {/* MAIN SECTION */}
           <section
             aria-labelledby="primary-heading"
-            className="w-full flex flex-col lg:order-last items-center overflow-y-scroll overflow-x-hidden"
+            className="w-full flex flex-1 flex-col lg:order-last items-center overflow-y-scroll overflow-x-hidden"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
             <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-5 space-x-4 self-stretch">

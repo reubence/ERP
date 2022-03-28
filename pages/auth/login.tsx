@@ -32,7 +32,7 @@ export default function SignIn() {
     loginMutation.mutate();
   };
   if (loginMutation.isSuccess) {
-    router.push("/");
+    router.push("/ledger");
   }
 
   return (

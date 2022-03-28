@@ -37,7 +37,7 @@ export default function Breadcrumb({ pages }: { pages: any[] }) {
                 href={page.href}
                 className={
                   page.current
-                    ? `ml-4 text-sm font-medium text-primary-50 group-hover:text-primary-100`
+                    ? `ml-4 text-sm font-bold text-primary-50 group-hover:text-primary-100`
                     : `ml-4 text-sm font-medium text-gray-400 group-hover:text-gray-700`
                 }
                 aria-current={page.current ? "page" : undefined}

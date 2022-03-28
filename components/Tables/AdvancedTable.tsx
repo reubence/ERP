@@ -17,6 +17,7 @@ import moment from "moment";
 import useUser from "../../hooks/useUser";
 import { CSVLink } from "react-csv";
 import useWindowDimensions from "../../hooks/useDynamicDimensions";
+import { useRouter } from "next/router";
 
 interface props {
   table_name: string;
@@ -142,7 +143,7 @@ function Table({
   );
 
   useEffect(() => {
-    setHiddenColumns(["created_by", "updated_by"]);
+    setHiddenColumns(["created_by", "updated_by", "meta"]);
 
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
@@ -177,19 +178,16 @@ function Table({
 
       <div
         style={{ height: h }}
-        className={`scrollbar scrollbar-thumb-secondary-100 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
+        className={`scrollbar scrollbar-thumb-primary-50 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
       >
-        <div
-          {...getTableProps()}
-          className="table relative bg-coffee border-collapse"
-        >
-          <div className="sticky top-0 bg-white table-header-group">
+        <div {...getTableProps()} className="table relative bg-coffee">
+          <div className="sticky top-0 bg-secondary-100 table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
                 {headerGroup.headers.map((column) => (
                   <div
                     {...column.getHeaderProps()}
-                    className="border border-gray-900 table-cell px-6 py-3 text-left text-xs text-coffee font-bold uppercase tracking-wider"
+                    className="border border-gray-300 table-cell px-6 py-3 text-left text-xs text-white font-bold uppercase tracking-wider"
                   >
                     {column.render("Header")}
                   </div>
@@ -213,7 +211,7 @@ function Table({
                       return (
                         <div
                           {...cell.getCellProps()}
-                          className="border border-gray-900 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-gray-300 group-hover:cursor-pointer"
+                          className="border border-gray-300 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-gray-300 group-hover:cursor-pointer"
                         >
                           {cell.render("Cell")}
                         </div>
@@ -316,6 +314,8 @@ function AdvancedTable({
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
   const [dataModal, setDataModal] = useState<any>();
+  console.log(sortby);
+  const router = useRouter();
   const formatTrProps = (state: any) => {
     return {
       onClick: () => {
@@ -324,15 +324,15 @@ function AdvancedTable({
         //   state["values"].created_at
         // ).format("YYYY-MM-DDTHH:mm");
 
-        tableName === "ledger"
-          ? (data_row["values"].anniversary = moment(
-              state["values"].anniversary
-            ).format("YYYY-MM-DD"))
-          : null;
+        data_row["values"].anniversary = moment(
+          state["values"].anniversary
+        ).format("YYYY-MM-DD");
 
         setState(state["values"].group_);
 
-        Toggle();
+        tableName !== "invoice"
+          ? Toggle()
+          : router.push(`/invoice/${data_row.values.invoice_no}`);
         setDataModal(data_row);
       },
     };
@@ -376,7 +376,7 @@ function AdvancedTable({
             .order(`${sortby ? sortby : "last_updated"}`, {
               ascending: false,
             });
-
+          console.log(data);
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
           }
@@ -404,10 +404,10 @@ function AdvancedTable({
         setLoading(false);
       }
     },
-    [modal, show, refreshTable]
+    [sortby, modal, show, refreshTable]
   );
 
-  useMemo(() => data, [modal, show, refreshTable]);
+  useMemo(() => data, [sortby, modal, show, refreshTable]);
 
   // useEffect(() => {
   //   // Update the document title using the browser API
