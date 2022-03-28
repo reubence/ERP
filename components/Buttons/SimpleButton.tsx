@@ -19,11 +19,7 @@ export default function SimpleButton(props: AppProps) {
     <div className="relative group ml-2">
       <button
         type="button"
-        className={
-          props.setSolid
-            ? "inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md text-cream-light bg-coffee-light group-hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-light"
-            : `inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${props.btnClass}`
-        }
+        className={`inline-flex items-center text-sm font-medium rounded-md ${props.btnClass}`}
         onClick={props.onClick}
       >
         {props.icon ? (
