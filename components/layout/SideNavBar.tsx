@@ -78,6 +78,8 @@ export default function SideNavBar({ children }: LayoutProps) {
     router.push("/auth/login");
   }
 
+  const { data, isLoading } = useUser();
+
   return (
     <>
       {/*
@@ -88,53 +90,102 @@ export default function SideNavBar({ children }: LayoutProps) {
         <body class="h-full overflow-hidden">
         ```
       */}
-      <div className="h-screen flex">
+      <div className="h-screen flex overflow-hidden">
         {/* Narrow sidebar */}
-        <div className="hidden w-24 bg-cream-light overflow-y-auto md:block border-r border-coffee-light">
-          <div className="w-full py-6 flex flex-col items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=black"
-                alt="Workflow"
-              />
-            </div>
-            <div className="flex-1 mt-6 w-full px-2 space-y-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  //   aria-current={item.current ? "page" : undefined}
-                >
-                  <a
-                    key={item.name}
-                    // href={item.href}
-                    className={classNames(
-                      item.href === router.asPath
-                        ? "bg-coffee-light text-cream-light"
-                        : "text-coffee-light hover:bg-cofffee-light hover:text-accent-light hover:ring-2 hover:ring-accent-light",
-                      "group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium"
-                    )}
-                    aria-current={
-                      item.href === router.asPath ? "page" : undefined
-                    }
-                  >
-                    <item.icon
+
+        <div className="hidden lg:flex lg:flex-shrink-0 bg-[#065D8C] overflow-x-hidden overflow-y-auto md:block border-r border-coffee-light">
+          <div className="py-6 flex w-24 flex-col items-center">
+            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto items-center">
+              <div className="flex-1">
+                <div className="bg-[#065D8C] py-4 flex items-center justify-center">
+                  <img
+                    className="h-8 w-auto"
+                    src="https://tailwindui.com/img/logos/workflow-mark-teal-400.svg"
+                    alt="Workflow"
+                  />
+                </div>
+                <div className="flex flex-col items-center space-y-3 mt-6 w-full px-2">
+                  {navigation.map((item) => (
+                    <Link
                       key={item.name}
-                      className={classNames(
-                        item.href === router.asPath
-                          ? "text-cream-light"
-                          : "text-coffee-light group-hover:text-accent-light",
-                        "h-6 w-6"
-                      )}
-                      aria-hidden="true"
+                      href={item.href}
+                      //   aria-current={item.current ? "page" : undefined}
+                    >
+                      <a
+                        key={item.name}
+                        // href={item.href}
+                        className={classNames(
+                          item.href === router.asPath
+                            ? "bg-[#084F76] text-white"
+                            : "text-gray-300 hover:bg-[#084F76] hover:text-white",
+                          "group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium"
+                        )}
+                        aria-current={
+                          item.href === router.asPath ? "page" : undefined
+                        }
+                      >
+                        <item.icon
+                          key={item.name}
+                          className={classNames(
+                            item.href === router.asPath
+                              ? "text-white"
+                              : "text-gray-00 group-hover:text-white",
+                            "h-6 w-6"
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span key={item.name} className="mt-2">
+                          {item.name}
+                        </span>
+                      </a>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* <Menu as="div" className="relative flex-shrink-0">
+                <div>
+                  <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYPRLSISP2uoEdGxNPVFrz02gI2KWiJ_VwNA&usqp=CAU"
+                      alt=""
                     />
-                    <span key={item.name} className="mt-2">
-                      {item.name}
-                    </span>
-                  </a>
-                </Link>
-              ))}
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg p-1 bg-coffee-light">
+                    {userNavigation.map((item) => (
+                      <Menu.Item key={item.name}>
+                        {({ active }) => (
+                          <Link key={item.name} href={item.href}>
+                            <a
+                              key={item.name}
+                              onClick={() => logoutMutation.mutate()}
+                              href={item.href}
+                              className={classNames(
+                                active ? "bg-white-light" : "text-white-light",
+                                "block px-4 py-2 text-sm rounded-md hover:bg-accent-light hover:text-white-light"
+                              )}
+                            >
+                              {item.name}
+                            </a>
+                          </Link>
+                        )}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Items>
+                </Transition>
+              </Menu> */}
             </div>
           </div>
         </div>
@@ -166,7 +217,7 @@ export default function SideNavBar({ children }: LayoutProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <div className="relative max-w-xs w-full bg-coffee-light pt-5 pb-4 flex-1 flex flex-col">
+              <div className="relative max-w-xs w-full bg-[#065D8C] pt-5 pb-4 flex-1 flex flex-col">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -179,11 +230,11 @@ export default function SideNavBar({ children }: LayoutProps) {
                   <div className="absolute top-1 right-0 -mr-14 p-1">
                     <button
                       type="button"
-                      className="h-12 w-12 rounded-full flex items-center justify-center focus:outline-none focus:bg-accent-light"
+                      className="h-12 w-12 rounded-full flex items-center justify-center focus:outline-none focus:bg-[#065D8C]"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <XIcon
-                        className="h-6 w-6 text-cream-light"
+                        className="h-6 w-6 text-white-light"
                         aria-hidden="true"
                       />
                       <span className="sr-only">Close sidebar</span>
@@ -207,8 +258,8 @@ export default function SideNavBar({ children }: LayoutProps) {
                             //   href={item.href}
                             className={classNames(
                               item.current
-                                ? "border-cream-light text-coffee-light"
-                                : "text-cream-light hover:border-cream-light hover:text-cream-light",
+                                ? "bg-[#084F76] text-white"
+                                : "text-indigo-100 hover:bg-[#084F76] hover:text-white",
                               "group py-2 px-3 rounded-md flex items-center text-sm font-medium"
                             )}
                             aria-current={item.current ? "page" : undefined}
@@ -217,8 +268,8 @@ export default function SideNavBar({ children }: LayoutProps) {
                               key={item.name}
                               className={classNames(
                                 item.current
-                                  ? "text-accent-light"
-                                  : "text-cream-light group-hover:text-accent-light",
+                                  ? "text-white"
+                                  : "text-indigo-300 group-hover:text-white",
                                 "mr-3 h-6 w-6"
                               )}
                               aria-hidden="true"
@@ -240,11 +291,11 @@ export default function SideNavBar({ children }: LayoutProps) {
 
         {/* Content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <header className="w-full">
-            <div className="relative z-10 flex-shrink-0 h-16 bg-cream border-b border-coffee shadow-sm flex">
+          {/* <header className="w-full">
+            <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 shadow-sm flex">
               <button
                 type="button"
-                className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-light md:hidden"
+                className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
@@ -253,13 +304,13 @@ export default function SideNavBar({ children }: LayoutProps) {
               <div className="flex-1 flex justify-between pr-4 sm:pr-6">
                 <div className="w-[324px]" />
                 <div className="flex-1 flex">
-                  {/* <Breadcrumb></Breadcrumb> */}
+
                 </div>
                 <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
-                  {/* Profile dropdown */}
+
                   <Menu as="div" className="relative flex-shrink-0">
                     <div>
-                      <Menu.Button className="bg-coffee-light rounded-full flex text-sm outline-none ring-2 ring-offset-2 ring-coffee-light hover:ring-accent-light">
+                      <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
@@ -288,9 +339,9 @@ export default function SideNavBar({ children }: LayoutProps) {
                                   href={item.href}
                                   className={classNames(
                                     active
-                                      ? "bg-cream-light"
-                                      : "text-cream-light",
-                                    "block px-4 py-2 text-sm rounded-md hover:bg-accent-light hover:text-cream-light"
+                                      ? "bg-white-light"
+                                      : "text-white-light",
+                                    "block px-4 py-2 text-sm rounded-md hover:bg-accent-light hover:text-white-light"
                                   )}
                                 >
                                   {item.name}
@@ -302,18 +353,10 @@ export default function SideNavBar({ children }: LayoutProps) {
                       </Menu.Items>
                     </Transition>
                   </Menu>
-
-                  {/* <button
-                    type="button"
-                    className="flex p-1 items-center justify-center text-coffee-light hover:text-accent-light focus-within:rounded-full focus-within:ring-2 focus-within:ring-accent-light focus-within:text-accent-light"
-                  >
-                    <BellIcon className="h-7 w-7" aria-hidden="true" />
-                    <span className="sr-only">Add file</span>
-                  </button> */}
                 </div>
               </div>
             </div>
-          </header>
+          </header> */}
           {/* Main Content */}
           {children}
         </div>

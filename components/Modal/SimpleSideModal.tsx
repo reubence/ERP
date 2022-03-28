@@ -188,7 +188,7 @@ export default function SimpleSideModal({
           onClose={() => close()}
         >
           <div className="absolute inset-0 overflow-hidden">
-            <Dialog.Overlay className="absolute inset-0 bg-coffee bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity ease-in-out" />
 
             <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
               <Transition.Child
@@ -207,15 +207,15 @@ export default function SimpleSideModal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 z-100 bg-coffee sm:px-6 sticky top-0">
+                      <div className="px-4 py-6 z-100 bg-coffee sm:px-6 sticky top-0 z-50">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
-                            <Dialog.Title className="text-lg font-medium text-cream">
+                            <Dialog.Title className="text-lg font-medium text-white">
                               {tableName.charAt(0).toUpperCase() +
                                 tableName.slice(1)}
                               {" Table"}
                             </Dialog.Title>
-                            <p className="text-sm text-cream">
+                            <p className="text-sm text-white">
                               Get started by filling in the information below to
                               create your new Table.
                             </p>
@@ -248,7 +248,10 @@ export default function SimpleSideModal({
                                       id={item + "-" + i}
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
-                                      {item["Header"]}
+                                      {item["Header"]
+                                        .toUpperCase()
+                                        .split("_")
+                                        .join(" ")}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -445,7 +448,7 @@ export default function SimpleSideModal({
                                       htmlFor="project-name"
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
-                                      {key.toUpperCase()}
+                                      {key.toUpperCase().split("_").join(" ")}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -577,11 +580,11 @@ export default function SimpleSideModal({
                       </code>
                     </pre> */}
                     {/* Action buttons */}
-                    <div className="flex-shrink-0 bg-cream px-4 border-t border-gray-200 py-5 sm:px-6">
+                    <div className="flex-shrink-0 bg-white px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"
-                          className="bg-red-500 py-2 px-4 text-cream rounded-md shadow-sm text-sm font-medium hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          className="bg-red-500 py-2 px-4 text-white rounded-md shadow-sm text-sm font-medium hover:border-red-500 hover:text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={
                             Array.isArray(inputFields)
                               ? () => close()

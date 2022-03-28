@@ -127,7 +127,7 @@ function Table({
       <div className={`scrollbar-none flex-grow h-full w-full`}>
         <div
           {...getTableProps()}
-          className="table w-full h-full relative bg-cream"
+          className="table w-full h-full relative bg-white"
         >
           <div className="sticky top-0 bg-gray-300 table-header-group">
             {headerGroups.map((headerGroup) => (
@@ -145,7 +145,7 @@ function Table({
           </div>
           <div
             {...getTableBodyProps()}
-            className="table-row-group bg-cream-light divide-y divide-gray-200"
+            className="table-row-group bg-white-light divide-y divide-gray-200"
           >
             {page.map((row, i) => {
               prepareRow(row);

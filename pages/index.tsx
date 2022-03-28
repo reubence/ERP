@@ -141,7 +141,7 @@ export default function HomePage() {
                 <SimpleButton
                   text="Sign Out"
                   setSolid={false}
-                  btnClass="px-6 py-4 text-lg rounded-xl border-2 border-coffee bg-cream text-coffee group-hover:text-coffee group-hover:bg-coffee group-hover:text-white"
+                  btnClass="px-6 py-4 text-lg rounded-xl border-2 border-coffee bg-white text-coffee group-hover:text-coffee group-hover:bg-coffee group-hover:text-white"
                 ></SimpleButton>
               </div>
             </div>

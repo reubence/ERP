@@ -3,7 +3,7 @@
   onClick={() => previousPage()}
   disabled={!canPreviousPage}
   type="button"
-  className="relative inline-flex items-center px-2 py-2 rounded-l-md border-2 border-coffee bg-cream hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+  className="relative inline-flex items-center px-2 py-2 rounded-l-md border-2 border-coffee bg-white hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
 >
   <span className="sr-only">Previous</span>
   <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -12,7 +12,7 @@
   onClick={() => nextPage()}
   disabled={!canNextPage}
   type="button"
-  className="relative inline-flex items-center px-2 py-2 rounded-r-md border-2 border-coffee bg-cream hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+  className="relative inline-flex items-center px-2 py-2 rounded-r-md border-2 border-coffee bg-white hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
 >
   <span className="sr-only">Next</span>
   <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />

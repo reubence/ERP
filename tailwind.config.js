@@ -1,5 +1,3 @@
-const colors = require("tailwindcss/colors");
-
 module.exports = {
   mode: "jit",
   purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
@@ -10,16 +8,13 @@ module.exports = {
         sort: "url('')",
       },
       colors: {
-        cyan: colors.cyan,
-        coffee: {
-          light: "#262125",
-          DEFAULT: "#262125",
-          dark: "#262125",
+        primary: {
+          50: "#065D8C",
+          100: "#084F76",
         },
-        cream: {
-          light: "#ffffff",
-          DEFAULT: "#ffffff",
-          dark: "#ffffff",
+        secondary: {
+          50: "#EFFDFA",
+          100: "#14B8A6",
         },
         accent: {
           light: "#ED960A",

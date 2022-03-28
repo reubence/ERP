@@ -1,20 +1,15 @@
-import SimpleTable from "../../components/Tables/SimpleTable";
-import ProtectedWrapper from "../../components/layout/Protected";
+import { PlusSmIcon, PrinterIcon } from "@heroicons/react/solid";
+import moment from "moment";
+import { useMemo, useState } from "react";
+import ComboBox from "../../components/Buttons/ComboBox";
 import SimpleButton from "../../components/Buttons/SimpleButton";
-import { PlusSmIcon } from "@heroicons/react/outline";
-import { useState, useEffect } from "react";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
+import Breadcrumb from "../../components/layout/Breadcrumbs";
+import ProtectedWrapper from "../../components/layout/Protected";
 import SimpleSideModal from "../../components/Modal/SimpleSideModal";
+import SimpleTable from "../../components/Tables/SimpleTable";
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
-import React, { useMemo, useRef } from "react";
-import toast from "react-hot-toast";
-import ComboBox from "../../components/Buttons/ComboBox";
-import moment from "moment";
-import _, { toNumber } from "lodash";
-import useUser from "../../hooks/useUser";
-import Router from "next/router";
-import { useRouter } from "next/router";
 
 // GST DATA COLUMNS
 const totalDataColumn = [
@@ -73,7 +68,7 @@ const gstDataColumns = [
     type: "number",
     Footer: (info: { rows: any[] }) => {
       // Only calculate total visits if rows change
-      const total = React.useMemo(
+      const total = useMemo(
         () => info.rows.reduce((sum, row) => row.values.total + sum, 0),
         [info.rows]
       );
@@ -101,7 +96,7 @@ const gstDataColumns = [
     type: "number",
     Footer: (info: { rows: any[] }) => {
       // Only calculate total visits if rows change
-      const total = React.useMemo(
+      const total = useMemo(
         () => info.rows.reduce((sum, row) => row.values.discount + sum, 0),
         [info.rows]
       );
@@ -115,7 +110,7 @@ const gstDataColumns = [
     type: "number",
     Footer: (info: { rows: any[] }) => {
       // Only calculate total visits if rows change
-      const total = React.useMemo(
+      const total = useMemo(
         () => info.rows.reduce((sum, row) => row.values.igst + sum, 0),
         [info.rows]
       );
@@ -150,9 +145,8 @@ const gstDataMeta: any[] = [
   },
 ];
 
-function App() {
-  // INITIALIZE STATE
-  const [invoiceData, setInvoiceData] = useState<any[]>([]); // LOCAL COPY OF ROWS
+function Print({ data, error }: any) {
+  const [invoiceData, setInvoiceData] = useState<any[]>(data[0].meta); // LOCAL COPY OF ROWS
   const [show, setShow] = useState(false); // MODAL
   const Toggle = () => {
     setShow(!show);
@@ -165,11 +159,10 @@ function App() {
   const [serial, setSerial] = useState(1); // SERIAL NOs
   const [gstData, setGstData] = useState<any[]>(gstDataMeta); //GST DATA TABLE
   const [totalTable, setTotalTable] = useState<any[]>(totalData);
-
   // DATA STATES :- INV. NO, QTY, IGST, TOTAL, DIS, SCHEME
-  const [invoiceNo, setInvoiceNo] = useState<string>("");
+  const [invoiceNo, setInvoiceNo] = useState<string>(data[0].invoice_no);
   const [qty, setQty] = useState(0);
-
+  console.log(data[0].meta, error);
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
     setInvoiceData((oldArray: any) => {
@@ -429,170 +422,49 @@ function App() {
     });
   };
 
-  // COMPANY NAME DROPDOWN DATA
-  const getCompanyName = async () => {
-    const { data, error } = await supabase
-      .from("ledger")
-      .select("company_name");
-    let arr: string[] = [];
-    data!.map((key, i) => {
-      arr.push(String(Object.values(key)[0]));
-    });
-    setCompany(arr);
-    console.log(company);
-  };
-
-  useEffect(() => {
-    getCompanyName();
-  }, []);
-
-  // GENERATE INVOICE NO
-  useEffect(() => {
-    setInvoiceNo(Math.random().toString(36).substring(2, 8).toUpperCase());
-  }, [selectedCompany]);
-
-  // INVOICE BILL DATA
-  const getInvoiceData = async () => {
-    const { data: work_address } = await supabase
-      .from("ledger")
-      .select("work_address")
-      .eq("company_name", selectedCompany);
-    const { data: company_phone } = await supabase
-      .from("ledger")
-      .select("company_phone")
-      .eq("company_name", selectedCompany);
-    const { data: state_ } = await supabase
-      .from("ledger")
-      .select("state_")
-      .eq("company_name", selectedCompany);
-    const { data: pincode } = await supabase
-      .from("ledger")
-      .select("pincode")
-      .eq("company_name", selectedCompany);
-    const { data: gstin } = await supabase
-      .from("ledger")
-      .select("gstin")
-      .eq("company_name", selectedCompany);
-
-    setInvoiceBillData([
-      Object.values(work_address![0])[0], // BILLING ADDRESS
-      Object.values(company_phone![0])[0], // PHONE NOs
-      Object.values(state_![0])[0], // STATE NAME
-      Object.values(pincode![0])[0], // PINCODE
-      Object.values(gstin![0])[0], // GST NO
-    ]);
-    console.log(invoiceBillData, selectedCompany);
-  };
-
-  useEffect(() => {
-    selectedCompany !== "" && getInvoiceData();
-  }, [selectedCompany]);
-
-  const router = useRouter();
-
-  // SEND DATA TO SERVER
-  const { data } = useUser();
-  const submitInvoiceData = async () => {
-    const { error: er } = await supabase
-      .from("invoice_items")
-      .insert(invoiceData);
-    const id = data.id;
-    const { error } = await supabase.from("invoice").insert({
-      created_by: id,
-      updated_by: id,
-      created_at: moment().format("YYYY-MM-DDTHH:mm"),
-      last_updated: moment().format("YYYY-MM-DDTHH:mm"),
-      invoice_no: invoiceNo,
-      company_name: selectedCompany,
-      meta: invoiceData,
-      total: Number(totalDataColumn[1].Header),
-      items_discount: totalTable[0].num,
-      bill_discount: totalTable[1].num,
-      total_discount: totalTable[2].num,
-      total_igst: totalTable[3].num,
-      round_off: totalTable[4].num,
-      total_items: invoiceData.length,
-      total_qty: qty,
-      grand_total: Number(totalDataColumn[1].Header) - totalTable[2].num,
-    });
-    console.log(totalData);
-    error
-      ? toast.error(`Error Creating Invoice - \n${error.message}`, {
-          duration: 6000,
-          position: "top-right",
-          style: {
-            background: "#262125",
-            color: "#ffffff",
-          },
-        })
-      : toast.success("Invoice Created Successfully", {
-          duration: 6000,
-          position: "top-right",
-          style: {
-            background: "#262125",
-            color: "#ffffff",
-          },
-        });
-
-    router.push(`/invoice/${invoiceNo}`);
-  };
-
   return (
-    <ProtectedWrapper>
-      <main className="flex w-full h-screen border-gray-200">
-        {/* MAIN SECTION */}
-        <section
-          aria-labelledby="primary-heading"
-          className="w-full flex flex-col lg:order-last items-center overflow-y-scroll"
-        >
-          {/* TOP INPUT COMBO BOX && BUTTONS */}
-          <div className="absolute w-full flex border-b h-14 items-center border-gray-200 bg-white px-8 justify-start z-5 space-x-4 self-stretch">
-            <div className="flex space-x-4">
-              <ComboBox
-                data={company}
-                state={selectedCompany}
-                setState={setSelectedCompany}
-                btnClass="text-primary-50 border-2 border-primary-50 block w-full sm:text-sm border-gray-200 rounded-md"
-              />
-              <SimpleButton
-                setSolid={false}
-                text="Add Row"
-                icon={PlusSmIcon}
-                onClick={
-                  selectedCompany ? () => Toggle() : () => setShow(false)
-                }
-                btnClass={`${
-                  selectedCompany
-                    ? "px-3 py-2 bg-white text-primary-50 border-2 border-primary-50 group-hover:bg-primary-50 group-hover:text-white"
-                    : "px-3 py-2 bg-gray-300 group-hover:bg-gray-300 text-white cursor-pointer"
-                } text-white`}
+    <>
+      <ProtectedWrapper>
+        <main className="flex w-full h-screen border-gray-200 overflow-hidden">
+          {/* MAIN SECTION */}
+          <section
+            aria-labelledby="primary-heading"
+            className="w-full flex flex-col lg:order-last items-center overflow-y-scroll overflow-x-hidden"
+          >
+            {/* TOP INPUT COMBO BOX && BUTTONS */}
+            <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-5 space-x-4 self-stretch">
+              <Breadcrumb
+                pages={[
+                  { name: "Invoices", href: "/ledger", current: false },
+                  {
+                    name: `Invoice No (${invoiceNo})`,
+                    href: "#",
+                    current: true,
+                  },
+                ]}
               />
 
-              <div
-                className="right-6 fixed inline-flex items-center text-sm font-medium rounded-md text-gray-500 "
-                id="download"
-              >
-                <SimpleButton
-                  setSolid={false}
-                  text="Create Invoice"
-                  icon={PlusSmIcon}
-                  onClick={
-                    invoiceData.length === 1
-                      ? submitInvoiceData
-                      : () => setShow(false)
-                  }
-                  btnClass={`${
-                    invoiceData.length === 1
-                      ? "px-3 py-2 bg-primary-50 text-white group-hover:bg-primary-100 group-hover:text-white"
-                      : "px-3 py-2 bg-gray-300 group-hover:bg-gray-300 text-white cursor-default"
-                  } text-white`}
-                />
+              <div className="py-1 flex space-x-2">
+                <div
+                  className="top-2 right-6 fixed inline-flex items-center text-sm font-medium rounded-md text-gray-500 "
+                  id="download"
+                >
+                  <SimpleButton
+                    setSolid={false}
+                    text="Print Invoice"
+                    icon={PrinterIcon}
+                    onClick={() => setShow(false)}
+                    btnClass={`${
+                      selectedCompany
+                        ? "px-3 py-2 bg-[#065D8C]"
+                        : "px-3 py-2 bg-[#065D8C] group-hover:bg-[#084F76] text-white cursor-pointer"
+                    } text-white`}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="lg:p-24 flex md:pl-96 md:p-24">
-            <div className="block shadow-2xl object-scale-down justify-center">
-              {selectedCompany !== "" && (
+            <div className="lg:p-24 flex md:pl-96 md:p-24">
+              <div className="block shadow-2xl object-scale-down justify-center">
                 <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[800px]">
                   <div className="flex flex-row border-b-2 border-black justify-between w-full h-1/4">
                     {/* COMPANY DATA DEFAULTS */}
@@ -711,29 +583,51 @@ function App() {
                     <span className=" w-3/12">10</span>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* MODAL FOR ADD-ROW */}
-        <ModalHOC selector="#modal">
-          <SimpleSideModal
-            show={show}
-            close={Toggle}
-            tableName={"invoice_items"}
-            dataModal={tableData}
-            state={selectedGST}
-            setState={setSelectedGST}
-            invoiceData={invoiceData}
-            setInvoiceData={updataData}
-            invoiceNo={invoiceNo}
-            serial={serial}
-          />
-        </ModalHOC>
-      </main>
-    </ProtectedWrapper>
+          {/* MODAL FOR ADD-ROW */}
+          <ModalHOC selector="#modal">
+            <SimpleSideModal
+              show={show}
+              close={Toggle}
+              tableName={"invoice_items"}
+              dataModal={tableData}
+              state={selectedGST}
+              setState={setSelectedGST}
+              invoiceData={invoiceData}
+              setInvoiceData={updataData}
+              invoiceNo={invoiceNo}
+              serial={serial}
+            />
+          </ModalHOC>
+        </main>
+      </ProtectedWrapper>
+    </>
   );
 }
 
-export default App;
+export async function getServerSideProps(context: any) {
+  const { params } = context;
+  const { invoiceNo } = params;
+  const { data, error } = await supabase
+    .from("invoice")
+    .select("*")
+    .match({ invoice_no: invoiceNo });
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      data: data,
+      error: error,
+    },
+  };
+}
+
+export default Print;

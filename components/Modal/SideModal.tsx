@@ -178,7 +178,7 @@ export default function SideModal({
           onClose={() => close()}
         >
           <div className="absolute inset-0 overflow-hidden">
-            <Dialog.Overlay className="absolute inset-0 bg-coffee bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity" />
 
             <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
               <Transition.Child
@@ -197,15 +197,18 @@ export default function SideModal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 bg-coffee sm:px-6 sticky top-0">
+                      <div className="px-4 py-6 bg-[#14B8A6] sm:px-6 sticky top-0">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
-                            <Dialog.Title className="text-lg font-medium text-cream">
-                              {tableName.charAt(0).toUpperCase() +
-                                tableName.slice(1)}
-                              {" Table"}
+                            <Dialog.Title className="text-lg font-medium text-white">
+                              {tableName
+                                .charAt(0)
+                                .toUpperCase()
+                                .split("_")
+                                .join(" ") + tableName.slice(1)}
+                              {" Row Data"}
                             </Dialog.Title>
-                            <p className="text-sm text-cream">
+                            <p className="text-sm text-white">
                               Get started by filling in the information below to
                               create your new Table.
                             </p>
@@ -213,7 +216,7 @@ export default function SideModal({
                           <div className="h-7 flex items-center">
                             <button
                               type="button"
-                              className="text-red-500 border-2 border-red-500 rounded-md"
+                              className="text-[#065D8C] border-2 border-[#065D8C] rounded-md"
                               onClick={() => close()}
                             >
                               <span className="sr-only">Close panel</span>
@@ -238,7 +241,10 @@ export default function SideModal({
                                       id={item + "-" + i}
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
-                                      {item["Header"]}
+                                      {item["Header"]
+                                        .toUpperCase()
+                                        .split("_")
+                                        .join(" ")}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -349,7 +355,7 @@ export default function SideModal({
                                       htmlFor="project-name"
                                       className="block text-sm font-medium text-coffee sm:mt-px sm:pt-2"
                                     >
-                                      {key.toUpperCase()}
+                                      {key.toUpperCase().split("_").join(" ")}
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
@@ -471,11 +477,11 @@ export default function SideModal({
                       </code>
                     </pre> */}
                     {/* Action buttons */}
-                    <div className="flex-shrink-0 bg-cream px-4 border-t border-gray-200 py-5 sm:px-6">
+                    <div className="flex-shrink-0 bg-white px-4 border-t border-gray-200 py-5 sm:px-6">
                       <div className="space-x-3 flex justify-end">
                         <button
                           type="button"
-                          className="bg-red-500 py-2 px-4 text-cream rounded-md shadow-sm text-sm font-medium hover:border-red-500 hover:text-cream hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          className="bg-red-500 py-2 px-4 text-white rounded-md shadow-sm text-sm font-medium hover:border-red-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={
                             Array.isArray(inputFields)
                               ? () => close()
@@ -486,7 +492,7 @@ export default function SideModal({
                         </button>
                         <button
                           type="submit"
-                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#14B8A6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                         >
                           Save
                         </button>

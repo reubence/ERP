@@ -32,13 +32,13 @@ function classNames(...classes: any) {
 export default function TickerTape() {
   return (
     <div>
-      <dl className="hidden lg:grid grid-cols-1 border-t-0 border-b-0 bg-cream overflow-hidden hover:shadow divide-y border-2 border-coffee divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x-2">
+      <dl className="hidden lg:grid grid-cols-1 border-t-0 border-b-0 bg-white overflow-hidden hover:shadow divide-y border-2 border-coffee divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x-2">
         {stats.map((item) => (
           <div
             key={item.name}
             className="group px-4 py-5 sm:px-6 sm:py-1 hover:bg-coffee"
           >
-            <dt className="text-sm font-medium text-gray-900 group-hover:text-cream">
+            <dt className="text-sm font-medium text-gray-900 group-hover:text-white">
               {item.name}
             </dt>
             <dd className="-mt-1 flex justify-between items-baseline md:block lg:flex">

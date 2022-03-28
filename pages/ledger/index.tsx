@@ -118,8 +118,8 @@ function App() {
           className="min-w-0 flex-1 flex flex-col lg:order-last"
         >
           {/* <div className="grid grid-cols-9 grid-rows-9"> */}
-          <div className="relative px-4 sm:px-6 lg:px-0">
-            <div className="flex justify-start z-10 space-x-4 items-stretch self-stretch">
+          <div className="relative px-4 sm:px-6 lg:px-0 ">
+            <div className="flex justify-start z-10 space-x-4 h-14 items-center self-stretch bg-white">
               {/* <div className="flex-grow">
                 <TickerTape />
               </div> */}
@@ -129,7 +129,7 @@ function App() {
                   text="Refresh"
                   icon={RefreshIcon}
                   onClick={() => setRefreshTable(!refreshTable)}
-                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
                   iconClass="text-gray-500 group-hover:text-coffee"
                 />
                 <DropDownButton
@@ -137,7 +137,7 @@ function App() {
                   text="Sort by"
                   icon={SwitchVerticalIcon}
                   onClick={setSortBy}
-                  btnClass="bg-cream text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
                   iconClass="text-gray-500 group-hover:text-coffee"
                 />
                 <SimpleButton
@@ -145,7 +145,7 @@ function App() {
                   text="Add Row"
                   icon={PlusSmIcon}
                   onClick={() => Toggle()}
-                  btnClass="bg-green-400 group-hover:bg-green-500 text-cream"
+                  btnClass="fixed right-6 px-3 py-3 bg-[#065D8C] group-hover:bg-[#084F76] text-white transition ease-in-out"
                 />
                 {/* <DropdownButton /> */}
                 {/* <div
@@ -178,11 +178,9 @@ function App() {
         </section>
 
         {/* SECOND MENU */}
-        <aside className="hidden w-64 lg:block lg:flex-shrink-0 lg:order-first border-r border-coffee">
-          <div className="px-6 pt-6 pb-4">
-            <h2 className="text-lg font-medium text-gray-900">
-              Data Directory
-            </h2>
+        <aside className="hidden w-64 lg:block lg:flex-shrink-0 lg:order-first border-r border-gray-200 bg-white ">
+          <div className="px-6 pt-10 pb-4">
+            <h2 className="text-lg font-bold text-[#14B8A6]">Data Directory</h2>
             <p className="mt-1 text-sm text-gray-600">
               Search through entire directory
             </p>
@@ -194,7 +192,7 @@ function App() {
                 <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon
-                      className="h-5 w-5 text-coffee"
+                      className="h-5 w-5 text-[#14B8A6]"
                       aria-hidden="true"
                     />
                   </div>
@@ -202,24 +200,24 @@ function App() {
                     type="search"
                     name="search"
                     id="search"
-                    className="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-coffee rounded-md"
+                    className="focus:ring-[#14B8A6] text-[#14B8A6] focus:border-[#14B8A6] block w-full pl-10 sm:text-sm border-gray-200 rounded-md"
                     placeholder="Search"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="group inline-flex justify-center px-3.5 py-2 border border-coffee shadow-sm text-sm font-medium rounded-md text-coffee bg-white hover:bg-coffee focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
+                className="group inline-flex justify-center px-3.5 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-coffee bg-white hover:bg-coffee focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
               >
                 <FilterIcon
-                  className="h-5 w-5 text-coffee group-hover:text-cream"
+                  className="h-5 w-5 text-[#14B8A6] group-hover:text-white"
                   aria-hidden="true"
                 />
                 <span className="sr-only">Search</span>
               </button>
             </form>
 
-            <div className="h-full relative flex flex-col w-52 border-r- border-coffee bg-cream overflow-y-auto mt-10">
+            <div className="h-full relative flex flex-col w-52 bg-white overflow-y-auto mt-10">
               <nav className="space-y-1" aria-label="Sidebar">
                 {navigation.map((item) => (
                   <a
@@ -227,8 +225,8 @@ function App() {
                     onClick={() => refreshTables(item.accessor)}
                     className={classNames(
                       item.current === String(item.accessor).toLowerCase()
-                        ? "bg-coffee text-cream"
-                        : "text-gray-600 hover:bg-gray-300 hover:text-gray-700 cursor-pointer",
+                        ? "bg-[#EFFDFA] text-[#14B8A6]"
+                        : "text-gray-400 hover:bg-[#14B8A6] hover:text-white cursor-pointer",
                       "group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                     )}
                     aria-current={item.current ? "page" : undefined}
@@ -238,7 +236,7 @@ function App() {
                       <span
                         className={classNames(
                           item.current === String(item.accessor).toLowerCase()
-                            ? "bg-cream text-coffee"
+                            ? "bg-white text-coffee"
                             : "bg-gray-200 text-gray-600 group-hover:bg-gray-200",
                           "ml-auto inline-block py-0.5 px-3 text-xs rounded-full"
                         )}

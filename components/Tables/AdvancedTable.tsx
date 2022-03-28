@@ -55,8 +55,8 @@ function GlobalFilter({
   }, 200);
 
   return (
-    <div className="flex items-center bg-gray-100">
-      <SearchIcon className="w-5 h-5 text-coffee ml-4" />
+    <div className="flex items-center bg-white">
+      <SearchIcon className="w-5 h-5 text-secondary-100 ml-4" />
       <input
         type="text"
         name="name"
@@ -67,7 +67,7 @@ function GlobalFilter({
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        className="block h-12 w-full text-coffee placeholder-gray-500 border-0 border-b-2 border-transparent bg-gray-100 focus:border-green-400 focus:ring-0 text-sm"
+        className="block h-12 w-full text-secondary-100 placeholder-gray-400 border-0 border-b-2 border-transparent bg-white focus:border-secondary-100 focus:ring-0 text-sm"
       />
     </div>
   );
@@ -148,7 +148,7 @@ function Table({
   }, [fetchData, pageIndex, pageSize]);
   // Render the UI for your table
   const { width, height } = useWindowDimensions();
-  const h = height - 196;
+  const h = height - 153;
   console.log(height - 205);
   return (
     <>
@@ -177,16 +177,19 @@ function Table({
 
       <div
         style={{ height: h }}
-        className={`scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
+        className={`scrollbar scrollbar-thumb-secondary-100 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
       >
-        <div {...getTableProps()} className="table relative bg-coffee">
-          <div className="sticky top-0 bg-gray-100 table-header-group">
+        <div
+          {...getTableProps()}
+          className="table relative bg-coffee border-collapse"
+        >
+          <div className="sticky top-0 bg-white table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
                 {headerGroup.headers.map((column) => (
                   <div
                     {...column.getHeaderProps()}
-                    className="border-b border-r border-coffee table-cell px-6 py-3 text-left text-xs text-coffee font-bold uppercase tracking-wider"
+                    className="border border-gray-900 table-cell px-6 py-3 text-left text-xs text-coffee font-bold uppercase tracking-wider"
                   >
                     {column.render("Header")}
                   </div>
@@ -196,7 +199,7 @@ function Table({
           </div>
           <div
             {...getTableBodyProps()}
-            className="table-row-group bg-cream-light divide-y divide-gray-200"
+            className="table-row-group bg-white-light divide-y divide-gray-500"
           >
             {page.map((row, i) => {
               prepareRow(row);
@@ -204,13 +207,13 @@ function Table({
                 <>
                   <div
                     {...row.getRowProps(formatRowProps && formatRowProps(row))}
-                    className="group table-row"
+                    className="group table-row bg-white"
                   >
                     {row.cells.map((cell) => {
                       return (
                         <div
                           {...cell.getCellProps()}
-                          className="border-b border-r border-coffee table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-gray-300 group-hover:cursor-pointer"
+                          className="border border-gray-900 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-gray-300 group-hover:cursor-pointer"
                         >
                           {cell.render("Cell")}
                         </div>
@@ -232,7 +235,7 @@ function Table({
       <div className="w-full">
         {/* Bottom Nav Bar */}
         <nav
-          className="border-t fixed bottom-0 bg-cream lg:left-[352px] left-0 right-0 overflow-hidden border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
+          className="border-t fixed bottom-0 bg-white lg:left-[352px] left-0 right-0 overflow-hidden border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
           aria-label="Pagination"
         >
           <div className="hidden sm:flex  left-54">
@@ -275,7 +278,7 @@ function Table({
               disabled={!canPreviousPage}
               className={
                 canPreviousPage
-                  ? `relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
+                  ? `relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-coffee`
                   : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
               }
             >
@@ -286,7 +289,7 @@ function Table({
               disabled={!canNextPage}
               className={
                 canNextPage
-                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-cream hover:bg-coffee`
+                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-coffee`
                   : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
               }
             >

@@ -50,21 +50,21 @@ export default function SignIn() {
           <div>
             <img
               className="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+              src="https://tailwindui.com/img/logos/workflow-mark-teal-400.svg"
               alt="Workflow"
             />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            {/* <p className="mt-2 text-center text-sm text-gray-600">
               Or{" "}
               <a
-                href="#"
+                href="#"=
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 start your 14-day free trial
               </a>
-            </p>
+            </p> */}
           </div>
           <form
             className="mt-8 space-y-6"
@@ -111,7 +111,7 @@ export default function SignIn() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#065D8C] focus:ring-[#065D8C] border-gray-300 rounded"
                 />
                 <label
                   htmlFor="remember-me"
@@ -124,7 +124,7 @@ export default function SignIn() {
               <div className="text-sm">
                 <a
                   href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="font-medium text-[#065D8C] hover:text-[#065D8C]"
                 >
                   Forgot your password?
                 </a>
@@ -134,14 +134,17 @@ export default function SignIn() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#065D8C] hover:bg-[#084F76] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#065D8C]"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   {loginMutation.isLoading ? (
-                    <span>Loading...</span>
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3"
+                      viewBox="0 0 24 24"
+                    ></svg>
                   ) : (
                     <LockClosedIcon
-                      className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                      className="h-5 w-5 text-[#EFFDFA] group-hover:text-[#14B8A6]"
                       aria-hidden="true"
                     />
                   )}

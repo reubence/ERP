@@ -31,21 +31,21 @@ export default function Example(props: any) {
         {stats.map((item) => (
           <div
             key={item.id}
-            className="group relative bg-cream-light pt-5 px-4 pb-12 sm:pt-6 sm:px-6 hover:shadow-2xl border-2 border-coffee-light  rounded-lg overflow-hidden hover:bg-coffee-light"
+            className="group relative bg-white-light pt-5 px-4 pb-12 sm:pt-6 sm:px-6 hover:shadow-2xl border-2 border-coffee-light  rounded-lg overflow-hidden hover:bg-coffee-light"
           >
             <dt>
-              <div className="absolute bg-coffee-light group-hover:bg-cream-light rounded-md p-3">
+              <div className="absolute bg-coffee-light group-hover:bg-white-light rounded-md p-3">
                 <item.icon
-                  className="h-6 w-6 text-cream-light group-hover:text-coffee-light"
+                  className="h-6 w-6 text-white-light group-hover:text-coffee-light"
                   aria-hidden="true"
                 />
               </div>
-              <p className="ml-16 text-sm font-medium text-gray-500 group-hover:text-cream-light group-hover:text-opacity-50 truncate">
+              <p className="ml-16 text-sm font-medium text-gray-500 group-hover:text-white-light group-hover:text-opacity-50 truncate">
                 {item.name}
               </p>
             </dt>
             <dd className="ml-16 pb-6 flex items-baseline sm:pb-7">
-              <p className="text-2xl font-semibold text-coffee-light group-hover:text-cream-light">
+              <p className="text-2xl font-semibold text-coffee-light group-hover:text-white-light">
                 {item.stat}
               </p>
               <p
@@ -74,7 +74,7 @@ export default function Example(props: any) {
                 </span>
                 {item.change}
               </p>
-              <div className="absolute bottom-0 inset-x-0 bg-cream-light border-t-2 border-coffee-light border-opacity-10 px-4 py-4 sm:px-6">
+              <div className="absolute bottom-0 inset-x-0 bg-white-light border-t-2 border-coffee-light border-opacity-10 px-4 py-4 sm:px-6">
                 <div className="text-sm">
                   <a
                     href="#"

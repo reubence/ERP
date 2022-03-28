@@ -54,17 +54,17 @@ export default function ComboBox(props: AppProps) {
       </Combobox.Label> */}
       <div className="relative">
         <Combobox.Input
-          className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${props.btnClass}`}
+          className={`inline-flex items-center text-sm font-medium rounded-md ${props.btnClass}`}
           //   onChange={(event) => setQuery(event.target.value)}
           onChange={(event) => {
             setQuery(event.target.value);
           }}
         />
-        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2">
           <SelectorIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
         </Combobox.Button>
         {filteredPeople.length > 0 && (
-          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Combobox.Options className="absolute z-5 mt-1 max-h-60 w-full overflow-auto rounded-md bg-primary-50 py-1 text-base shadow sm:text-sm">
             {filteredPeople.map((person) => (
               <Combobox.Option
                 key={person}
@@ -72,7 +72,7 @@ export default function ComboBox(props: AppProps) {
                 className={({ active }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-3 pr-9",
-                    active ? "bg-indigo-600 text-white" : "text-gray-900"
+                    active ? "bg-secondary-100 text-white" : "text-white"
                   )
                 }
               >
@@ -91,7 +91,7 @@ export default function ComboBox(props: AppProps) {
                       <span
                         className={classNames(
                           "absolute inset-y-0 right-0 flex items-center pr-4",
-                          active ? "text-white" : "text-indigo-600"
+                          active ? "text-white" : "text-secondary-100"
                         )}
                       >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
