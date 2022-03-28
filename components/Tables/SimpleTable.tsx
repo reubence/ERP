@@ -1,4 +1,3 @@
-import ReactTable from "react-table";
 import React, { useCallback, useMemo, useRef } from "react";
 import {
   useTable,
@@ -10,7 +9,6 @@ import { useState, useEffect } from "react";
 import SimpleSideModal from "../Modal/SimpleSideModal";
 import ModalHOC from "../HigherOrderComponents/ModalHOC";
 import moment from "moment";
-import { invoiceItems } from "../../public/data/invoice";
 
 interface props {
   table_name: string;
