@@ -13,7 +13,7 @@ module.exports = {
           100: "#084F76",
         },
         secondary: {
-          50: "#EFFDFA",
+          50: "#d3f7ef",
           100: "#14B8A6",
         },
         accent: {

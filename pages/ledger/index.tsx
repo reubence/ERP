@@ -159,7 +159,7 @@ function App() {
                   text="Add Row"
                   icon={PlusSmIcon}
                   onClick={() => Toggle()}
-                  btnClass="fixed right-6 px-3 py-3 bg-[#065D8C] group-hover:bg-[#084F76] text-white transition ease-in-out"
+                  btnClass="fixed right-6 px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
                 />
                 {/* <DropdownButton /> */}
                 {/* <div
@@ -194,7 +194,9 @@ function App() {
         {/* SECOND MENU */}
         <aside className="hidden w-64 lg:block lg:flex-shrink-0 lg:order-first border-r border-gray-200 bg-white ">
           <div className="px-6 pt-10 pb-4">
-            <h2 className="text-lg font-bold text-[#14B8A6]">Data Directory</h2>
+            <h2 className="text-lg font-bold text-secondary-100">
+              Data Directory
+            </h2>
             <p className="mt-1 text-sm text-gray-600">
               Search through entire directory
             </p>
@@ -206,7 +208,7 @@ function App() {
                 <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon
-                      className="h-5 w-5 text-[#14B8A6]"
+                      className="h-5 w-5 text-secondary-100"
                       aria-hidden="true"
                     />
                   </div>
@@ -214,17 +216,17 @@ function App() {
                     type="search"
                     name="search"
                     id="search"
-                    className="focus:ring-[#14B8A6] text-[#14B8A6] focus:border-[#14B8A6] block w-full pl-10 sm:text-sm border-gray-200 rounded-md"
+                    className="focus:ring-secondary-100 text-secondary-100 focus:border-secondary-100 block w-full pl-10 sm:text-sm border-gray-200 rounded-md"
                     placeholder="Search"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="group inline-flex justify-center px-3.5 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-coffee bg-white hover:bg-coffee focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
+                className="group inline-flex justify-center px-3.5 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-coffee bg-white hover:bg-coffee focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-50"
               >
                 <FilterIcon
-                  className="h-5 w-5 text-[#14B8A6] group-hover:text-white"
+                  className="h-5 w-5 text-secondary-100 group-hover:text-white"
                   aria-hidden="true"
                 />
                 <span className="sr-only">Search</span>
@@ -239,8 +241,8 @@ function App() {
                     onClick={() => refreshTables(item.accessor)}
                     className={classNames(
                       item.current === String(item.accessor).toLowerCase()
-                        ? "bg-[#EFFDFA] font-bold text-[#14B8A6]"
-                        : "text-gray-400 font-medium hover:bg-[#14B8A6] hover:text-white cursor-pointer",
+                        ? "bg-secondary-50 font-bold text-secondary-100"
+                        : "text-gray-400 font-medium hover:bg-secondary-50 hover:text-secondary-100 cursor-pointer",
                       "group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                     )}
                     aria-current={item.current ? "page" : undefined}

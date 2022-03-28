@@ -139,7 +139,7 @@ export default function SignIn() {
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   {loginMutation.isLoading ? (
                     <svg
-                      className="animate-spin h-5 w-5 mr-3"
+                      className="animate-spin h-4 w-4 text-white"
                       viewBox="0 0 24 24"
                     ></svg>
                   ) : (
@@ -149,7 +149,7 @@ export default function SignIn() {
                     />
                   )}
                 </span>
-                Sign in
+                {!loginMutation.isLoading ? "Sign in" : "Loading..."}
               </button>
             </div>
             {loginMutation.isError && (

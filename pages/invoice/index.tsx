@@ -577,7 +577,7 @@ function App() {
                   text="Create Invoice"
                   icon={PlusSmIcon}
                   onClick={
-                    invoiceData.length === 1
+                    invoiceData.length >= 1
                       ? submitInvoiceData
                       : () => setShow(false)
                   }

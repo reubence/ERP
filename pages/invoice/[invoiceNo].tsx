@@ -432,7 +432,7 @@ function Print({ data, error }: any) {
             className="w-full flex flex-1 flex-col lg:order-last items-center overflow-y-scroll overflow-x-hidden"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
-            <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-5 space-x-4 self-stretch">
+            <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
               <Breadcrumb
                 pages={[
                   { name: "Invoices", href: "/ledger", current: false },

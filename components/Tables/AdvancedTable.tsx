@@ -168,7 +168,7 @@ function Table({
           )}
         </code>
       </pre> */}
-      <div className="w-full overflow-auto border-t border-coffee">
+      <div className="w-full overflow-auto border-t border-gray-200">
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
@@ -178,9 +178,9 @@ function Table({
 
       <div
         style={{ height: h }}
-        className={`scrollbar scrollbar-thumb-primary-50 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-coffee pb-40 pr-40`}
+        className={`scrollbar scrollbar-thumb-primary-50 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-gray-200 pb-40 pr-40`}
       >
-        <div {...getTableProps()} className="table relative bg-coffee">
+        <div {...getTableProps()} className="table relative">
           <div className="sticky top-0 bg-secondary-100 table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
@@ -233,7 +233,7 @@ function Table({
       <div className="w-full">
         {/* Bottom Nav Bar */}
         <nav
-          className="border-t fixed bottom-0 bg-white lg:left-[352px] left-0 right-0 overflow-hidden border-coffee px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
+          className="border-t fixed bottom-0 bg-white lg:left-[352px] left-0 right-0 overflow-hidden border-gray-200 px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
           aria-label="Pagination"
         >
           <div className="hidden sm:flex  left-54">
@@ -241,7 +241,7 @@ function Table({
               {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
               Page{" "}
               <input
-                className="mx-2 w-24 text-coffee hover:text-coffee inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-coffee focus:ring-coffee focus:text-coffee"
+                className="mx-2 w-24 text-coffee hover:text-coffee inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
                 value={Number(pageIndex + 1)}
                 type="number"
                 min={pageIndex + 1}
@@ -257,7 +257,7 @@ function Table({
           <div className="ml-2 hidden sm:flex">
             <select
               value={pageSize}
-              className="text-sm text-coffee hover:text-coffee  rounded-md px-2 py-1 pr-8 focus:border-coffee focus:ring-coffee focus:text-coffee"
+              className="text-sm text-coffee hover:text-coffee  rounded-md px-2 py-1 pr-8 focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
@@ -276,8 +276,8 @@ function Table({
               disabled={!canPreviousPage}
               className={
                 canPreviousPage
-                  ? `relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-coffee`
-                  : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+                  ? `relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-primary-50`
+                  : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
               }
             >
               Previous
@@ -287,8 +287,8 @@ function Table({
               disabled={!canNextPage}
               className={
                 canNextPage
-                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-coffee border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-coffee`
-                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-500 pointer-events-none`
+                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-primary-50`
+                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
               }
             >
               Next
