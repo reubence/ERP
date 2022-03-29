@@ -211,8 +211,12 @@ export default function SimpleSideModal({
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-lg font-medium text-white">
-                              {tableName.charAt(0).toUpperCase() +
-                                tableName.slice(1)}
+                              {(
+                                tableName.charAt(0).toUpperCase() +
+                                tableName.slice(1)
+                              )
+                                .split("_")
+                                .join(" ")}
                               {" Table"}
                             </Dialog.Title>
                             <p className="text-sm text-white">

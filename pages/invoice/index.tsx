@@ -582,7 +582,7 @@ function App() {
                       : () => setShow(false)
                   }
                   btnClass={`${
-                    invoiceData.length === 1
+                    invoiceData.length >= 1
                       ? "px-3 py-2 bg-primary-50 text-white group-hover:bg-primary-100 group-hover:text-white"
                       : "px-3 py-2 bg-gray-300 group-hover:bg-gray-300 text-white cursor-default"
                   } text-white`}

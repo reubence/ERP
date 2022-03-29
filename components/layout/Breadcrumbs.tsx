@@ -1,5 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { HomeIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 
 export default function Breadcrumb({ pages }: { pages: any[] }) {
   return (
@@ -33,17 +34,18 @@ export default function Breadcrumb({ pages }: { pages: any[] }) {
               >
                 <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
               </svg>
-              <a
-                href={page.href}
-                className={
-                  page.current
-                    ? `ml-4 text-sm font-bold text-primary-50 group-hover:text-primary-100`
-                    : `ml-4 text-sm font-medium text-gray-400 group-hover:text-gray-700`
-                }
-                aria-current={page.current ? "page" : undefined}
-              >
-                {page.name}
-              </a>
+              <Link href={page.href}>
+                <a
+                  className={
+                    page.current
+                      ? `ml-4 text-sm font-bold text-primary-50 group-hover:text-primary-100`
+                      : `ml-4 text-sm font-medium text-gray-400 group-hover:text-gray-700`
+                  }
+                  aria-current={page.current ? "page" : undefined}
+                >
+                  {page.name}
+                </a>
+              </Link>
             </div>
           </li>
         ))}

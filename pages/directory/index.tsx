@@ -115,6 +115,14 @@ function App() {
     return true;
   };
 
+  const router = useRouter();
+  useEffect(() => {
+    if (router.asPath === "/directory#invoice") {
+      setMenuItem("invoice");
+      setRefreshTable(true);
+    }
+  }, []);
+
   return (
     <ProtectedWrapper>
       <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
@@ -239,6 +247,7 @@ function App() {
                   <a
                     key={item.name}
                     onClick={() => refreshTables(item.accessor)}
+                    id={item.accessor}
                     className={classNames(
                       item.current === String(item.accessor).toLowerCase()
                         ? "bg-secondary-50 font-bold text-secondary-100"

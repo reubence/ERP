@@ -41,7 +41,7 @@ import useUser from "../../hooks/useUser";
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
-  { name: "Directory", href: "/ledger", icon: LibraryIcon, current: true },
+  { name: "Directory", href: "/directory", icon: LibraryIcon, current: true },
   { name: "Invoicing", href: "/invoice", icon: PrinterIcon, current: false },
   // {
   //   name: "Purchase",

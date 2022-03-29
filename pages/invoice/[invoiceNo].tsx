@@ -10,6 +10,8 @@ import SimpleSideModal from "../../components/Modal/SimpleSideModal";
 import SimpleTable from "../../components/Tables/SimpleTable";
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
+import React, { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 // GST DATA COLUMNS
 const totalDataColumn = [
@@ -422,6 +424,11 @@ function Print({ data, error }: any) {
     });
   };
 
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <>
       <ProtectedWrapper>
@@ -435,7 +442,11 @@ function Print({ data, error }: any) {
             <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
               <Breadcrumb
                 pages={[
-                  { name: "Invoices", href: "/ledger", current: false },
+                  {
+                    name: "Invoices",
+                    href: "/directory#invoice",
+                    current: false,
+                  },
                   {
                     name: `Invoice No (${invoiceNo})`,
                     href: "#",
@@ -453,7 +464,7 @@ function Print({ data, error }: any) {
                     setSolid={false}
                     text="Print Invoice"
                     icon={PrinterIcon}
-                    onClick={() => setShow(false)}
+                    onClick={handlePrint}
                     btnClass={`${
                       selectedCompany
                         ? "px-3 py-2 bg-[#065D8C]"
@@ -465,10 +476,13 @@ function Print({ data, error }: any) {
             </div>
             <div className="lg:p-24 flex md:pl-96 md:p-24">
               <div className="block shadow-2xl object-scale-down justify-center">
-                <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[800px]">
+                <div
+                  className="flex flex-col bg-white border-2 border-black w-[1200px] h-[848px]"
+                  ref={componentRef}
+                >
                   <div className="flex flex-row border-b-2 border-black justify-between w-full h-1/4">
                     {/* COMPANY DATA DEFAULTS */}
-                    <div className=" w-full border-r-2 border-black px-4 py-2 text-blue-900">
+                    <div className=" w-full border-r-2 border-black px-4 py-2 text-primary-50">
                       <h1 className="font-extrabold text-lg mb-2">
                         NEO KUMFURT SOLUTIONS PVT. LTD
                       </h1>
@@ -483,18 +497,18 @@ function Print({ data, error }: any) {
                       </p>
                     </div>
                     {/* INVOICE NO && DATE */}
-                    <span className=" w-full border-r-2 leading-none border-black px-4 py-2 text-blue-900 text-center">
+                    <span className=" w-full border-r-2 leading-none border-black px-4 py-2 text-primary-50 text-center">
                       <h1 className="font-extrabold text-3xl">GST INVOICE</h1>
                       {/* <h1 className="font-extrabold text-md">CREDIT</h1> */}
                       <div className="p-4">
                         <dl className="bg-white grid grid-cols-2">
-                          <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-r">
+                          <div className="flex flex-col border-primary-50 p-2 text-center border-0 border-r">
                             <dt className="order-2 mt-2 text-lg leading-6 font-medium">
                               #{invoiceNo}
                             </dt>
                             <dd className="order-1 font-bold">Invoice No</dd>
                           </div>
-                          <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-l">
+                          <div className="flex flex-col border-primary-50 p-2 text-center border-0 border-l">
                             <dt className="order-2 mt-2 text-lg leading-6 font-medium">
                               {moment().format("ll")}
                             </dt>
