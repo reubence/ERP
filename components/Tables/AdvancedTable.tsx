@@ -428,9 +428,9 @@ function AdvancedTable({
   return (
     <>
       <div className="">
-        {/* <ModalHOC selector="#download">
+        <ModalHOC selector="#download">
           <CSVLink data={data}>Export Data</CSVLink>
-        </ModalHOC> */}
+        </ModalHOC>
         {/* <button onClick={resetData}>Reset Data</button> */}
         <Table
           columns={tableData}

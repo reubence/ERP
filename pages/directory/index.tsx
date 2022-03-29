@@ -162,6 +162,15 @@ function App() {
                   state={sortby}
                   setState={setSortBy}
                 />
+                <div
+                  id="download"
+                  // onClick={downloadData}
+                  className="group items-center text-sm bg-white text-gray-500 hover:text-primary-50 flex rounded-md px-3 py-3 hover:bg-secondary-50"
+                  // iconClass="text-gray-500 group-hover:text-primary-50"
+                >
+                  <DownloadIcon className="text-gray-500 w-4 h-4 mr-1 group-hover:text-primary-50" />
+                </div>
+
                 <SimpleButton
                   setSolid={false}
                   text="Add Row"
@@ -174,15 +183,6 @@ function App() {
                   className="right-6 fixed inline-flex items-center px-2 py-1 text-sm font-medium rounded-md text-gray-500 hover:text-coffee hover:bg-gray-300"
                   id="download"
                 >
-                  <SimpleButton
-                    setSolid={false}
-                    text="Export Data"
-                    icon={DownloadIcon}
-                    // onClick={downloadData}
-                    iconClass="text-gray-500 group-hover:text-coffee"
-                    onClick={getData}
-                    btnClass="text-gray-500 group-hover:text-coffee group-hover:bg-gray-300"
-                  />
                 </div> */}
               </div>
             </div>
