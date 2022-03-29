@@ -343,6 +343,7 @@ function App() {
               setQty((prevState) => {
                 return prevState - Number(item["qty"]) + Number(obj["qty"]);
               });
+
               arr = [...oldArray];
 
               // ADDING IGST TOTALS

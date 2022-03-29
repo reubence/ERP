@@ -26,7 +26,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <div className="h-screen">
           <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
-            <ReactQueryDevtools position="bottom-right" />
+            {/* <ReactQueryDevtools position="bottom-right" /> */}
           </QueryClientProvider>
         </div>
       );
@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
               <Toaster />
 
-              <ReactQueryDevtools position="bottom-right" />
+              {/* <ReactQueryDevtools position="bottom-right" /> */}
             </SideNavBar>
           </QueryClientProvider>
         </div>

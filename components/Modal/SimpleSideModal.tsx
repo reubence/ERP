@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
 import ComboBox from "../Buttons/ComboBox";
+import { useRouter } from "next/router";
 
 export default function SimpleSideModal({
   show,
@@ -53,6 +54,7 @@ export default function SimpleSideModal({
   // PULLING ITEMS NAMES FROM SUPABASE
   const [itemsState, setItemsState] = useState<string>("Placeholder");
   const [itemsNameList, setItemsNameList] = useState<string[]>([]);
+  const router = useRouter();
   const getItemsData = async () => {
     const { data, error } = await supabase
       .from("inventory")
@@ -136,6 +138,29 @@ export default function SimpleSideModal({
       console.log(obj);
       obj["add"] = true;
       setInvoiceData({ obj });
+      if (router.asPath === `/invoice/${obj["invoice_no"]}`) {
+        const { error } = await supabase.from(tableName).insert(obj);
+        error ? null : setObj({});
+        error ? console.log(error, "Error") : close();
+        console.log(obj);
+        error
+          ? toast.error(`Error Adding Row -\n${error.message}`, {
+              duration: 6000,
+              position: "top-right",
+              style: {
+                background: "#262125",
+                color: "#ffffff",
+              },
+            })
+          : toast.success("Row Added Successfully", {
+              duration: 6000,
+              position: "top-right",
+              style: {
+                background: "#262125",
+                color: "#ffffff",
+              },
+            });
+      }
       setObj({});
       close();
     }
@@ -147,6 +172,7 @@ export default function SimpleSideModal({
       obj["edit"] = true;
       console.log(obj);
       setInvoiceData({ obj });
+      setObj({});
       close();
     }
   };

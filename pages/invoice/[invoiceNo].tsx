@@ -12,6 +12,8 @@ import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 // GST DATA COLUMNS
 const totalDataColumn = [
@@ -164,6 +166,7 @@ function Print({ data, error }: any) {
   // DATA STATES :- INV. NO, QTY, IGST, TOTAL, DIS, SCHEME
   const [invoiceNo, setInvoiceNo] = useState<string>(data[0].invoice_no);
   const [qty, setQty] = useState(0);
+  const router = useRouter();
   console.log(data[0].meta, error);
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
@@ -339,6 +342,56 @@ function Print({ data, error }: any) {
                 return prevState - Number(item["qty"]) + Number(obj["qty"]);
               });
               arr = [...oldArray];
+              if (router.asPath === `/invoice/${obj["invoice_no"]}`) {
+                console.log(obj["invoice_no"]);
+                const getData = async () => {
+                  const { error: s } = await supabase
+                    .from("invoice_items")
+                    .update(obj)
+                    .match({ s_no: obj.s_no, invoice_no: obj.invoice_no });
+                  console.log(obj["invoice_no"], s);
+
+                  const { error } = await supabase
+                    .from("invoice")
+                    .update({
+                      last_updated: moment().format("YYYY-MM-DDTHH:mm"),
+                      invoice_no: invoiceNo,
+                      meta: arr,
+                      total: Number(totalDataColumn[1].Header),
+                      items_discount: totalTable[0].num,
+                      bill_discount: totalTable[1].num,
+                      total_discount: totalTable[2].num,
+                      total_igst: totalTable[3].num,
+                      round_off: totalTable[4].num,
+                      total_items: invoiceData.length,
+                      total_qty: qty,
+                      grand_total:
+                        Number(totalDataColumn[1].Header) - totalTable[2].num,
+                    })
+                    .match({ invoice_no: obj.invoice_no });
+
+                  error ? console.log(error, "Error") : close();
+                  console.log(obj);
+                  error
+                    ? toast.error(`Error Adding Row -\n${error.message}`, {
+                        duration: 6000,
+                        position: "top-right",
+                        style: {
+                          background: "#262125",
+                          color: "#ffffff",
+                        },
+                      })
+                    : toast.success("Row Added Successfully", {
+                        duration: 6000,
+                        position: "top-right",
+                        style: {
+                          background: "#262125",
+                          color: "#ffffff",
+                        },
+                      });
+                };
+                getData();
+              }
 
               // ADDING IGST TOTALS
             }
@@ -600,22 +653,6 @@ function Print({ data, error }: any) {
               </div>
             </div>
           </section>
-
-          {/* MODAL FOR ADD-ROW */}
-          <ModalHOC selector="#modal">
-            <SimpleSideModal
-              show={show}
-              close={Toggle}
-              tableName={"invoice_items"}
-              dataModal={tableData}
-              state={selectedGST}
-              setState={setSelectedGST}
-              invoiceData={invoiceData}
-              setInvoiceData={updataData}
-              invoiceNo={invoiceNo}
-              serial={serial}
-            />
-          </ModalHOC>
         </main>
       </ProtectedWrapper>
     </>

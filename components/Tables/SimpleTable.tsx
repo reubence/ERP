@@ -256,11 +256,12 @@ function SimpleTable({
     // fetchData;
   }, [invoiceData, modal, show, refreshTable]);
 
-  tableName === "invoice_items" &&
-    data.map((key: string, i: number) => {
-      data[i].created_at = moment(data[i].created_at).format("llll");
-      data[i].last_updated = moment(data[i].last_updated).format("llll");
-    });
+  tableName === "invoice_items" ||
+    (tableName === "invoice" &&
+      data.map((key: string, i: number) => {
+        data[i].created_at = moment(data[i].created_at).format("llll");
+        data[i].last_updated = moment(data[i].last_updated).format("llll");
+      }));
 
   return (
     <>

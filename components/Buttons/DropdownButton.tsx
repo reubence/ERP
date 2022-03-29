@@ -45,8 +45,8 @@ export default function DropDownButton(props: AppProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="origin-top-right  z-10 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-primary-50 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-          <div className="px-4 py-3 space-y-1 bg-primary-100 rounded-t-md">
+        <Menu.Items className="origin-top-right  z-10 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-primary-50/90 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+          <div className="px-4 py-3 space-y-1 bg-primary-100/80 rounded-t-md">
             <p className="text-sm text-white">Currently sorting by column</p>
             <p className="text-sm font-bold text-secondary-100">
               {props.state.split("_").join(" ").toUpperCase()}

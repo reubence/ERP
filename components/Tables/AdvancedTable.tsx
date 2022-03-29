@@ -211,7 +211,7 @@ function Table({
                       return (
                         <div
                           {...cell.getCellProps()}
-                          className="border border-gray-300 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-gray-300 group-hover:cursor-pointer"
+                          className="border border-gray-300 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-secondary-50 group-hover:cursor-pointer"
                         >
                           {cell.render("Cell")}
                         </div>
@@ -237,11 +237,11 @@ function Table({
           aria-label="Pagination"
         >
           <div className="hidden sm:flex  left-54">
-            <p className="text-sm text-coffee">
+            <p className="text-sm text-gray-900">
               {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
               Page{" "}
               <input
-                className="mx-2 w-24 text-coffee hover:text-coffee inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
+                className="mx-2 w-24 text-gray-900 hover:text-gray-900 inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
                 value={Number(pageIndex + 1)}
                 type="number"
                 min={pageIndex + 1}
@@ -257,7 +257,7 @@ function Table({
           <div className="ml-2 hidden sm:flex">
             <select
               value={pageSize}
-              className="text-sm text-coffee hover:text-coffee  rounded-md px-2 py-1 pr-8 focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
+              className="text-sm text-gray-900 hover:text-gray-900  rounded-md px-2 py-1 pr-8 focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
@@ -276,7 +276,7 @@ function Table({
               disabled={!canPreviousPage}
               className={
                 canPreviousPage
-                  ? `relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-primary-50`
+                  ? `relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
                   : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
               }
             >
@@ -287,7 +287,7 @@ function Table({
               disabled={!canNextPage}
               className={
                 canNextPage
-                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-coffee hover:text-white hover:bg-primary-50`
+                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
                   : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
               }
             >
