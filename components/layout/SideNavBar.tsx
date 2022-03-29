@@ -38,7 +38,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import useLogOut from "../../hooks/useLogout";
 import useUser from "../../hooks/useUser";
-
+//DELETE Com
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
   { name: "Data", href: "/directory", icon: LibraryIcon, current: true },
