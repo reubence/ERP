@@ -1,6 +1,7 @@
 import { PlusSmIcon, PrinterIcon } from "@heroicons/react/solid";
+import { CashIcon, TrashIcon } from "@heroicons/react/outline";
 import moment from "moment";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ComboBox from "../../components/Buttons/ComboBox";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
@@ -158,7 +159,7 @@ function Print({ data, error }: any) {
   let [company, setCompany] = useState<string[]>([]); // LIST OF COMPANIES AVAILABLE TO CHOOSE FROM
   let tableData = columns[5];
   const [invoiceBillData, setInvoiceBillData] = useState<any[]>([]); // INVOICE DATA
-  const [selectedCompany, setSelectedCompany] = useState(""); // SELECTED COMPANY
+  const [selectedCompany, setSelectedCompany] = useState(data[0].company_name); // SELECTED COMPANY
   const [selectedGST, setSelectedGST] = useState("5"); // REQUIRED COMBO BOX IN MODAL
   const [serial, setSerial] = useState(1); // SERIAL NOs
   const [gstData, setGstData] = useState<any[]>(gstDataMeta); //GST DATA TABLE
@@ -167,7 +168,7 @@ function Print({ data, error }: any) {
   const [invoiceNo, setInvoiceNo] = useState<string>(data[0].invoice_no);
   const [qty, setQty] = useState(0);
   const router = useRouter();
-  console.log(data[0].meta, error);
+  console.log(invoiceBillData);
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
     setInvoiceData((oldArray: any) => {
@@ -375,7 +376,7 @@ function Print({ data, error }: any) {
                   error
                     ? toast.error(`Error Adding Row -\n${error.message}`, {
                         duration: 6000,
-                        position: "top-right",
+                        position: "bottom-right",
                         style: {
                           background: "#262125",
                           color: "#ffffff",
@@ -383,7 +384,7 @@ function Print({ data, error }: any) {
                       })
                     : toast.success("Row Added Successfully", {
                         duration: 6000,
-                        position: "top-right",
+                        position: "bottom-right",
                         style: {
                           background: "#262125",
                           color: "#ffffff",
@@ -477,6 +478,64 @@ function Print({ data, error }: any) {
     });
   };
 
+  useEffect(() => {
+    // COMPANY ADDRESS DROPDOWN DATA
+    const getBillData = async () => {
+      const { data: yolo }: any = await supabase
+        .from("ledger")
+        .select("work_address, company_phone, state_, pincode, gstin")
+        .match({ company_name: selectedCompany });
+
+      setInvoiceBillData([
+        Object.values(yolo[0][0]), // BILLING ADDRESS
+        Object.values(yolo[0][1]), // PHONE NOs
+        Object.values(yolo[0][2]), // STATE NAME
+        Object.values(yolo[0][3]), // PINCODE
+        Object.values(yolo[0][4]), // GST NO
+      ]);
+      console.log(yolo, invoiceBillData);
+    };
+
+    getBillData;
+    console.log(invoiceBillData, selectedCompany);
+  }, [selectedCompany]);
+
+  //DELETE INVOICE
+  const handleDelete = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const { data: invoice_items, error: err } = await supabase
+      .from("invoice_items")
+      .delete()
+      .match({
+        invoice_no: invoiceNo,
+      });
+
+    const { data, error } = await supabase.from("invoice").delete().match({
+      invoice_no: invoiceNo,
+    });
+
+    console.log(invoice_items, err);
+
+    !err ? router.push("/data#invoice") : null;
+    error
+      ? toast.error(`Error Deleting Invoice - \n${error.message}`, {
+          duration: 6000,
+          position: "bottom-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        })
+      : toast.success("Invoice Deleted Successfully", {
+          duration: 6000,
+          position: "bottom-right",
+          style: {
+            background: "#262125",
+            color: "#ffffff",
+          },
+        });
+  };
+
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -497,7 +556,7 @@ function Print({ data, error }: any) {
                 pages={[
                   {
                     name: "Invoices",
-                    href: "/directory#invoice",
+                    href: "/data#invoice",
                     current: false,
                   },
                   {
@@ -515,14 +574,25 @@ function Print({ data, error }: any) {
                 >
                   <SimpleButton
                     setSolid={false}
-                    text="Print Invoice"
+                    text="Log Payment"
+                    icon={CashIcon}
+                    onClick={Toggle}
+                    btnClass={`px-3 py-2 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
+                  />
+                  <SimpleButton
+                    setSolid={false}
+                    text="Delete"
+                    icon={TrashIcon}
+                    onClick={handleDelete}
+                    btnClass={`px-3 py-2 bg-red-500 group-hover:bg-red-600 text-white cursor-pointer text-white`}
+                  />
+
+                  <SimpleButton
+                    setSolid={false}
+                    text="Print"
                     icon={PrinterIcon}
                     onClick={handlePrint}
-                    btnClass={`${
-                      selectedCompany
-                        ? "px-3 py-2 bg-[#065D8C]"
-                        : "px-3 py-2 bg-[#065D8C] group-hover:bg-[#084F76] text-white cursor-pointer"
-                    } text-white`}
+                    btnClass={`px-3 py-2 bg-primary-50 group-hover:bg-primary-100 text-white cursor-pointer text-white`}
                   />
                 </div>
               </div>
@@ -582,7 +652,8 @@ function Print({ data, error }: any) {
                         STATE : {invoiceBillData[3]},{" "}
                         {String(invoiceBillData[2]).toUpperCase()}
                         <br /> PHONE. : {invoiceBillData[1]}
-                        <br /> GSTIN :{String(invoiceBillData[4]).toUpperCase()}
+                        <br /> GSTIN :{" "}
+                        {String(invoiceBillData[4]).toUpperCase()}
                       </p>
                       {/* </div> */}
                       {/* <div className="w-3/6 px-4 py-2">
@@ -653,6 +724,21 @@ function Print({ data, error }: any) {
               </div>
             </div>
           </section>
+          {/* MODAL FOR LOG-PAYMENT */}
+          <ModalHOC selector="#modal">
+            <SimpleSideModal
+              show={show}
+              close={Toggle}
+              tableName={"invoice_items"}
+              dataModal={tableData}
+              state={selectedGST}
+              setState={setSelectedGST}
+              invoiceData={invoiceData}
+              setInvoiceData={updataData}
+              invoiceNo={invoiceNo}
+              serial={serial}
+            />
+          </ModalHOC>
         </main>
       </ProtectedWrapper>
     </>
