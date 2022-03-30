@@ -150,7 +150,11 @@ function Table({
   // Render the UI for your table
   const { width, height } = useWindowDimensions();
   const h = height - 153;
-  console.log(height - 205);
+
+  useEffect(() => {
+    gotoPage(0);
+  }, [columns]);
+
   return (
     <>
       {/* <pre>
@@ -337,7 +341,6 @@ function AdvancedTable({
       },
     };
   };
-
   // We'll start our table without any data
   const [data, setData] = React.useState<any>([]);
   const dataRef = useRef(data);
@@ -429,7 +432,9 @@ function AdvancedTable({
     <>
       <div className="">
         <ModalHOC selector="#download">
-          <CSVLink data={data}>Export Data</CSVLink>
+          <CSVLink data={data} className="font-medium text-sm">
+            Export Data
+          </CSVLink>
         </ModalHOC>
         {/* <button onClick={resetData}>Reset Data</button> */}
         <Table
