@@ -4,9 +4,10 @@ import { AppProps } from "next/app";
 import SideNavBar from "../components/layout/SideNavBar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
+import NextNProgress from "nextjs-progressbar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       return (
         <div className="h-screen">
           <QueryClientProvider client={queryClient}>
+            <NextNProgress color="#14B8A6" height={8} />
             <SideNavBar>
               <Component {...pageProps} />
               <Toaster />

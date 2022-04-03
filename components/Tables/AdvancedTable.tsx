@@ -328,9 +328,10 @@ function AdvancedTable({
         //   state["values"].created_at
         // ).format("YYYY-MM-DDTHH:mm");
 
-        data_row["values"].anniversary = moment(
-          state["values"].anniversary
-        ).format("YYYY-MM-DD");
+        tableName === "ledger" &&
+          (data_row["values"].anniversary = moment(
+            state["values"].anniversary
+          ).format("YYYY-MM-DD"));
 
         setState(state["values"].group_);
 

@@ -1,10 +1,10 @@
-import { inventoryData } from "./inventory";
 import { invoiceItems } from "./invoiceItems";
 import { invoice } from "./invoice";
-import { ledgerData } from "./ledger";
 import { paymentsData } from "./payments";
 import { purchaseData } from "./purchase";
 import { salesData } from "./sales";
+import { ledgerData } from "./ledger";
+import { inventoryData } from "./inventory";
 export const columns = {
   // LEDGER
   0: ledgerData,

@@ -32,7 +32,7 @@ export default function SignIn() {
     loginMutation.mutate();
   };
   if (loginMutation.isSuccess) {
-    router.push("/ledger");
+    router.push("/data");
   }
 
   return (
@@ -45,7 +45,7 @@ export default function SignIn() {
         <body class="h-full">
         ```
       */}
-      <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-full flex items-center justify-center py-12   px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
             <img

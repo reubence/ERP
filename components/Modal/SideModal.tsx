@@ -59,7 +59,7 @@ export default function SideModal({
     error
       ? toast.error(`Error Deleting Row -\n${error.message}`, {
           duration: 6000,
-          position: "top-right",
+          position: "bottom-right",
           style: {
             background: "#262125",
             color: "#ffffff",
@@ -67,7 +67,7 @@ export default function SideModal({
         })
       : toast.success("Row Deleted Successfully", {
           duration: 6000,
-          position: "top-right",
+          position: "bottom-right",
           style: {
             background: "#262125",
             color: "#ffffff",
@@ -92,7 +92,7 @@ export default function SideModal({
       error
         ? toast.error(`Error Adding Row -\n${error.message}`, {
             duration: 6000,
-            position: "top-right",
+            position: "bottom-right",
             style: {
               background: "#262125",
               color: "#ffffff",
@@ -100,7 +100,7 @@ export default function SideModal({
           })
         : toast.success("Row Added Successfully", {
             duration: 6000,
-            position: "top-right",
+            position: "bottom-right",
             style: {
               background: "#262125",
               color: "#ffffff",
@@ -119,7 +119,7 @@ export default function SideModal({
       error
         ? toast.error(`Error Updating Row - \n${error.message}`, {
             duration: 6000,
-            position: "top-right",
+            position: "bottom-right",
             style: {
               background: "#262125",
               color: "#ffffff",
@@ -127,7 +127,7 @@ export default function SideModal({
           })
         : toast.success("Row Updated Successfully", {
             duration: 6000,
-            position: "top-right",
+            position: "bottom-right",
             style: {
               background: "#262125",
               color: "#ffffff",
@@ -137,7 +137,7 @@ export default function SideModal({
   };
   const people = {
     ledger: ["Buyer", "Seller"],
-    inventory: ["High", "Low"],
+    inventory: ["High", "Low", "Out Of Stock"],
     payments: ["Late", "On Time"],
     purchase: ["Paid", "Not Paid"],
     sales: ["Paid", "Not Paid"],
@@ -197,7 +197,7 @@ export default function SideModal({
                   >
                     <div className="flex-1">
                       {/* Header */}
-                      <div className="px-4 py-6 bg-[#14B8A6] sm:px-6 sticky top-0">
+                      <div className="px-4 py-6 bg-[#14B8A6] sm:px-6 sticky top-0 z-10">
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-lg font-medium text-white">
@@ -229,12 +229,12 @@ export default function SideModal({
                       {/* Divider container */}
                       <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                         {/* Project name */}
-                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                        <div className="px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-8 sm:px-6 sm:py-5">
                           {Array.isArray(inputFields)
                             ? // ADD ROW MODAL
                               inputFields.map((item, i) => (
                                 <>
-                                  <div>
+                                  <div className="">
                                     <label
                                       key={i}
                                       htmlFor="project-name"
@@ -303,11 +303,18 @@ export default function SideModal({
                                           obj["phy_stock_in_hand"]
                                         }
                                       />
-                                    ) : (
-                                      <textarea
+                                    ) : item["type"] === "text" ||
+                                      ["created_at", "last_updated"].includes(
+                                        item["accessor"]
+                                      ) ? (
+                                      <input
                                         key={i}
-                                        // type={item["type"]}
-                                        rows={4}
+                                        type={item["type"]}
+                                        pattern={
+                                          item["regex"]
+                                            ? item["regex"]
+                                            : "(.*?)"
+                                        }
                                         onChange={(event) =>
                                           handleInputChange(
                                             item["accessor"],
@@ -340,6 +347,33 @@ export default function SideModal({
                                 focus:border-coffee border-gray-300 rounded-md`
                                         }
                                       />
+                                    ) : (
+                                      item["type"] === "textarea" && (
+                                        <textarea
+                                          key={i}
+                                          rows={4}
+                                          // type={item["type"]}
+                                          onChange={(event) =>
+                                            handleInputChange(
+                                              item["accessor"],
+                                              event
+                                            )
+                                          }
+                                          placeholder={
+                                            item["Header"] === "ID"
+                                              ? "auto generated value"
+                                              : ""
+                                          }
+                                          disabled={item["disabled"]}
+                                          className={
+                                            item["disabled"]
+                                              ? `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                        focus:border-coffee bg-gray-300 text-gray-500 border-gray-300 rounded-md`
+                                              : `block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                                focus:border-coffee border-gray-300 rounded-md`
+                                          }
+                                        />
+                                      )
                                     )}
                                   </div>
                                 </>
@@ -359,7 +393,8 @@ export default function SideModal({
                                     </label>
                                   </div>
                                   <div className="sm:col-span-2">
-                                    {key === "anniversary" ? (
+                                    {key === "anniversary" ||
+                                    key === "expiry" ? (
                                       <input
                                         type="date"
                                         onChange={(event) =>
@@ -414,10 +449,32 @@ export default function SideModal({
                                 focus:border-coffee border-gray-300 rounded-md"
                                         defaultValue={inputFields.values[key]}
                                       />
-                                    ) : (
+                                    ) : [
+                                        "work_address",
+                                        "home_address",
+                                      ].includes(key) ? (
                                       <textarea
                                         key={i}
                                         rows={4}
+                                        onChange={(event) =>
+                                          handleInputChange(key, event)
+                                        }
+                                        className={`block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                            focus:border-coffee border-gray-300 rounded-md`}
+                                      />
+                                    ) : (
+                                      <input
+                                        key={i}
+                                        type="text"
+                                        pattern={
+                                          key === "gstin"
+                                            ? "\\d{2}[A-Z]{5}\\d{4}[A-Z]{1}[A-Z\\d]{1}[Z]{1}[A-Z\\d]{1}"
+                                            : key === "pan"
+                                            ? `[A-Z]{5}[0-9]{4}[A-Z]{1}`
+                                            : key === "hsn_code"
+                                            ? "\\d{8}"
+                                            : `(.*?)`
+                                        }
                                         name={key + "-" + i}
                                         id={key + "-" + i}
                                         defaultValue={

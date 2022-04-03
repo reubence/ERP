@@ -146,7 +146,7 @@ export default function SimpleSideModal({
         error
           ? toast.error(`Error Adding Row -\n${error.message}`, {
               duration: 6000,
-              position: "top-right",
+              position: "bottom-right",
               style: {
                 background: "#262125",
                 color: "#ffffff",
@@ -154,7 +154,7 @@ export default function SimpleSideModal({
             })
           : toast.success("Row Added Successfully", {
               duration: 6000,
-              position: "top-right",
+              position: "bottom-right",
               style: {
                 background: "#262125",
                 color: "#ffffff",
@@ -168,7 +168,27 @@ export default function SimpleSideModal({
     else {
       obj = inputFields.values;
       obj["igst"] = state;
+      obj["invoice_no"] = invoiceNo;
+      obj["igst"] = state;
       obj["item_name"] = itemsState;
+      obj["mrp"] = itemData[0].mrp;
+      obj["ptr"] = itemData[0].ptr;
+      obj["mfr"] = itemData[0].mfr;
+      obj["rate"] = itemData[0].rate;
+      obj["hsn_code"] = itemData[0].hsn_code;
+      obj["batch_no"] = itemData[0].batch_no;
+      obj["pack_size"] = itemData[0].pack_size;
+      obj["expiry"] = itemData[0].expiry;
+      obj["value_igst"] =
+        Math.round(
+          (obj["ptr"] + (obj["igst"] / obj["ptr"]) * 100 + Number.EPSILON) * 100
+        ) / 100;
+      obj["total"] =
+        Math.round(
+          (obj["qty"] * ((obj["igst"] / obj["ptr"]) * 100) + Number.EPSILON) *
+            100
+        ) / 100;
+
       obj["edit"] = true;
       console.log(obj);
       setInvoiceData({ obj });
@@ -266,7 +286,7 @@ export default function SimpleSideModal({
                       {/* Divider container */}
                       <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                         {/* Project name */}
-                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                        <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-8 sm:px-6 sm:py-5">
                           {Array.isArray(inputFields)
                             ? // ADD ROW MODAL
                               inputFields.map((item, i) => (
@@ -499,15 +519,64 @@ export default function SimpleSideModal({
                                         }
                                         btnClass="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                                       />
-                                    ) : key === "expiry" ? (
+                                    ) : ["mrp", "rate", "ptr"].includes(key) ? (
+                                      <input
+                                        type="number"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                    focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                      />
+                                    ) : [
+                                        "pack_size",
+                                        "batch_no",
+                                        "mfr",
+                                        "hsn_code",
+                                      ].includes(key) ? (
+                                      <input
+                                        type="text"
+                                        className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
+                  focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
+                                      />
+                                    ) : ["expiry"].includes(key) ? (
                                       <input
                                         type="date"
-                                        onChange={(event) =>
-                                          handleInputChange(key, event)
-                                        }
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                                        focus:border-coffee border-gray-300 rounded-md"
-                                        defaultValue={inputFields.values[key]}
+                focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
+                                        disabled={true}
+                                        value={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        defaultValue={
+                                          itemData[0]?.[key]
+                                            ? itemData[0]?.[key]
+                                            : 0
+                                        }
+                                        onWheel={(e) => e.currentTarget.blur()}
                                       />
                                     ) : key === "invoice_no" ? (
                                       <input
@@ -518,14 +587,23 @@ export default function SimpleSideModal({
                                         disabled={true}
                                         value={inputFields.values[key]}
                                       />
-                                    ) : ["s_no"].includes(key) ? (
+                                    ) : [
+                                        "s_no",
+                                        "total",
+                                        "value_igst",
+                                      ].includes(key) ? (
                                       <input
-                                        type="number"
-                                        onWheel={(e) => e.currentTarget.blur()}
+                                        type="text"
                                         className="block w-full shadow-sm sm:text-sm focus:ring-coffee 
-                            focus:border-coffee border-gray-300 text-gray-500 bg-gray-300 rounded-md"
+                    focus:border-coffee border-gray-300 rounded-md text-gray-500 bg-gray-300"
                                         disabled={true}
-                                        value={inputFields.values[key]}
+                                        value={
+                                          ["total", "value_igst"].includes(key)
+                                            ? "auto generated value"
+                                            : serial
+                                        }
+                                        defaultValue={serial}
+                                        onWheel={(e) => e.currentTarget.blur()}
                                       />
                                     ) : // NUMERIC VALUES
                                     [

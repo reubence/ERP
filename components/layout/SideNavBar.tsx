@@ -38,11 +38,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import useLogOut from "../../hooks/useLogout";
 import useUser from "../../hooks/useUser";
+import { toLower } from "lodash";
 //DELETE Com
 const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon, current: false },
-  { name: "Data", href: "/directory", icon: LibraryIcon, current: true },
-  { name: "Invoice", href: "/invoice", icon: PrinterIcon, current: false },
+  { name: "Home", href: "", icon: HomeIcon, current: false },
+  { name: "Data", href: "data", icon: LibraryIcon, current: true },
+  { name: "Invoice", href: "invoice", icon: PrinterIcon, current: false },
   // {
   //   name: "Purchase",
   //   href: "/purchase",
@@ -52,10 +53,10 @@ const navigation = [
   // { name: "Payments", href: "/payments", icon: CashIcon, current: false },
   // { name: "Inventory", href: "/inventory", icon: ArchiveIcon, current: false },
   // { name: "Analytics", href: "/analytics", icon: ChartPieIcon, current: false },
-  { name: "Settings", href: "/settings", icon: CogIcon, current: false },
+  { name: "Settings", href: "settings", icon: CogIcon, current: false },
 ];
 const userNavigation = [
-  { name: "Your profile", href: "/profile" },
+  { name: "Your profile", href: "profile" },
   { name: "Sign out", href: "/" },
 ];
 
@@ -79,7 +80,7 @@ export default function SideNavBar({ children }: LayoutProps) {
   }
 
   const { data, isLoading } = useUser();
-
+  console.log(router.asPath.split("/").includes("data"));
   return (
     <>
       {/*
@@ -108,14 +109,14 @@ export default function SideNavBar({ children }: LayoutProps) {
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
-                      href={item.href}
+                      href={`/${item.href}`}
                       //   aria-current={item.current ? "page" : undefined}
                     >
                       <a
                         key={item.name}
                         // href={item.href}
                         className={classNames(
-                          item.href === router.asPath
+                          router.asPath.split("/").includes(toLower(item.name))
                             ? "bg-[#084F76] text-white"
                             : "text-gray-300 hover:bg-[#084F76] hover:text-white",
                           "group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium"

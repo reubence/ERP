@@ -180,7 +180,7 @@ function App() {
                       ? () => router.push("/invoice")
                       : () => Toggle()
                   }
-                  btnClass="fixed right-6 px -3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
+                  btnClass="fixed right-6 px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
                 />
                 {/* <DropdownButton /> */}
                 {/* <div

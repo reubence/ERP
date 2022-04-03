@@ -7,13 +7,12 @@ import ModalHOC from "../../components/HigherOrderComponents/ModalHOC";
 import SimpleSideModal from "../../components/Modal/SimpleSideModal";
 import { columns } from "../../public/data/data";
 import { supabase } from "../../utils/supabaseClient";
-import React, { useMemo, useRef } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 import ComboBox from "../../components/Buttons/ComboBox";
 import moment from "moment";
-import _, { toNumber } from "lodash";
+import _ from "lodash";
 import useUser from "../../hooks/useUser";
-import Router from "next/router";
 import { useRouter } from "next/router";
 
 // GST DATA COLUMNS
@@ -454,33 +453,18 @@ function App() {
 
   // INVOICE BILL DATA
   const getInvoiceData = async () => {
-    const { data: work_address } = await supabase
+    const { data }: any = await supabase
       .from("ledger")
-      .select("work_address")
-      .eq("company_name", selectedCompany);
-    const { data: company_phone } = await supabase
-      .from("ledger")
-      .select("company_phone")
-      .eq("company_name", selectedCompany);
-    const { data: state_ } = await supabase
-      .from("ledger")
-      .select("state_")
-      .eq("company_name", selectedCompany);
-    const { data: pincode } = await supabase
-      .from("ledger")
-      .select("pincode")
-      .eq("company_name", selectedCompany);
-    const { data: gstin } = await supabase
-      .from("ledger")
-      .select("gstin")
-      .eq("company_name", selectedCompany);
+      .select("work_address,company_phone,state_,pincode,gstin")
+      .match({ company_name: selectedCompany });
 
+    console.log(data);
     setInvoiceBillData([
-      Object.values(work_address![0])[0], // BILLING ADDRESS
-      Object.values(company_phone![0])[0], // PHONE NOs
-      Object.values(state_![0])[0], // STATE NAME
-      Object.values(pincode![0])[0], // PINCODE
-      Object.values(gstin![0])[0], // GST NO
+      Object.values(data[0])[0], // BILLING ADDRESS
+      Object.values(data[0])[1], // PHONE NOs
+      Object.values(data[0])[2], // STATE NAME
+      Object.values(data[0])[3], // PINCODE
+      Object.values(data[0])[4], // GST NO
     ]);
     console.log(invoiceBillData, selectedCompany);
   };
@@ -516,11 +500,11 @@ function App() {
       total_qty: qty,
       grand_total: Number(totalDataColumn[1].Header) - totalTable[2].num,
     });
-    console.log(totalData);
+    console.log(er, error, totalData);
     error
       ? toast.error(`Error Creating Invoice - \n${error.message}`, {
           duration: 6000,
-          position: "top-right",
+          position: "bottom-right",
           style: {
             background: "#262125",
             color: "#ffffff",
@@ -528,7 +512,7 @@ function App() {
         })
       : toast.success("Invoice Created Successfully", {
           duration: 6000,
-          position: "top-right",
+          position: "bottom-right",
           style: {
             background: "#262125",
             color: "#ffffff",
@@ -540,14 +524,14 @@ function App() {
 
   return (
     <ProtectedWrapper>
-      <main className="flex w-full h-screen border-gray-200">
+      <main className="flex-1 w-full h-full border-gray-200">
         {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
-          className="w-full flex flex-col lg:order-last items-center overflow-y-scroll"
+          className="flex-1 flex flex-col lg:order-last items-center"
         >
           {/* TOP INPUT COMBO BOX && BUTTONS */}
-          <div className="absolute w-full flex border-b h-14 items-center border-gray-200 bg-white px-8 justify-start z-5 space-x-4 self-stretch">
+          <div className="flex border-b h-14 items-center border-gray-200 bg-white px-8 justify-start z-10 space-x-4 self-stretch">
             <div className="flex space-x-4">
               <ComboBox
                 data={company}
@@ -591,13 +575,13 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="lg:p-24 flex md:pl-96 md:p-24">
+          <div className="lg:p-24 md:pl-96 md:p-24 overflow-y-auto ">
             <div className="block shadow-2xl object-scale-down justify-center">
               {selectedCompany !== "" && (
-                <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[800px]">
+                <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[848px]">
                   <div className="flex flex-row border-b-2 border-black justify-between w-full h-1/4">
                     {/* COMPANY DATA DEFAULTS */}
-                    <div className=" w-full border-r-2 border-black px-4 py-2 text-blue-900">
+                    <div className=" w-full border-r-2 border-black px-4 py-2 text-primary-50">
                       <h1 className="font-extrabold text-lg mb-2">
                         NEO KUMFURT SOLUTIONS PVT. LTD
                       </h1>
@@ -612,18 +596,18 @@ function App() {
                       </p>
                     </div>
                     {/* INVOICE NO && DATE */}
-                    <span className=" w-full border-r-2 leading-none border-black px-4 py-2 text-blue-900 text-center">
+                    <span className=" w-full border-r-2 leading-none border-black px-4 py-2 text-primary-50 text-center">
                       <h1 className="font-extrabold text-3xl">GST INVOICE</h1>
                       {/* <h1 className="font-extrabold text-md">CREDIT</h1> */}
                       <div className="p-4">
                         <dl className="bg-white grid grid-cols-2">
-                          <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-r">
+                          <div className="flex flex-col border-primary-50 p-2 text-center border-0 border-r">
                             <dt className="order-2 mt-2 text-lg leading-6 font-medium">
                               #{invoiceNo}
                             </dt>
                             <dd className="order-1 font-bold">Invoice No</dd>
                           </div>
-                          <div className="flex flex-col border-blue-900 p-2 text-center border-0 border-l">
+                          <div className="flex flex-col border-primary-50 p-2 text-center border-0 border-l">
                             <dt className="order-2 mt-2 text-lg leading-6 font-medium">
                               {moment().format("ll")}
                             </dt>
@@ -644,7 +628,8 @@ function App() {
                         STATE : {invoiceBillData[3]},{" "}
                         {String(invoiceBillData[2]).toUpperCase()}
                         <br /> PHONE. : {invoiceBillData[1]}
-                        <br /> GSTIN :{String(invoiceBillData[4]).toUpperCase()}
+                        <br /> GSTIN :{" "}
+                        {String(invoiceBillData[4]).toUpperCase()}
                       </p>
                       {/* </div> */}
                       {/* <div className="w-3/6 px-4 py-2">
@@ -707,9 +692,42 @@ function App() {
                     </div>
                   </div>
                   <div className="flex flex-row justify-between w-full h-1/4">
-                    <span className="border-r-2 border-black w-5/12">08</span>
-                    <span className="border-r-2 border-black w-4/12">09</span>
-                    <span className=" w-3/12">10</span>
+                    <span className="border-r-2 border-black w-5/12 px-6 py-4 flex flex-row justify-between">
+                      <span className="flex flex-col w-3/6">
+                        <h1 className="text-md font-bold underline underline-offset-2 mb-2 ">
+                          OUR BANK DETAILS AS :-
+                        </h1>
+                        <p className="text-sm font-medium">
+                          Bank Name : ICICI BANK
+                          <br />
+                          Branch Name : SEC-7
+                          <br /> Account No. : 370305500027
+                          <br /> IFSC Code : ICIC0003703
+                        </p>
+                      </span>
+                      <span className="flex flex-col w-3/6">
+                        <h1 className="text-md font-bold underline underline-offset-2 mb-2">
+                          TERMS & CONDITIONS :-
+                        </h1>
+                        <p className="text-sm font-medium">
+                          Goods once sold will not be taken back or exchanged.
+                          Bills not paid due date will attract 24% interest. All
+                          disputes subject to Jurisdiction only.{" "}
+                        </p>
+                      </span>
+                    </span>
+                    <span className="flex flex-col border-r-2 border-black w-4/12 px-6 py-4 justify-between">
+                      <h1 className="text-md font-bold mb-2">
+                        FOR NEO KUMFURT SOLUTIONS PVT. LTD.
+                      </h1>
+                      <div className="border-black border-b font-medium text-md">
+                        Authorised Signatory
+                      </div>
+                    </span>
+                    <span className="w-3/12 text-2xl flex flex-col font-medium justify-center items-center">
+                      <h1>Grand Total </h1>
+                      1012020.00
+                    </span>
                   </div>
                 </div>
               )}

@@ -21,13 +21,6 @@ export const invoice = [
     disabled: true,
   },
   {
-    Header: "Invoice ID",
-    accessor: "invoice_id" as const,
-    type: "text",
-    required: true,
-    disabled: false,
-  },
-  {
     Header: "Invoice No",
     accessor: "invoice_no" as const,
     type: "text",

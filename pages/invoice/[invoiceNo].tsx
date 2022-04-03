@@ -163,11 +163,59 @@ function Print({ data, error }: any) {
   const [selectedGST, setSelectedGST] = useState("5"); // REQUIRED COMBO BOX IN MODAL
   const [serial, setSerial] = useState(1); // SERIAL NOs
   const [gstData, setGstData] = useState<any[]>(gstDataMeta); //GST DATA TABLE
-  const [totalTable, setTotalTable] = useState<any[]>(totalData);
+  const [totalTable, setTotalTable] = useState<any[]>([
+    {
+      // 0
+      total: "ITEM DIS AMT.",
+      num: data[0].items_discount,
+    },
+    {
+      // 1
+      total: " BILL DIS AMT.",
+      num: data[0].bill_discount,
+    },
+    {
+      // 2
+      total: "TOTAL DIS",
+      num: data[0].total_discount,
+    },
+    {
+      // 3
+      total: "IGST PAYBLE",
+      num: data[0].total_igst,
+    },
+    {
+      // 4
+      total: "Round off",
+      num: data[0].round_off,
+    },
+  ]);
   // DATA STATES :- INV. NO, QTY, IGST, TOTAL, DIS, SCHEME
   const [invoiceNo, setInvoiceNo] = useState<string>(data[0].invoice_no);
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(data[0].total_qty);
+  console.log(data[0]);
   const router = useRouter();
+  useEffect(() => {
+    // COMPANY ADDRESS DROPDOWN DATA
+    const getBillData = async () => {
+      const { data: yolo }: any = await supabase
+        .from("ledger")
+        .select("work_address, company_phone, state_, pincode, gstin")
+        .match({ company_name: selectedCompany });
+
+      setInvoiceBillData([
+        Object.values(yolo[0])[0], // BILLING ADDRESS
+        Object.values(yolo[0])[1], // PHONE NOs
+        Object.values(yolo[0])[2], // STATE NAME
+        Object.values(yolo[0])[3], // PINCODE
+        Object.values(yolo[0])[4], // GST NO
+      ]);
+      console.log(yolo, invoiceBillData);
+    };
+
+    getBillData();
+  }, [selectedCompany]);
+
   console.log(invoiceBillData);
   // ADDING ROW TO LOCAL CACHE
   const updataData = ({ obj }: any) => {
@@ -250,7 +298,7 @@ function Print({ data, error }: any) {
             //DELETE
             if (obj["delete"]) {
               delete obj.delete;
-              setQty((prevState) => {
+              setQty((prevState: any) => {
                 return prevState - Number(item["qty"]);
               });
               oldArray.splice(index, 1);
@@ -339,7 +387,7 @@ function Print({ data, error }: any) {
               });
 
               oldArray[index] = obj;
-              setQty((prevState) => {
+              setQty((prevState: any) => {
                 return prevState - Number(item["qty"]) + Number(obj["qty"]);
               });
               arr = [...oldArray];
@@ -404,7 +452,7 @@ function Print({ data, error }: any) {
       if (obj["add"]) {
         delete obj.add;
         setSerial(serial + 1);
-        setQty((prevState) => {
+        setQty((prevState: any) => {
           return Number(obj["qty"]) + prevState;
         });
 
@@ -478,28 +526,6 @@ function Print({ data, error }: any) {
     });
   };
 
-  useEffect(() => {
-    // COMPANY ADDRESS DROPDOWN DATA
-    const getBillData = async () => {
-      const { data: yolo }: any = await supabase
-        .from("ledger")
-        .select("work_address, company_phone, state_, pincode, gstin")
-        .match({ company_name: selectedCompany });
-
-      setInvoiceBillData([
-        Object.values(yolo[0][0]), // BILLING ADDRESS
-        Object.values(yolo[0][1]), // PHONE NOs
-        Object.values(yolo[0][2]), // STATE NAME
-        Object.values(yolo[0][3]), // PINCODE
-        Object.values(yolo[0][4]), // GST NO
-      ]);
-      console.log(yolo, invoiceBillData);
-    };
-
-    getBillData;
-    console.log(invoiceBillData, selectedCompany);
-  }, [selectedCompany]);
-
   //DELETE INVOICE
   const handleDelete = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -513,8 +539,6 @@ function Print({ data, error }: any) {
     const { data, error } = await supabase.from("invoice").delete().match({
       invoice_no: invoiceNo,
     });
-
-    console.log(invoice_items, err);
 
     !err ? router.push("/data#invoice") : null;
     error
@@ -548,7 +572,7 @@ function Print({ data, error }: any) {
           {/* MAIN SECTION */}
           <section
             aria-labelledby="primary-heading"
-            className="w-full flex flex-1 flex-col lg:order-last items-center overflow-y-scroll overflow-x-hidden"
+            className="flex flex-1 flex-col lg:order-last items-center overflow-y-auto"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
             <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
@@ -716,9 +740,42 @@ function Print({ data, error }: any) {
                     </div>
                   </div>
                   <div className="flex flex-row justify-between w-full h-1/4">
-                    <span className="border-r-2 border-black w-5/12">08</span>
-                    <span className="border-r-2 border-black w-4/12">09</span>
-                    <span className=" w-3/12">10</span>
+                    <span className="border-r-2 border-black w-5/12 px-6 py-4 flex flex-row justify-between">
+                      <span className="flex flex-col w-3/6">
+                        <h1 className="text-md font-bold underline underline-offset-2 mb-2 ">
+                          OUR BANK DETAILS AS :-
+                        </h1>
+                        <p className="text-sm font-medium">
+                          Bank Name : ICICI BANK
+                          <br />
+                          Branch Name : SEC-7
+                          <br /> Account No. : 370305500027
+                          <br /> IFSC Code : ICIC0003703
+                        </p>
+                      </span>
+                      <span className="flex flex-col w-3/6">
+                        <h1 className="text-md font-bold underline underline-offset-2 mb-2">
+                          TERMS & CONDITIONS :-
+                        </h1>
+                        <p className="text-sm font-medium">
+                          Goods once sold will not be taken back or exchanged.
+                          Bills not paid due date will attract 24% interest. All
+                          disputes subject to Jurisdiction only.{" "}
+                        </p>
+                      </span>
+                    </span>
+                    <span className="flex flex-col border-r-2 border-black w-4/12 px-6 py-4 justify-between">
+                      <h1 className="text-md font-bold mb-2">
+                        FOR NEO KUMFURT SOLUTIONS PVT. LTD.
+                      </h1>
+                      <div className="border-black border-b font-medium text-sm">
+                        Authorised Signatory
+                      </div>
+                    </span>
+                    <span className="w-3/12 text-2xl flex flex-col font-medium justify-center items-center">
+                      <h1>Grand Total </h1>
+                      1012020.00
+                    </span>
                   </div>
                 </div>
               </div>

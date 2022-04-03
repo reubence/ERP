@@ -70,14 +70,14 @@ export const ledgerData = [
   {
     Header: "Work Address",
     accessor: "work_address" as const,
-    type: "text",
+    type: "textarea",
     required: true,
     disabled: false,
   },
   {
     Header: "Home Address",
     accessor: "home_address" as const,
-    type: "text",
+    type: "textarea",
     required: true,
     disabled: false,
   },
@@ -131,6 +131,7 @@ export const ledgerData = [
     type: "text",
     required: true,
     disabled: false,
+    regex: "\\d{2}[A-Z]{5}\\d{4}[A-Z]{1}[A-Z\\d]{1}[Z]{1}[A-Z\\d]{1}",
   },
   {
     Header: "DL No.",
@@ -139,7 +140,13 @@ export const ledgerData = [
     required: true,
     disabled: false,
   },
-  { Header: "PAN", accessor: "pan" as const, type: "text", required: true },
+  {
+    Header: "PAN",
+    accessor: "pan" as const,
+    type: "text",
+    required: true,
+    regex: "[A-Z]{5}[0-9]{4}[A-Z]{1}",
+  },
   {
     Header: "Last Updated",
     accessor: "last_updated" as const,
