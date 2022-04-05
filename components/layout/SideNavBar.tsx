@@ -51,7 +51,7 @@ const navigation = [
   //   current: false,
   // },
   // { name: "Payments", href: "/payments", icon: CashIcon, current: false },
-  // { name: "Inventory", href: "/inventory", icon: ArchiveIcon, current: false },
+  { name: "Inventory", href: "inventory", icon: ArchiveIcon, current: false },
   // { name: "Analytics", href: "/analytics", icon: ChartPieIcon, current: false },
   { name: "Settings", href: "settings", icon: CogIcon, current: false },
 ];

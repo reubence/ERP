@@ -118,8 +118,9 @@ function App() {
   const router = useRouter();
   useEffect(() => {
     if (router.asPath === "/data#invoice") {
-      setMenuItem("invoice");
-      setRefreshTable(true);
+      refreshTables("invoice");
+    } else if (router.asPath === "/data#inventory") {
+      refreshTables("inventory");
     }
   }, []);
 
@@ -133,7 +134,7 @@ function App() {
         >
           {/* <div className="grid grid-cols-9 grid-rows-9"> */}
           <div className="relative px-4 sm:px-6 lg:px-0 ">
-            <div className="flex justify-start z-10 space-x-4 h-14 items-center self-stretch bg-white">
+            <div className="flex justify-start z-10 space-x-4 h-16 items-center self-stretch bg-white">
               {/* <div className="flex-grow">
                 <TickerTape />
               </div> */}
@@ -173,12 +174,22 @@ function App() {
 
                 <SimpleButton
                   setSolid={false}
-                  text="Add Row"
+                  text={
+                    menuItem === "inventory"
+                      ? "Add Item"
+                      : menuItem === "invoice"
+                      ? "Create Invoice"
+                      : menuItem === "ledger"
+                      ? "Add Company"
+                      : "Add Row"
+                  }
                   icon={PlusSmIcon}
                   onClick={
                     menuItem === "invoice"
                       ? () => router.push("/invoice")
-                      : () => Toggle()
+                      : // : menuItem === "inventory"
+                        // ? () => router.push("/inventory")
+                        () => Toggle()
                   }
                   btnClass="fixed right-6 px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
                 />

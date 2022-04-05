@@ -137,7 +137,8 @@ function Table({
       // pageCount.
       pageCount: controlledPageCount,
     },
-    useFilters, // useFilters!
+    useFilters,
+    // useFilters!
     useGlobalFilter, // useGlobalFilter!
     usePagination
   );
@@ -149,7 +150,7 @@ function Table({
   }, [fetchData, pageIndex, pageSize]);
   // Render the UI for your table
   const { width, height } = useWindowDimensions();
-  const h = height - 153;
+  const h = height - 160;
 
   useEffect(() => {
     gotoPage(0);
@@ -335,9 +336,11 @@ function AdvancedTable({
 
         setState(state["values"].group_);
 
-        tableName !== "invoice"
-          ? Toggle()
-          : router.push(`/invoice/${data_row.values.invoice_no}`);
+        tableName === "invoice"
+          ? router.push(`/invoice/${data_row.values.invoice_no}`)
+          : tableName === "inventory"
+          ? router.push(`/inventory/${data_row.values.item_name}`)
+          : Toggle();
         setDataModal(data_row);
       },
     };

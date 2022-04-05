@@ -575,7 +575,7 @@ function Print({ data, error }: any) {
             className="flex flex-1 flex-col lg:order-last items-center overflow-y-auto"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
-            <div className="absolute w-full flex border-b h-14 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
+            <div className="w-full flex border-b h-20 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
               <Breadcrumb
                 pages={[
                   {
@@ -601,14 +601,14 @@ function Print({ data, error }: any) {
                     text="Log Payment"
                     icon={CashIcon}
                     onClick={Toggle}
-                    btnClass={`px-3 py-2 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
+                    btnClass={`px-3 py-3 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
                   />
                   <SimpleButton
                     setSolid={false}
                     text="Delete"
                     icon={TrashIcon}
                     onClick={handleDelete}
-                    btnClass={`px-3 py-2 bg-red-500 group-hover:bg-red-600 text-white cursor-pointer text-white`}
+                    btnClass={`px-3 py-3 bg-red-500 group-hover:bg-red-600 text-white cursor-pointer text-white`}
                   />
 
                   <SimpleButton
@@ -616,12 +616,12 @@ function Print({ data, error }: any) {
                     text="Print"
                     icon={PrinterIcon}
                     onClick={handlePrint}
-                    btnClass={`px-3 py-2 bg-primary-50 group-hover:bg-primary-100 text-white cursor-pointer text-white`}
+                    btnClass={`px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white cursor-pointer text-white`}
                   />
                 </div>
               </div>
             </div>
-            <div className="lg:p-24 flex md:pl-96 md:p-24">
+            <div className="lg:p-12 flex md:pl-96 md:p-24 overflow-y-scroll">
               <div className="block shadow-2xl object-scale-down justify-center">
                 <div
                   className="flex flex-col bg-white border-2 border-black w-[1200px] h-[848px]"
@@ -739,6 +739,7 @@ function Print({ data, error }: any) {
                       </span>
                     </div>
                   </div>
+                  {/* BANK DETAILS / T&C / GRAND TOTAL */}
                   <div className="flex flex-row justify-between w-full h-1/4">
                     <span className="border-r-2 border-black w-5/12 px-6 py-4 flex flex-row justify-between">
                       <span className="flex flex-col w-3/6">
