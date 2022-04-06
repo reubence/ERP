@@ -17,6 +17,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { CSVDownload, CSVLink } from "react-csv";
 import { useRouter } from "next/router";
 import DropDownButton from "../../components/Buttons/DropdownButton";
+import Breadcrumb from "../../components/layout/Breadcrumbs";
 
 /* This example requires Tailwind CSS v2.0+ */
 
@@ -35,7 +36,7 @@ function App() {
     { name: "Purchase", accessor: "purchase", current: menuItem },
     { name: "Payments", accessor: "payments", current: menuItem },
     { name: "Inventory", accessor: "inventory", current: menuItem },
-    { name: "Invoice", accessor: "invoice", current: menuItem },
+    { name: "Invoices", accessor: "invoice", current: menuItem },
     { name: "Invoice Items", accessor: "invoice_items", current: menuItem },
     { name: "Reports", accessor: "reports", current: menuItem, count: "25+" },
   ];
@@ -216,7 +217,18 @@ function App() {
 
         {/* SECOND MENU */}
         <aside className="hidden w-64 lg:block lg:flex-shrink-0 lg:order-first border-r border-gray-200 bg-white ">
-          <div className="px-6 pt-10 pb-4">
+          <div className="flex justify-start z-10 space-x-4 h-16 items-center self-stretch bg-white">
+            <Breadcrumb
+              pages={[
+                {
+                  name: menuItem.split("_").join(" "),
+                  href: "/data#invoice",
+                  current: true,
+                },
+              ]}
+            />
+          </div>
+          <div className="p-6 border-t">
             <h2 className="text-lg font-bold text-secondary-100">
               Data Directory
             </h2>

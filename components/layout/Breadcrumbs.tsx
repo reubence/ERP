@@ -8,9 +8,9 @@ export default function Breadcrumb({ pages }: { pages: any[] }) {
       <ol role="list" className="bg-white-light rounded-md px-6 flex space-x-4">
         <li className="flex group">
           <div className="flex items-center">
-            <a href="#" className="text-gray-400 group-hover:text-gray-700">
+            <a href="/" className="text-gray-400 group-hover:text-primary-100">
               <HomeIcon
-                className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-700"
+                className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-primary-100"
                 aria-hidden="true"
               />
               <span className="sr-only">Home</span>
@@ -38,8 +38,8 @@ export default function Breadcrumb({ pages }: { pages: any[] }) {
                 <a
                   className={
                     page.current
-                      ? `ml-4 text-sm font-bold text-primary-50 group-hover:text-primary-100`
-                      : `ml-4 text-sm font-medium text-gray-400 group-hover:text-gray-700`
+                      ? `ml-4 text-sm font-bold text-primary-50 group-hover:text-primary-100 capitalize`
+                      : `ml-4 text-sm font-medium text-gray-400 group-hover:text-gray-700 capitalize`
                   }
                   aria-current={page.current ? "page" : undefined}
                 >

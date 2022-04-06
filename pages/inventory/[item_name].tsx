@@ -12,16 +12,16 @@ import React, { useRef } from "react";
 import GridCards from "../../components/Grid/Cards";
 import SideModal from "../../components/Modal/SideModal";
 
-function Inventory({ data, error, projects }: any) {
-  const [inventoryData, setInventoryData] = useState<any[]>(data); // LOCAL COPY OF ROWS
-  const [itemName, setItemName] = useState(data[0].item_name);
+function Inventory({ data, error }: any) {
+  const [itemName, setItemName] = useState(data[0].name);
   const [show, setShow] = useState(false); // MODAL
-  const [selectedDropDown, setSelectedDropDown] = useState(""); // REQUIRED COMBO BOX IN MODAL
-  const Toggle = () => {
+  let tableData = columns[1];
+  const [inventoryData, setInventoryData] = useState<any>(tableData); // LOCAL COPY OF ROWS
+  const [selectedDropDown, setSelectedDropDown] = useState("High"); // REQUIRED COMBO BOX IN MODAL
+  const Toggle = (data: any) => {
+    setInventoryData(data);
     setShow(!show);
   };
-  console.log(data, projects);
-  let tableData = columns[1];
 
   const updataData = ({ obj }: any) => {};
 
@@ -32,14 +32,14 @@ function Inventory({ data, error, projects }: any) {
           {/* MAIN SECTION */}
           <section
             aria-labelledby="primary-heading"
-            className="flex flex-1 flex-col lg:order-last items-center overflow-y-auto"
+            className="flex flex-1 flex-col lg:order-last overflow-y-auto"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
-            <div className="w-full flex border-b h-16 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
+            <div className="w-full flex border-b h-16 items-center border-coffee bg-white justify-start z-10 space-x-4 self-stretch">
               <Breadcrumb
                 pages={[
                   {
-                    name: "Items List",
+                    name: "Inventory",
                     href: "/data#inventory",
                     current: false,
                   },
@@ -60,7 +60,7 @@ function Inventory({ data, error, projects }: any) {
                     setSolid={false}
                     text="Add New Batch"
                     icon={CashIcon}
-                    onClick={Toggle}
+                    onClick={() => Toggle(tableData)}
                     btnClass={`px-3 py-3 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
                   />
                   {/* <SimpleButton
@@ -73,8 +73,15 @@ function Inventory({ data, error, projects }: any) {
                 </div>
               </div>
             </div>
-            <div className="lg:p-16 md:pl-96 md:p-16 flex">
-              <GridCards title="Batch Items" data={projects} onClick={Toggle} />
+            <div className="lg:p-12 flex">
+              <GridCards
+                title="Batches"
+                data={data}
+                onClick={Toggle}
+                show={show}
+                state={selectedDropDown}
+                setState={setSelectedDropDown}
+              />
             </div>
           </section>
           {/* MODAL FOR LOG-PAYMENT */}
@@ -82,8 +89,8 @@ function Inventory({ data, error, projects }: any) {
             <SideModal
               show={show}
               close={Toggle}
-              tableName={"invoice_items"}
-              dataModal={tableData}
+              tableName={"inventory"}
+              dataModal={inventoryData}
               state={selectedDropDown}
               setState={setSelectedDropDown}
               // data={inventoryData}
@@ -110,21 +117,29 @@ export async function getServerSideProps(context: any) {
       notFound: true,
     };
   }
+  console.log("HEEERE", data[0]);
   const projects: any = [];
   data.map((item: any) => {
     projects.push({
       name: item.item_name,
       initials: "# " + item.batch_no,
       href: "#",
-      members: item.group_,
-      bgColor: "bg-pink-600",
+      subtitle: item.group_ + " Stock",
+      line1: "Stock In Hand : " + item.stock_in_hand,
+      line2: "Expiry : " + item.expiry,
+      bgColor:
+        item.group_ === "High"
+          ? "bg-secondary-100"
+          : item.group_ === "Low"
+          ? "bg-red-500"
+          : "bg-gray-300 text-gray-700",
+      values: item,
     });
   });
   return {
     props: {
-      data: data,
+      data: projects,
       error: error,
-      projects,
     },
   };
 }

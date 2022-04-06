@@ -127,7 +127,7 @@ function Table({
           {...getTableProps()}
           className="table w-full h-full relative bg-white"
         >
-          <div className="sticky top-0 bg-gray-300 table-header-group">
+          <div className=" bg-gray-300 table-header-group">
             {headerGroups.map((headerGroup) => (
               <div {...headerGroup.getHeaderGroupProps()} className="table-row">
                 {headerGroup.headers.map((column) => (

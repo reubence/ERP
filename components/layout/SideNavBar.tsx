@@ -80,7 +80,7 @@ export default function SideNavBar({ children }: LayoutProps) {
   }
 
   const { data, isLoading } = useUser();
-  console.log(router.asPath.split("/").includes("data"));
+  console.log(router.asPath.split("/").includes("inventory"));
   return (
     <>
       {/*

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import useUser from "../../hooks/useUser";
 import ComboBox from "../Buttons/ComboBox";
+import Router, { useRouter } from "next/router";
 
 export default function SideModal({
   show,
@@ -168,7 +169,7 @@ export default function SideModal({
 
     setInputFields(inputFields);
   };
-
+  const router = useRouter();
   return (
     <>
       <Transition.Root show={show} as={Fragment}>
@@ -340,6 +341,10 @@ export default function SideModal({
                                         }
                                         disabled={item["disabled"]}
                                         className={
+                                          // (item["accessor"] === "item_name" &&
+                                          //   router.asPath
+                                          //     .split("/")
+                                          //     .includes("inventory")) ||
                                           item["disabled"]
                                             ? `block w-full shadow-sm sm:text-sm focus:ring-coffee 
                                         focus:border-coffee bg-gray-300 text-gray-500 border-gray-300 rounded-md`

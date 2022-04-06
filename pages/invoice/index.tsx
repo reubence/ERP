@@ -528,7 +528,7 @@ function App() {
         {/* MAIN SECTION */}
         <section
           aria-labelledby="primary-heading"
-          className="flex flex-1 flex-col lg:order-last items-center overflow-y-auto"
+          className="flex flex-1 flex-col lg:order-last overflow-y-auto"
         >
           {/* TOP INPUT COMBO BOX && BUTTONS */}
           <div className="w-full flex border-b h-20 items-center border-gray-200 bg-white px-8 justify-start z-10 space-x-4 self-stretch">
@@ -575,7 +575,7 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="lg:p-16 flex md:pl-96 md:p-24 overflow-y-scroll">
+          <div className="lg:pt-16 flex justify-center overflow-y-scroll">
             <div className="block shadow-2xl object-scale-down justify-center">
               {selectedCompany !== "" && (
                 <div className="flex flex-col bg-white border-2 border-black w-[1200px] h-[848px]">

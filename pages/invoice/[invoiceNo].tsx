@@ -572,57 +572,56 @@ function Print({ data, error }: any) {
           {/* MAIN SECTION */}
           <section
             aria-labelledby="primary-heading"
-            className="flex flex-1 flex-col lg:order-last items-center overflow-y-auto"
+            className="flex flex-1 flex-col lg:order-last overflow-y-auto"
           >
             {/* TOP INPUT COMBO BOX && BUTTONS */}
-            <div className="w-full flex border-b h-20 items-center border-coffee bg-white px-8 justify-start z-10 space-x-4 self-stretch">
+            <div className="w-full flex border-b h-20 items-center border-coffee bg-white justify-start z-10 space-x-4 self-stretch">
               <Breadcrumb
                 pages={[
                   {
-                    name: "Invoices",
+                    name: "Invoice",
                     href: "/data#invoice",
                     current: false,
                   },
                   {
-                    name: `Invoice No (${invoiceNo})`,
+                    name: `Invoice No (#${invoiceNo})`,
                     href: "#",
                     current: true,
                   },
                 ]}
               />
 
-              <div className="py-1 flex space-x-2">
-                <div
-                  className="top-2 right-6 fixed inline-flex items-center text-sm font-medium rounded-md text-gray-500 "
-                  id="download"
-                >
-                  <SimpleButton
-                    setSolid={false}
-                    text="Log Payment"
-                    icon={CashIcon}
-                    onClick={Toggle}
-                    btnClass={`px-3 py-3 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
-                  />
-                  <SimpleButton
-                    setSolid={false}
-                    text="Delete"
-                    icon={TrashIcon}
-                    onClick={handleDelete}
-                    btnClass={`px-3 py-3 bg-red-500 group-hover:bg-red-600 text-white cursor-pointer text-white`}
-                  />
+              <div
+                className="right-6 fixed inline-flex items-center text-sm font-medium rounded-md text-gray-500 "
+                id="download"
+              >
+                <SimpleButton
+                  setSolid={false}
+                  text="Log Payment"
+                  icon={CashIcon}
+                  onClick={Toggle}
+                  btnClass={`px-3 py-3 bg-secondary-100 group-hover:bg-green-500 text-white cursor-pointer text-white`}
+                />
+                <SimpleButton
+                  setSolid={false}
+                  text="Delete"
+                  icon={TrashIcon}
+                  onClick={handleDelete}
+                  btnClass={`px-3 py-3 bg-red-500 group-hover:bg-red-600 text-white cursor-pointer text-white`}
+                />
 
-                  <SimpleButton
-                    setSolid={false}
-                    text="Print"
-                    icon={PrinterIcon}
-                    onClick={handlePrint}
-                    btnClass={`px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white cursor-pointer text-white`}
-                  />
-                </div>
+                <SimpleButton
+                  setSolid={false}
+                  text="Print"
+                  icon={PrinterIcon}
+                  onClick={handlePrint}
+                  btnClass={`px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white cursor-pointer text-white`}
+                />
               </div>
             </div>
-            <div className="lg:p-12 flex md:pl-96 md:p-24 overflow-y-scroll">
-              <div className="block shadow-2xl object-scale-down justify-center">
+
+            <div className="flex overflow-y-scroll justify-center pt-12 object-scale-down">
+              <div className="block shadow-2xl">
                 <div
                   className="flex flex-col bg-white border-2 border-black w-[1200px] h-[848px]"
                   ref={componentRef}
@@ -687,7 +686,7 @@ function Print({ data, error }: any) {
                   </div>
                   <div className="flex border-b-2 border-black flex-col justify-between">
                     {/* INVENTORY ITEMS TABLE */}
-                    <div className="border-b-2 border-black h-96">
+                    <div className="border-b-2 border-black h-96 ">
                       <SimpleTable
                         tableData={tableData}
                         show={show}
