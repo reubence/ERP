@@ -166,16 +166,16 @@ function App() {
                   text="Refresh"
                   icon={RefreshIcon}
                   onClick={() => setRefreshTable(!refreshTable)}
-                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-primary-50 group-hover:bg-secondary-50"
-                  iconClass="text-gray-500 group-hover:text-primary-50"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-secondary-100 group-hover:bg-secondary-50"
+                  iconClass="text-gray-500 group-hover:text-secondary-100"
                 />
                 <DropDownButton
                   setSolid={false}
                   text="Sort by"
                   icon={SwitchVerticalIcon}
                   onClick={setSortBy}
-                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-primary-50 group-hover:bg-secondary-50"
-                  iconClass="text-gray-500 group-hover:text-primary-50"
+                  btnClass="px-3 py-3 bg-white text-gray-500 group-hover:text-secondary-100 group-hover:bg-secondary-50"
+                  iconClass="text-gray-500 group-hover:text-secondary-100"
                   menuItems={[
                     "last_updated",
                     "id",
@@ -188,10 +188,10 @@ function App() {
                 <div
                   id="download"
                   // onClick={downloadData}
-                  className="group items-center bg-white text-gray-500 hover:text-primary-50 flex rounded-md px-3 py-3 hover:bg-secondary-50"
+                  className="group items-center bg-white text-gray-500 hover:text-secondary-100 flex rounded-md px-3 py-3 hover:bg-secondary-50"
                   // iconClass="text-gray-500 group-hover:text-primary-50"
                 >
-                  <DownloadIcon className="text-gray-500 w-4 h-4 mr-1 group-hover:text-primary-50" />
+                  <DownloadIcon className="text-gray-500 w-4 h-4 mr-1 group-hover:text-secondary-100" />
                 </div>
                 <div className="fixed right-6 flex">
                   <SimpleButton
