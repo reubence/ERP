@@ -5,6 +5,7 @@ import SimpleButton from "../../components/Buttons/SimpleButton";
 import {
   SearchIcon,
   PlusSmIcon,
+  TrashIcon,
   RefreshIcon,
   SwitchVerticalIcon,
 } from "@heroicons/react/outline";
@@ -18,6 +19,8 @@ import { CSVDownload, CSVLink } from "react-csv";
 import { useRouter } from "next/router";
 import DropDownButton from "../../components/Buttons/DropdownButton";
 import Breadcrumb from "../../components/layout/Breadcrumbs";
+import { useDeleteData } from "../../hooks/useDeleteData";
+import toast from "react-hot-toast";
 
 /* This example requires Tailwind CSS v2.0+ */
 
@@ -125,6 +128,24 @@ function App() {
     }
   }, []);
 
+  const [deleteData, setDeleteData] = useState<any[]>([]);
+  const sendDeletedData = async () => {
+    if (deleteData.length === 0) {
+      toast.error(`Please Select A Row First`, {
+        duration: 6000,
+        position: "bottom-right",
+        style: {
+          background: "#262125",
+          color: "#ffffff",
+        },
+      });
+    } else {
+      useDeleteData(menuItem, deleteData);
+      setRefreshTable(!refreshTable);
+      setDeleteData([]);
+    }
+  };
+
   return (
     <ProtectedWrapper>
       <main className="min-w-0 flex-1 h-screen border-gray-200 lg:flex">
@@ -172,28 +193,42 @@ function App() {
                 >
                   <DownloadIcon className="text-gray-500 w-4 h-4 mr-1 group-hover:text-primary-50" />
                 </div>
-
-                <SimpleButton
-                  setSolid={false}
-                  text={
-                    menuItem === "inventory"
-                      ? "Add Item"
-                      : menuItem === "invoice"
-                      ? "Create Invoice"
-                      : menuItem === "ledger"
-                      ? "Add Company"
-                      : "Add Row"
-                  }
-                  icon={PlusSmIcon}
-                  onClick={
-                    menuItem === "invoice"
-                      ? () => router.push("/invoice")
-                      : // : menuItem === "inventory"
-                        // ? () => router.push("/inventory")
-                        () => Toggle()
-                  }
-                  btnClass="fixed right-6 px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
-                />
+                <div className="fixed right-6 flex">
+                  <SimpleButton
+                    setSolid={false}
+                    text={
+                      menuItem === "inventory"
+                        ? "Add Item"
+                        : menuItem === "invoice"
+                        ? "Create Invoice"
+                        : menuItem === "ledger"
+                        ? "Add Company"
+                        : "Add Row"
+                    }
+                    icon={PlusSmIcon}
+                    onClick={
+                      menuItem === "invoice"
+                        ? () => router.push("/invoice")
+                        : // : menuItem === "inventory"
+                          // ? () => router.push("/inventory")
+                          () => Toggle()
+                    }
+                    btnClass="px-3 py-3 bg-primary-50 group-hover:bg-primary-100 text-white transition ease-in-out"
+                  />
+                  <SimpleButton
+                    setSolid={false}
+                    text={"Delete"}
+                    icon={TrashIcon}
+                    onClick={
+                      menuItem === "invoice"
+                        ? () => router.push("/invoice")
+                        : // : menuItem === "inventory"
+                          // ? () => router.push("/inventory")
+                          () => sendDeletedData()
+                    }
+                    btnClass="px-3 py-3 bg-red-500 group-hover:bg-red-600 text-white transition ease-in-out"
+                  />
+                </div>
                 {/* <DropdownButton /> */}
                 {/* <div
                   className="right-6 fixed inline-flex items-center px-2 py-1 text-sm font-medium rounded-md text-gray-500 hover:text-coffee hover:bg-gray-300"
@@ -211,6 +246,7 @@ function App() {
               sortby={sortby}
               state={selectedPerson}
               setState={setSelectedPerson}
+              setDeleteData={setDeleteData}
             ></AdvancedTable>
           </div>
         </section>

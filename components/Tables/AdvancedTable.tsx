@@ -1,11 +1,12 @@
-import ReactTable from "react-table";
-import React, { useMemo, useRef } from "react";
+import ReactTable, { Hooks } from "react-table";
+import React, { forwardRef, useMemo, useRef } from "react";
 import {
   useTable,
   usePagination,
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
+  useRowSelect,
 } from "react-table";
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
@@ -34,6 +35,7 @@ interface AppProps {
   sortby?: string;
   state: string;
   setState: Function;
+  setDeleteData: Function;
 }
 interface TableProps {
   columns: any;
@@ -42,6 +44,8 @@ interface TableProps {
   fetchData: any;
   loading: any;
   pageCount: any;
+  setDeleteData: Function;
+  tableName: string;
 }
 
 function GlobalFilter({
@@ -74,6 +78,28 @@ function GlobalFilter({
   );
 }
 
+const IndeterminateCheckbox = forwardRef(
+  ({ indeterminate, ...rest }: any, ref) => {
+    const defaultRef = useRef();
+    const resolvedRef: any = ref || defaultRef;
+
+    useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return (
+      <>
+        <input
+          type="checkbox"
+          className="appearance-none rounded-sm p-2 border-2 border-gray-300 focus:ring-secondary-100 text-secondary-100 checked:ring checked:ring-secondary-50 indeterminate:ring indeterminate:ring-secondary-50"
+          ref={resolvedRef}
+          {...rest}
+        />
+      </>
+    );
+  }
+);
+
 // Let's add a fetchData method to our Table component that will be used to fetch
 // new data when pagination state changes
 // We can also add a loading state to let our table know it's loading new data
@@ -84,6 +110,8 @@ function Table({
   fetchData,
   loading,
   pageCount: controlledPageCount,
+  setDeleteData,
+  tableName,
 }: TableProps) {
   const [open, setOpen] = React.useState(false); // Use the state and functions returned from useTable to build your UI
   // const skipPageResetRef = React.useRef();
@@ -92,11 +120,37 @@ function Table({
   //   skipPageResetRef.current = false;
   // });
 
+  const selectionHook = (hooks: Hooks<any>) => {
+    hooks.visibleColumns.push((columns) => [
+      // Let's make a column for selection
+      {
+        id: "selection",
+        // The header can use the table's getToggleAllRowsSelectedProps method
+        // to render a checkbox
+        Header: ({ getToggleAllPageRowsSelectedProps }) => (
+          <div>
+            <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+          </div>
+        ),
+        // The cell can use the individual row's getToggleRowSelectedProps method
+        // to the render a checkbox
+        Cell: ({ row }) => (
+          <div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+      },
+      ...columns,
+    ]);
+  };
+
+  const hooks = [selectionHook];
   const {
     getTableProps,
     getTableBodyProps,
-    headerGroups,
     prepareRow,
+    headerGroups,
+    selectedFlatRows,
     state,
     page,
     canPreviousPage,
@@ -114,6 +168,7 @@ function Table({
     state: {
       pageIndex,
       pageSize, // Get the state from the instance
+      selectedRowIds,
     },
   } = useTable(
     {
@@ -140,15 +195,19 @@ function Table({
     useFilters,
     // useFilters!
     useGlobalFilter, // useGlobalFilter!
-    usePagination
+    usePagination,
+    useRowSelect,
+    ...hooks
   );
 
+  // HIDDEN COLUMNS LIST
   useEffect(() => {
     setHiddenColumns(["created_by", "updated_by", "meta"]);
 
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
-  // Render the UI for your table
+
+  // SCROLL BAR POSITION CUSTOM
   const { width, height } = useWindowDimensions();
   const h = height - 160;
 
@@ -156,153 +215,183 @@ function Table({
     gotoPage(0);
   }, [columns]);
 
+  // DELETE ROW
+  useEffect(() => {
+    console.log("AAAAAAA");
+
+    setDeleteData(selectedFlatRows);
+    console.log(selectedFlatRows);
+  }, [selectedFlatRows]);
+
   return (
     <>
-      {/* <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre> */}
-      <div className="w-full overflow-auto border-t border-gray-200">
-        <GlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-        />
-      </div>
+      {loading ? (
+        // Use our custom loading state to show a loading indicator
+        <div>
+          {" "}
+          <svg
+            viewBox="-1.5 0 259 259"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            preserveAspectRatio="xMidYMid"
+            className="w-5 h-5 animate-spin text-secondary-100"
+          >
+            <g fill="rgba(20, 184, 166)">
+              <path d="M1.20368953,96.5716086 C1.20368953,96.9402024 0.835095614,97.6773903 0.835095614,98.0459843 C0.835095614,101.36333 3.41525309,104.312081 7.10119236,104.312081 L59.0729359,104.312081 C61.6530934,104.312081 63.496063,102.837706 64.6018448,100.626142 C75.2910686,77.0361305 98.8810798,61.1865916 125.788436,61.1865916 C163.016423,61.1865916 193.241125,91.4112936 193.241125,128.63928 C193.241125,165.867267 163.016423,196.091969 125.788436,196.091969 C98.5124859,196.091969 75.2910686,179.873835 64.6018448,157.021013 C63.496063,154.440855 61.6530934,152.96648 59.0729359,152.96648 L7.10119236,152.96648 C3.78384701,152.96648 0.835095614,155.546637 0.835095614,159.232575 C0.835095614,159.60117 0.835095614,160.338357 1.20368953,160.706952 C15.5788527,216.733228 66.0762205,258.015748 126.157031,258.015748 C197.295658,258.015748 255.164905,200.146502 255.164905,129.007874 C255.164905,57.8692464 197.295658,0 126.157031,0 C66.0762205,0 15.5788527,41.2825197 1.20368953,96.5716086 L1.20368953,96.5716086 Z" />
+            </g>
+          </svg>
+        </div>
+      ) : (
+        <>
+          {/* <pre>
+            <code>
+              {JSON.stringify(
+                {
+                  selectedRowIds: selectedRowIds,
+                  "selectedFlatRows[].original": selectedFlatRows.map(
+                    (d) => d.original.id
+                  ),
+                },
+                null,
+                2
+              )}
+            </code>
+          </pre> */}
 
-      <div
-        style={{ height: h }}
-        className={`scrollbar scrollbar-thumb-primary-50 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-gray-200 pb-40 pr-40`}
-      >
-        <div {...getTableProps()} className="table relative">
-          <div className="sticky top-0 bg-secondary-100 table-header-group">
-            {headerGroups.map((headerGroup) => (
-              <div {...headerGroup.getHeaderGroupProps()} className="table-row">
-                {headerGroup.headers.map((column) => (
+          <div className="w-full overflow-auto border-t border-gray-200">
+            <GlobalFilter
+              preGlobalFilteredRows={preGlobalFilteredRows}
+              globalFilter={state.globalFilter}
+              setGlobalFilter={setGlobalFilter}
+            />
+          </div>
+          <div
+            style={{ height: h }}
+            className={`scrollbar scrollbar-thumb-primary-50 scrollbar-track-gray-100 overflow-auto flex-grow border-t border-gray-200 pb-40 pr-40`}
+          >
+            <div {...getTableProps()} className="table relative">
+              <div className="sticky top-0 bg-secondary-100 table-header-group">
+                {headerGroups.map((headerGroup) => (
                   <div
-                    {...column.getHeaderProps()}
-                    className="border border-gray-300 table-cell px-6 py-3 text-left text-xs text-white font-bold uppercase tracking-wider"
+                    {...headerGroup.getHeaderGroupProps()}
+                    className="table-row"
                   >
-                    {column.render("Header")}
+                    {headerGroup.headers.map((column) => (
+                      <div
+                        {...column.getHeaderProps()}
+                        className="border border-gray-300 table-cell px-6 py-3 text-left text-xs text-white font-bold uppercase tracking-wider"
+                      >
+                        {column.render("Header")}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
-          <div
-            {...getTableBodyProps()}
-            className="table-row-group bg-white-light divide-y divide-gray-500"
-          >
-            {page.map((row, i) => {
-              prepareRow(row);
-              return (
-                <>
-                  <div
-                    {...row.getRowProps(formatRowProps && formatRowProps(row))}
-                    className="group table-row bg-white"
-                  >
-                    {row.cells.map((cell) => {
-                      return (
-                        <div
-                          {...cell.getCellProps()}
-                          className="border border-gray-300 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-secondary-50 group-hover:cursor-pointer"
-                        >
-                          {cell.render("Cell")}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* <div className="w-full"> */}
-      {loading ? (
-        // Use our custom loading state to show a loading indicator
-        <div>Loading...</div>
-      ) : null}
-      <div className="w-full">
-        {/* Bottom Nav Bar */}
-        <nav
-          className="border-t fixed bottom-0 bg-white lg:left-[352px] left-0 right-0 overflow-hidden border-gray-200 px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
-          aria-label="Pagination"
-        >
-          <div className="hidden sm:flex  left-54">
-            <p className="text-sm text-gray-900">
-              {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
-              Page{" "}
-              <input
-                className="mx-2 w-24 text-gray-900 hover:text-gray-900 inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
-                value={Number(pageIndex + 1)}
-                type="number"
-                min={pageIndex + 1}
-                max={pageCount}
-                onChange={(e) => {
-                  const page = Number(e.target.value) - 1;
-                  gotoPage(page);
-                }}
-              ></input>
-              of {pageCount}
-            </p>
-          </div>
-          <div className="ml-2 hidden sm:flex">
-            <select
-              value={pageSize}
-              className="text-sm text-gray-900 hover:text-gray-900  rounded-md px-2 py-1 pr-8 focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-              }}
-            >
-              {[10, 50, 100, 500, 1000].map((pageSize) => (
-                <option key={pageSize} value={pageSize} className="">
-                  {pageSize} rows
-                </option>
-              ))}
-            </select>
+              <div
+                {...getTableBodyProps()}
+                className="table-row-group bg-white-light divide-y divide-gray-500"
+              >
+                {page.map((row, i) => {
+                  prepareRow(row);
+                  return (
+                    <>
+                      <div
+                        {...row.getRowProps()}
+                        className="group table-row bg-white"
+                      >
+                        {row.cells.map((cell) => {
+                          return (
+                            <div
+                              {...cell.getCellProps(
+                                cell.render("id") === "selection"
+                                  ? undefined
+                                  : formatRowProps(row)
+                              )}
+                              className="border border-gray-300 table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:bg-secondary-50 group-hover:cursor-pointer"
+                            >
+                              {cell.render("Cell")}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          <div className="right-12 flex-1 flex justify-start sm:justify-end">
-            <button
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
-              className={
-                canPreviousPage
-                  ? `relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
-                  : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
-              }
+          <div className="w-full">
+            {/* Bottom Nav Bar */}
+            <nav
+              className="border-t fixed bottom-0 bg-white lg:left-[352px] left-0 right-0 overflow-hidden border-gray-200 px-4 py-2 flex flex-grow items-center justify-between sm:px-6"
+              aria-label="Pagination"
             >
-              Previous
-            </button>
-            <button
-              onClick={() => nextPage()}
-              disabled={!canNextPage}
-              className={
-                canNextPage
-                  ? `ml-2 relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
-                  : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
-              }
-            >
-              Next
-            </button>
+              <div className="hidden sm:flex  left-54">
+                <p className="text-sm text-gray-900">
+                  {/* Showing <span className="font-medium">{page.length}</span> to{" "} */}
+                  Page{" "}
+                  <input
+                    className="mx-2 w-24 text-gray-900 hover:text-gray-900 inline-flex items-center px-2 py-1 text-sm font-medium rounded-md focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
+                    defaultValue={Number(pageIndex + 1)}
+                    type="number"
+                    min={pageIndex + 1}
+                    max={pageCount}
+                    onChange={(e) => {
+                      const page = Number(e.target.value) - 1;
+                      gotoPage(page);
+                    }}
+                  ></input>
+                  of {pageCount}
+                </p>
+              </div>
+              <div className="ml-2 hidden sm:flex">
+                <select
+                  value={pageSize}
+                  className="text-sm text-gray-900 hover:text-gray-900  rounded-md px-2 py-1 pr-8 focus:border-primary-50 focus:ring-primary-50 focus:text-primary-50"
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  {[10, 50, 100, 500, 1000].map((pageSize) => (
+                    <option key={pageSize} value={pageSize} className="">
+                      {pageSize} rows
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="right-12 flex-1 flex justify-start sm:justify-end">
+                <button
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                  className={
+                    canPreviousPage
+                      ? `relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
+                      : `relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
+                  }
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                  className={
+                    canNextPage
+                      ? `ml-2 relative inline-flex items-center px-4 py-1 border-primary-50 border text-sm font-medium rounded-md text-gray-900 hover:text-white hover:bg-primary-50`
+                      : `ml-2 relative inline-flex items-center px-4 py-1 bg-gray-100 border text-sm font-medium rounded-md text-gray-400 pointer-events-none`
+                  }
+                >
+                  Next
+                </button>
+              </div>
+            </nav>
           </div>
-        </nav>
-      </div>
-      {/* )} */}
-      {/* </div> */}
+
+          {/* )} */}
+          {/* </div> */}
+        </>
+      )}
     </>
   );
 }
@@ -315,6 +404,7 @@ function AdvancedTable({
   sortby,
   state,
   setState,
+  setDeleteData,
 }: AppProps) {
   const [modal, setModal] = useState(false);
   const Toggle = () => setModal(!modal);
@@ -340,7 +430,9 @@ function AdvancedTable({
           ? router.push(`/invoice/${data_row.values.invoice_no}`)
           : tableName === "inventory"
           ? router.push(`/inventory/${data_row.values.item_name}`)
-          : Toggle();
+          : // : tableName === "ledger"
+            // ? null
+            Toggle();
         setDataModal(data_row);
       },
     };
@@ -376,21 +468,24 @@ function AdvancedTable({
           sortby,
         }: props) => {
           console.log("Reaching supabase query function");
+          const { count, error: countError } = await supabase
+            .from(table_name)
+            .select("*", { count: "exact", head: true });
           const { data, error } = await supabase
             .from(table_name)
-            .select("*")
+            .select("*", { count: "exact" })
             .range(startRow, endRow)
             .order(`${sortby ? sortby : "last_updated"}`, {
               ascending: false,
             });
-          console.log(data);
+          console.log(data, count);
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
           }
 
           setData(data);
           if (data != null) {
-            setPageCount(Math.ceil(data.length / pageSize));
+            setPageCount(Math.ceil(count! / pageSize));
           }
           return data;
         };
@@ -432,6 +527,7 @@ function AdvancedTable({
     data[i].anniversary = moment(data[i].anniversary).format("ll");
   });
   // console.log(data);
+
   return (
     <>
       <div className="">
@@ -448,6 +544,8 @@ function AdvancedTable({
           loading={loading}
           pageCount={pageCount}
           formatRowProps={(state: any) => formatTrProps(state)}
+          setDeleteData={setDeleteData}
+          tableName={tableName}
         ></Table>
         <ModalHOC selector="#modal">
           <SideModal
