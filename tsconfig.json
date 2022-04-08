@@ -25,6 +25,12 @@
     "jsx": "preserve"
   },
 
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/invoice/test.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/invoice/test.js",
+    "components/Tables/AdvancedTable.jsx"
+  ],
   "exclude": ["node_modules"]
 }
