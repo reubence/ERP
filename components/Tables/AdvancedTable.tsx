@@ -19,9 +19,10 @@ import useUser from "../../hooks/useUser";
 import { CSVLink } from "react-csv";
 import useWindowDimensions from "../../hooks/useDynamicDimensions";
 import { useRouter } from "next/router";
+import useFetchData from "../../hooks/useFetchData";
 
 interface props {
-  table_name: string;
+  tableName: string;
   startRow: number;
   endRow: number;
   sortby?: string;
@@ -217,8 +218,6 @@ function Table({
 
   // DELETE ROW
   useEffect(() => {
-    console.log("AAAAAAA");
-
     setDeleteData(selectedFlatRows);
     console.log(selectedFlatRows);
   }, [selectedFlatRows]);
@@ -444,6 +443,8 @@ function AdvancedTable({
   const [pageCount, setPageCount] = React.useState<any>(0);
   const fetchIdRef = React.useRef(0);
   const [filter, setFilter] = useState("");
+  // const { data: some, isError, isLoading } = useFetchData("ledger", 0, 10);
+  // console.log(some, isError);
   const fetchData = React.useCallback(
     ({ pageSize, pageIndex }) => {
       // This will get called when the table needs new data
@@ -459,26 +460,26 @@ function AdvancedTable({
       if (fetchId === fetchIdRef.current) {
         const startRow = pageSize * pageIndex;
         const endRow = startRow + pageSize;
-        const table_name = tableName;
 
         const readData = async ({
-          table_name,
+          tableName,
           startRow,
           endRow,
           sortby,
         }: props) => {
           console.log("Reaching supabase query function");
           const { count, error: countError } = await supabase
-            .from(table_name)
+            .from(tableName)
             .select("*", { count: "exact", head: true });
           const { data, error } = await supabase
-            .from(table_name)
+            .from(tableName)
             .select("*", { count: "exact" })
             .range(startRow, endRow)
             .order(`${sortby ? sortby : "last_updated"}`, {
               ascending: false,
             });
-          console.log(data, count);
+
+          console.log(data, count, startRow, endRow);
           if (error) {
             throw new Error(`${error.message}: ${error.details}`);
           }
@@ -492,13 +493,13 @@ function AdvancedTable({
 
         sortby
           ? readData({
-              table_name,
+              tableName,
               startRow,
               endRow,
               sortby,
             })
           : readData({
-              table_name,
+              tableName,
               startRow,
               endRow,
             });

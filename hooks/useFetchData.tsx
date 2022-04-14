@@ -2,14 +2,10 @@ import { User } from "@supabase/supabase-js";
 import { useQuery } from "react-query";
 import { supabase } from "../utils/supabaseClient";
 
-export const useFetchData = async (
-  tableName: any,
-  startRow: any,
-  endRow: any
-) => {
+export const getData = async (tableName: any, startRow: any, endRow: any) => {
   const { data, error } = await supabase
     .from(tableName)
-    .select("*")
+    .select("*", { count: "exact" })
     .range(startRow, endRow);
 
   if (error) {
@@ -24,3 +20,13 @@ export const useFetchData = async (
 
   return data;
 };
+
+export default function useFetchData(
+  tableName: any,
+  startRow: any,
+  endRow: any
+) {
+  return useQuery([tableName, startRow, endRow], () =>
+    getData(tableName, startRow, endRow)
+  );
+}
