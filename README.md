@@ -6,3 +6,6 @@ Note: This does not represent the final product, which is covered under confiden
 
 login : testing@gmail.com
 password: testing
+
+## Video Demo
+[![Step Image](https://img.youtube.com/vi/EAKKajcLmqk/0.jpg)](https://www.youtube.com/watch?v=EAKKajcLmqk)
